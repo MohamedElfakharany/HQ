@@ -1,0 +1,844 @@
+// ignore_for_file: must_be_immutable, body_might_complete_normally_nullable, library_private_types_in_public_api
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hq/screens/main_screens/card_screen.dart';
+import 'package:hq/screens/main_screens/notification_screen.dart';
+import 'package:hq/screens/main_screens/search_screen.dart';
+import 'package:hq/shared/constants/colors.dart';
+import 'package:hq/shared/constants/general_constants.dart';
+import 'package:hq/shared/network/local/const_shared.dart';
+import 'package:hq/translations/locale_keys.g.dart';
+
+void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
+      context,
+      FadeRoute(page: widget),
+      (Route<dynamic> route) => false,
+    );
+
+void showToast({
+  required String? msg,
+  required ToastState? state,
+}) {
+  Fluttertoast.showToast(
+      msg: msg!,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 2,
+      backgroundColor: chooseToastColor(state!),
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
+
+enum ToastState { success, error, warning }
+
+Color chooseToastColor(ToastState state) {
+  Color color;
+  switch (state) {
+    case ToastState.success:
+      color = Colors.green;
+      break;
+    case ToastState.warning:
+      color = Colors.amber;
+      break;
+    case ToastState.error:
+      color = Colors.red;
+      break;
+  }
+  return color;
+}
+
+Widget myHorizontalDivider() => Padding(
+      padding: const EdgeInsets.only(left: 10, top: 8, bottom: 8, right: 10),
+      child: Container(
+        width: double.infinity,
+        height: 1.0,
+        color: Colors.grey.withOpacity(0.5),
+      ),
+    );
+
+Widget myVerticalDivider() => Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: 1.0,
+        height: double.infinity,
+        color: greyLightColor.withOpacity(0.5),
+      ),
+    );
+
+class GeneralButton extends StatelessWidget {
+  double width;
+  double height;
+  double radius;
+  double offSet;
+  Color btnBackgroundColor;
+  String title;
+  Function onPress;
+  double fontSize;
+  Color txtColor;
+
+  GeneralButton({
+    Key? key,
+    this.width = double.infinity,
+    this.height = 50,
+    this.radius = 8,
+    this.offSet = 15,
+    this.fontSize = 18,
+    this.btnBackgroundColor = blueColor,
+    this.txtColor = whiteColor,
+    required this.title,
+    required this.onPress,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: () {
+        onPress();
+      },
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius),
+            color: btnBackgroundColor),
+        child: Center(
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: titleStyle.copyWith(
+                color: txtColor,
+                fontWeight: FontWeight.normal,
+                fontSize: fontSize),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GeneralUnfilledButton extends StatelessWidget {
+  final String title;
+  final String? image;
+  final Color color;
+  final Color borderColor;
+  final Function onPress;
+  final double width;
+  final double height;
+  final double btnRadius;
+  final double borderWidth;
+  final double titleSize;
+
+  const GeneralUnfilledButton({
+    Key? key,
+    required this.title,
+    this.color = blueColor,
+    this.borderColor = blueColor,
+    required this.onPress,
+    this.width = 50,
+    this.height = 50,
+    this.btnRadius = 8,
+    this.borderWidth = 2,
+    this.image,
+    this.titleSize = 14,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: () {
+        onPress();
+      },
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(btnRadius),
+          border: Border.all(color: borderColor, width: borderWidth),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.15),
+              spreadRadius: 2,
+              blurRadius: 2,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          color: whiteColor,
+        ),
+        child: Row(
+          children: [
+            if (image != null) horizontalSmallSpace,
+            if (image != null)
+              Image.asset(
+                '$image',
+                fit: BoxFit.cover,
+                height: 30,
+                width: 30,
+              ),
+            if (image != null) horizontalSmallSpace,
+            if (image != null)
+              Expanded(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: titleSize,
+                    color: color,
+                  ),
+                ),
+              ),
+            if (image == null)
+              Expanded(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: titleSize,
+                    color: color,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GeneralAppBar extends StatelessWidget with PreferredSizeWidget {
+  String title;
+  double? leadingWidth;
+  bool? centerTitle;
+  Color? appBarColor;
+  Widget? leading;
+  List<Widget>? actions;
+
+  double? appbarPreferredSize;
+  Color? appbarBackButtonColor;
+
+  GeneralAppBar(
+      {Key? key,
+      required this.title,
+      this.leadingWidth,
+      this.centerTitle = true,
+      this.appBarColor = whiteColor,
+      this.leading,
+      this.actions,
+      this.appbarPreferredSize = 60,
+      this.appbarBackButtonColor = whiteColor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: leading ??
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: greyDarkColor,
+            ),
+          ),
+      centerTitle: centerTitle,
+      title: Text(
+        title,
+        style: titleStyle.copyWith(fontWeight: FontWeight.normal),
+      ),
+      actions: actions,
+      backgroundColor: appBarColor,
+      elevation: 0.0,
+    );
+  }
+
+  @override
+  Size get preferredSize =>
+      Size.fromHeight(appbarPreferredSize ?? kToolbarHeight);
+}
+
+class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
+  const GeneralHomeLayoutAppBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: greyExtraLightColor,
+      elevation: 0.0,
+      title: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: whiteColor,
+            radius: 15,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: CachedNetworkImage(
+                imageUrl: 'https://avatars.githubusercontent.com/u/34916493?s=400&u=e7300b829193270fbcd03a813551a3702299cbb1&v=4',
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                        color: blueColor,
+                      )),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: whiteColor),
+                  child: const Icon(
+                    Icons.perm_identity,
+                    size: 100,
+                    color: blueColor,
+                  ),
+                ),
+                width: 120,
+                height: 120,
+              ),
+            ),
+          ),
+          horizontalMiniSpace,
+          Expanded(
+            child: Text(
+              '${LocaleKeys.homeTxtWelcome.tr()} Mohamed ,',
+              textAlign: TextAlign.start ,
+              style: titleSmallStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              FadeRoute(
+                page: const SearchScreen(),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.search,
+            size: 30,
+            color: blueColor,
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              FadeRoute(
+                page: const CardScreen(),
+              ),
+            );
+          },
+          child: Stack(
+            alignment: AlignmentDirectional.centerEnd,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    FadeRoute(
+                      page: const CardScreen(),
+                    ),
+                  );
+                },
+                icon: const ImageIcon(
+                  AssetImage(
+                    'assets/images/lab.png',
+                  ),
+                  color: blueColor,
+                ),
+              ),
+              // Image.asset('assets/images/science.png',color: blueColor,),
+              const CircleAvatar(
+                radius: 12,
+                backgroundColor: whiteColor,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: redColor,
+                  child: Text(
+                    '3',
+                    style: TextStyle(color: whiteColor),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              FadeRoute(
+                page: const NotificationScreen(),
+              ),
+            );
+          },
+          icon: const ImageIcon(
+            AssetImage('assets/images/notification.png'),
+            color: blueColor,
+          ),
+        ),
+        horizontalMicroSpace
+      ],
+    );
+  }
+
+  @override
+  //  TODO: implement preferredSize
+  Size get preferredSize => const Size.fromHeight(40);
+}
+
+class DefaultTextButton extends StatelessWidget {
+  String title;
+  Widget? screen;
+  bool isFinish;
+  AlignmentDirectional align;
+  FontWeight? weight;
+
+  DefaultTextButton(
+      {Key? key,
+      required this.title,
+      this.weight = FontWeight.w400,
+      this.screen,
+      this.isFinish = false,
+      this.align = AlignmentDirectional.centerEnd})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(end: 20.0),
+      child: Align(
+        alignment: align,
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            color: blueColor,
+            fontFamily: fontFamily,
+            fontWeight: weight,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DefaultFormField extends StatelessWidget {
+  TextEditingController controller;
+  TextInputType type;
+  Function? onSubmit;
+  Function? onChange;
+  dynamic validate;
+  dynamic onTap;
+  bool obscureText = false;
+  String label;
+  Widget? prefixIcon;
+  Function? prefixPressed;
+  IconData? suffixIcon;
+  Color suffixColor;
+  Color prefixColor;
+  Function? suffixPressed;
+  bool isClickable = true;
+  bool readOnly = false;
+  bool autoFocus = false;
+  bool removeBorder;
+  double height;
+  EdgeInsetsGeometry? contentPadding;
+  String? hintText;
+  bool expend;
+  bool isConfirm = false;
+  String? confirm;
+  FocusNode? focusNode;
+
+  DefaultFormField({
+    Key? key,
+    this.focusNode,
+    required this.controller,
+    required this.type,
+    this.expend = false,
+    this.onSubmit,
+    this.onChange,
+    this.validate,
+    this.onTap,
+    this.hintText,
+    this.removeBorder = true,
+    this.obscureText = false,
+    this.prefixColor = blueColor,
+    required this.label,
+    this.prefixIcon,
+    this.prefixPressed,
+    this.suffixIcon,
+    this.suffixColor = blueColor,
+    this.suffixPressed,
+    this.isClickable = true,
+    this.readOnly = false,
+    this.contentPadding,
+    this.height = 80,
+    this.autoFocus = false,
+    this.isConfirm = false,
+    this.confirm,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(),
+      alignment: AlignmentDirectional.center,
+      child: TextFormField(
+        focusNode: focusNode,
+        expands: expend,
+        validator: (value) {
+          validate;
+        },
+        autofocus: autoFocus,
+        controller: controller,
+        keyboardType: type,
+        maxLines: obscureText ? 1 : null,
+        obscureText: obscureText,
+        obscuringCharacter: '*',
+        readOnly: readOnly,
+        enabled: isClickable,
+        onFieldSubmitted: (val) {
+          onSubmit;
+        },
+        onChanged: (val) {
+          onChange;
+        },
+        onTap: () {
+          onTap();
+        },
+        cursorColor: blueColor,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hintText,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 1,
+              color: greyExtraLightColor.withOpacity(0.4),
+            ),
+          ),
+          prefixIcon: prefixIcon != null
+              ? IconButton(
+                  icon: prefixIcon!,
+                  onPressed: () {
+                    prefixPressed;
+                  },
+                )
+              : null,
+          suffixIcon: IconButton(
+            onPressed: () {
+              suffixPressed!();
+            },
+            icon: Icon(suffixIcon),
+            color: blueColor,
+          ),
+          hintStyle: const TextStyle(color: greyDarkColor, fontSize: 14),
+          labelStyle: const TextStyle(
+            // color: isClickable ? Colors.grey[400] : blueColor,
+            color: greyDarkColor,
+            fontSize: 14,
+          ),
+          fillColor: Colors.white,
+          filled: true,
+          errorStyle: const TextStyle(color: redColor),
+          // floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: contentPadding ??
+              const EdgeInsetsDirectional.only(
+                  start: 15.0, end: 15.0, bottom: 15.0, top: 15.0),
+        ),
+        style: const TextStyle(
+            color: blueLightColor, fontSize: 18, fontFamily: fontFamily),
+      ),
+    );
+  }
+}
+
+Widget textLabel({required String title}) {
+  return Text(
+    title,
+    style: titleSmallStyle.copyWith(fontWeight: FontWeight.normal),
+  );
+}
+
+final otpInputDecoration = InputDecoration(
+  contentPadding: const EdgeInsets.symmetric(vertical: 15),
+  border: outlineInputBorder(),
+  focusedBorder: outlineInputBorder(),
+  enabledBorder: outlineInputBorder(),
+);
+
+// class DownloadImage extends StatefulWidget {
+//   const DownloadImage({Key? key, required this.imageUrl}) : super(key: key);
+//   final imageUrl;
+//   @override
+//   State<DownloadImage> createState() => _DownloadImageState();
+// }
+//
+// class _DownloadImageState extends State<DownloadImage> {
+//   final Dio dio = Dio();
+//   bool loading = false;
+//   double progress = 0;
+//
+//   Future<bool> saveVideo(String url, String fileName) async {
+//     Directory? directory;
+//     try {
+//       if (Platform.isAndroid) {
+//         if (await _requestPermission(Permission.storage)) {
+//           directory = await getExternalStorageDirectory();
+//           String newPath = "";
+//           if (kDebugMode) {
+//             print(directory);
+//           }
+//           List<String> paths = directory!.path.split("/");
+//           for (int x = 1; x < paths.length; x++) {
+//             String folder = paths[x];
+//             if (folder != "Android") {
+//               newPath += "/" + folder;
+//             } else {
+//               break;
+//             }
+//           }
+//           newPath = newPath + "/DarAltepApp";
+//           directory = Directory(newPath);
+//         } else {
+//           return false;
+//         }
+//       } else {
+//         if (await _requestPermission(Permission.photos)) {
+//           directory = await getTemporaryDirectory();
+//         } else {
+//           return false;
+//         }
+//       }
+//       File saveFile = File(directory.path + "/$fileName");
+//       if (!await directory.exists()) {
+//         await directory.create(recursive: true);
+//       }
+//       if (await directory.exists()) {
+//         await dio.download(url, saveFile.path,
+//             onReceiveProgress: (value1, value2) {
+//               setState(() {
+//                 progress = value1 / value2;
+//               });
+//             });
+//         if (Platform.isIOS) {
+//           await GallerySaver.saveFile(saveFile.path);
+//         }
+//         return true;
+//       }
+//       return false;
+//     } catch (e) {
+//       if (kDebugMode) {
+//         print(e);
+//       }
+//       return false;
+//     }
+//   }
+//
+//   Future<bool> _requestPermission(Permission permission) async {
+//     if (await permission.isGranted) {
+//       return true;
+//     } else {
+//       var result = await permission.request();
+//       if (result == PermissionStatus.granted) {
+//         return true;
+//       }
+//     }
+//     return false;
+//   }
+//
+//   downloadFile() async {
+//     setState(() {
+//       loading = true;
+//       progress = 0;
+//     });
+//     bool downloaded = await saveVideo(
+//         widget.imageUrl,
+//         "DarAltep.jpeg");
+//
+//     if (downloaded) {
+//       if (kDebugMode) {
+//         print("File Downloaded");
+//       }
+//     } else {
+//       if (kDebugMode) {
+//         print("Problem Downloading File");
+//       }
+//     }
+//     setState(() {
+//       loading = false;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: loading
+//           ? Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: LinearProgressIndicator(
+//           minHeight: 10,
+//           value: progress,
+//         ),
+//       ):GeneralButton(
+//         title: 'Download',
+//         radius: 8,
+//         btnBackgroundColor: blueLight,
+//         onPress: downloadFile,
+//       ),
+//     );
+//   }
+// }
+
+OutlineInputBorder outlineInputBorder() {
+  return OutlineInputBorder(
+    borderRadius: BorderRadius.circular(15),
+    borderSide: const BorderSide(color: blueColor),
+  );
+}
+
+class FadeRoute extends PageRouteBuilder {
+  final Widget page;
+
+  FadeRoute({
+    required this.page,
+  }) : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+}
+
+void showPopUp(BuildContext context, Widget widget) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      content: widget,
+      contentPadding: const EdgeInsets.all(0.0),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(radius))),
+    ),
+  );
+}
+
+void printWrapped(String text) {
+  final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+  pattern.allMatches(text).forEach((match) {
+    if (kDebugMode) {
+      print(match.group(0));
+    }
+  });
+}
+
+class ScreenHolder extends StatelessWidget {
+  final String msg;
+
+  const ScreenHolder(this.msg, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'There is no $msg Yet',
+        textAlign: TextAlign.center,
+        style:
+            Theme.of(context).textTheme.headline5?.copyWith(color: blueColor),
+      ),
+    );
+  }
+}
+
+void showCustomBottomSheet(
+  BuildContext context, {
+  required Widget bottomSheetContent,
+  required double bottomSheetHeight,
+}) {
+  showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      context: context,
+      builder: (context) {
+        return ScreenUtilInit(
+          builder: (ctx, _) {
+            return SizedBox(
+              height: bottomSheetHeight.sh,
+              child: bottomSheetContent,
+            );
+          },
+        );
+      });
+}
+
+class MySeparator extends StatelessWidget {
+  final double height;
+  final Color color;
+
+  const MySeparator({
+    super.key,
+    this.height = 1,
+    this.color = greyLightColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final boxWidth = constraints.constrainWidth();
+          const dashWidth = 5.0;
+          final dashHeight = height;
+          final dashCount = (boxWidth / (2 * dashWidth)).floor();
+          return Flex(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            direction: Axis.horizontal,
+            children: List.generate(dashCount, (_) {
+              return SizedBox(
+                width: dashWidth,
+                height: dashHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: color),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
+}
+
+Widget doneKeyboard() {
+  return const Text(
+    'done',
+    style: titleSmallStyle,
+  );
+}
