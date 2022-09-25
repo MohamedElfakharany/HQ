@@ -119,10 +119,7 @@ class _MapScreenState extends State<MapScreen> {
             //   ),
             //   width: double.infinity,
             // ),
-            title: const Text(
-              '',
-              style: titleStyle,
-            ),
+            title: const Icon(Icons.gps_fixed_outlined,color: blueColor,),
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             leading: IconButton(
