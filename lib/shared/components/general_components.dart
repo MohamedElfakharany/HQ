@@ -4,9 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hq/cubit/cubit.dart';
+import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/notification_screen.dart';
 import 'package:hq/screens/main_screens/search_screen.dart';
@@ -267,130 +270,159 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: greyExtraLightColor,
-      elevation: 0.0,
-      title: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: whiteColor,
-            radius: 15,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: CachedNetworkImage(
-                imageUrl: 'https://avatars.githubusercontent.com/u/34916493?s=400&u=e7300b829193270fbcd03a813551a3702299cbb1&v=4',
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Center(
-                      child: CircularProgressIndicator(
-                        color: blueColor,
-                      )),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: whiteColor),
-                  child: const Icon(
-                    Icons.perm_identity,
-                    size: 100,
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return AppBar(
+          backgroundColor: greyExtraLightColor,
+          elevation: 0.0,
+          title: Row(
+            children: [
+              if (AppCubit.get(context).isVisitor == true)
+                CircleAvatar(
+                  backgroundColor: whiteColor,
+                  radius: 15,
+                  child: Image.asset(
+                    'assets/images/profile.png',
+                    width: 25,
+                    height: 35,
                     color: blueColor,
                   ),
                 ),
-                width: 120,
-                height: 120,
-              ),
-            ),
-          ),
-          horizontalMiniSpace,
-          Expanded(
-            child: Text(
-              '${LocaleKeys.homeTxtWelcome.tr()} Mohamed ,',
-              textAlign: TextAlign.start ,
-              style: titleSmallStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: const SearchScreen(),
-              ),
-            );
-          },
-          icon: const Icon(
-            Icons.search,
-            size: 30,
-            color: blueColor,
-          ),
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: const CardScreen(),
-              ),
-            );
-          },
-          child: Stack(
-            alignment: AlignmentDirectional.centerEnd,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    FadeRoute(
-                      page: const CardScreen(),
+              if (AppCubit.get(context).isVisitor == false)
+                CircleAvatar(
+                  backgroundColor: whiteColor,
+                  radius: 15,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://avatars.githubusercontent.com/u/34916493?s=400&u=e7300b829193270fbcd03a813551a3702299cbb1&v=4',
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: Center(
+                            child: CircularProgressIndicator(
+                          color: blueColor,
+                        )),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: whiteColor),
+                        child: const Icon(
+                          Icons.perm_identity,
+                          size: 100,
+                          color: blueColor,
+                        ),
+                      ),
+                      width: 120,
+                      height: 120,
                     ),
-                  );
-                },
-                icon: const ImageIcon(
-                  AssetImage(
-                    'assets/images/lab.png',
                   ),
-                  color: blueColor,
                 ),
-              ),
-              // Image.asset('assets/images/science.png',color: blueColor,),
-              const CircleAvatar(
-                radius: 12,
-                backgroundColor: whiteColor,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: redColor,
+              horizontalMiniSpace,
+              if (AppCubit.get(context).isVisitor == false)
+                Expanded(
                   child: Text(
-                    '3',
-                    style: TextStyle(color: whiteColor),
+                    '${LocaleKeys.homeTxtWelcome.tr()} Mohamed ,',
+                    textAlign: TextAlign.start,
+                    style: titleSmallStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              ),
+              if (AppCubit.get(context).isVisitor == true)
+                Expanded(
+                  child: Text(
+                    '${LocaleKeys.homeTxtWelcome.tr()} ,',
+                    textAlign: TextAlign.start,
+                    style: titleSmallStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
             ],
           ),
-        ),
-        IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: const NotificationScreen(),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  FadeRoute(
+                    page: const SearchScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.search,
+                size: 30,
+                color: blueColor,
               ),
-            );
-          },
-          icon: const ImageIcon(
-            AssetImage('assets/images/notification.png'),
-            color: blueColor,
-          ),
-        ),
-        horizontalMicroSpace
-      ],
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  FadeRoute(
+                    page: const CardScreen(),
+                  ),
+                );
+              },
+              child: Stack(
+                alignment: AlignmentDirectional.centerEnd,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: const CardScreen(),
+                        ),
+                      );
+                    },
+                    icon: const ImageIcon(
+                      AssetImage(
+                        'assets/images/lab.png',
+                      ),
+                      color: blueColor,
+                    ),
+                  ),
+                  // Image.asset('assets/images/science.png',color: blueColor,),
+                  const CircleAvatar(
+                    radius: 12,
+                    backgroundColor: whiteColor,
+                    child: CircleAvatar(
+                      radius: 10,
+                      backgroundColor: redColor,
+                      child: Text(
+                        '3',
+                        style: TextStyle(color: whiteColor),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  FadeRoute(
+                    page: const NotificationScreen(),
+                  ),
+                );
+              },
+              icon: const ImageIcon(
+                AssetImage('assets/images/notification.png'),
+                color: blueColor,
+              ),
+            ),
+            horizontalMicroSpace
+          ],
+        );
+      },
     );
   }
 

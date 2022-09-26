@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -121,7 +120,7 @@ class _MapScreenState extends State<MapScreen> {
             // ),
             title: const Icon(Icons.gps_fixed_outlined,color: blueColor,),
             elevation: 0.0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: whiteColor,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,

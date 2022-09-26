@@ -1,9 +1,11 @@
+// ignore_for_file: body_might_complete_normally_nullable
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/main_screens/profile/address_screen/address_screen.dart';
+import 'package:hq/screens/main_screens/profile/address_screen/map_screen.dart';
 import 'package:hq/screens/main_screens/reservations/reservation_overview.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -20,17 +22,33 @@ class ReservationDetailsScreen extends StatefulWidget {
 }
 
 class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
-  final memberItems = ['Mohamed Elfakharany (Me)', 'Ahmed (Son)','salim (Father)','omar (brother)',];
+  final memberItems = [
+    'Mohamed (Me)',
+    'Ahmed (Son)',
+    'salim (Father)',
+    'omar (brother)',
+  ];
   String? memberValue;
-  final locationItems = ['Riyadh , Abdallah St 1', 'Riyadh , King tower St 2','Riyadh , Abdallah St 3','Riyadh , Abdallah St 4',];
+  final locationItems = [
+    'Riyadh , Abdallah St 1',
+    'Riyadh , King tower St 2',
+    'Riyadh , Abdallah St 3',
+    'Riyadh , Abdallah St 4',
+  ];
   String? locationValue;
-  final branchItems = ['${LocaleKeys.txtBranch.tr()} 1', '${LocaleKeys.txtBranch.tr()} 2' ,'${LocaleKeys.txtBranch.tr()} 3','${LocaleKeys.txtBranch.tr()} 4'];
+  final branchItems = [
+    '${LocaleKeys.txtBranch.tr()} 1',
+    '${LocaleKeys.txtBranch.tr()} 2',
+    '${LocaleKeys.txtBranch.tr()} 3',
+    '${LocaleKeys.txtBranch.tr()} 4'
+  ];
   String? branchValue;
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
-      listener: (context, state){},
-      builder: (context,state){
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -39,7 +57,8 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
             appBarColor: greyExtraLightColor,
           ),
           body: Padding(
-            padding: const EdgeInsets.only(right: 20.0,left: 20.0,bottom: 20.0),
+            padding:
+                const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -48,44 +67,84 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                   style: titleStyle.copyWith(fontWeight: FontWeight.w500),
                 ),
                 verticalMiniSpace,
-                Container(
-                  height: 50.0,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(radius),
-                  ),
-                  alignment: AlignmentDirectional.center,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButtonFormField<String>(
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Relation Required';
-                        }
-                      },
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.perm_identity_rounded,color: greyLightColor,size: 30,),
-                        contentPadding: EdgeInsetsDirectional.only(
-                            start: 20.0, end: 0.0,),
-                        fillColor: Colors.white,
-                        filled: true,
-                        errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
-                        border: InputBorder.none,
+                if (AppCubit.get(context).isVisitor == true)
+                  Container(
+                    height: 50.0,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(radius),
+                    ),
+                    alignment: AlignmentDirectional.center,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.perm_identity_rounded,
+                            color: greyLightColor,
+                            size: 30,
+                          ),
+                          horizontalMiniSpace,
+                          Text(
+                            LocaleKeys.txtPatient.tr(),
+                          ),
+                        ],
                       ),
-                      value: memberItems.first,
-                      isExpanded: true,
-                      iconSize: 30,
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded,color: blueColor,),
-                      items: memberItems.map(buildMenuItem).toList(),
-                      onChanged: (value) =>
-                          setState(() => memberValue = value),
-                      onSaved: (v) {
-                        FocusScope.of(context).unfocus();
-                      },
                     ),
                   ),
-                ),
+                if (AppCubit.get(context).isVisitor == false)
+                  Container(
+                    height: 50.0,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(radius),
+                    ),
+                    alignment: AlignmentDirectional.center,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButtonFormField<String>(
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Relation Required';
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.perm_identity_rounded,
+                            color: greyLightColor,
+                            size: 30,
+                          ),
+                          contentPadding: EdgeInsetsDirectional.only(
+                            start: 20.0,
+                            end: 0.0,
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
+                          errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
+                          border: InputBorder.none,
+                        ),
+                        value: memberItems.first,
+                        isExpanded: true,
+                        iconSize: 30,
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: blueColor,
+                        ),
+                        items: memberItems.map(buildMenuItem).toList(),
+                        onChanged: (value) =>
+                            setState(() => memberValue = value),
+                        onSaved: (v) {
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
+                    ),
+                  ),
                 verticalMiniSpace,
                 Text(
                   LocaleKeys.TxtPopUpReservationType.tr(),
@@ -100,7 +159,8 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                     borderRadius: BorderRadius.circular(radius),
                   ),
                   alignment: AlignmentDirectional.center,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -113,7 +173,8 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                               style: titleSmallStyle.copyWith(color: blueColor),
                             ),
                             const Spacer(),
-                            Image.asset('assets/images/atLabIcon.png',height: 30,width: 20,color: greyDarkColor),
+                            Image.asset('assets/images/atLabIcon.png',
+                                height: 30, width: 20, color: greyDarkColor),
                             horizontalSmallSpace,
                           ],
                         ),
@@ -128,22 +189,42 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                               }
                             },
                             decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.location_on_rounded,color: greyLightColor,size: 30,),
+                              prefixIcon: const Icon(
+                                Icons.location_on_rounded,
+                                color: greyLightColor,
+                                size: 30,
+                              ),
                               contentPadding: const EdgeInsetsDirectional.only(
-                                  start: 20.0, end: 0.0,bottom: 15.0),
+                                  start: 20.0, end: 0.0, bottom: 15.0),
                               fillColor: Colors.white,
                               filled: true,
-                              errorStyle: const TextStyle(color: Color(0xFF4F4F4F)),
+                              errorStyle:
+                                  const TextStyle(color: Color(0xFF4F4F4F)),
                               border: InputBorder.none,
-                              suffixIcon: IconButton(onPressed: (){
-                                Navigator.push(context, FadeRoute(page: const AddressScreen(),),);
-                              }, icon: const Icon(Icons.add_location_alt_outlined,color: blueColor,),),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    FadeRoute(
+                                      page: MapScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.add_location_alt_outlined,
+                                  color: blueColor,
+                                ),
+                              ),
                             ),
                             value: locationItems.first,
                             isExpanded: true,
                             iconSize: 30,
-                            icon: const Icon(Icons.keyboard_arrow_down_rounded,color: blueColor,),
-                            items: locationItems.map(buildLocationItem).toList(),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: blueColor,
+                            ),
+                            items:
+                                locationItems.map(buildLocationItem).toList(),
                             onChanged: (value) =>
                                 setState(() => locationValue = value),
                             onSaved: (v) {
@@ -162,9 +243,13 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                               }
                             },
                             decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.location_on_rounded,color: greyLightColor,size: 30,),
+                              prefixIcon: Icon(
+                                Icons.location_on_rounded,
+                                color: greyLightColor,
+                                size: 30,
+                              ),
                               contentPadding: EdgeInsetsDirectional.only(
-                                  start: 20.0, end: 0.0,bottom: 5.0),
+                                  start: 20.0, end: 0.0, bottom: 5.0),
                               fillColor: Colors.white,
                               filled: true,
                               errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
@@ -174,7 +259,10 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                             value: branchItems.first,
                             isExpanded: true,
                             iconSize: 30,
-                            icon: const Icon(Icons.keyboard_arrow_down_rounded,color: blueColor,),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: blueColor,
+                            ),
                             items: branchItems.map(buildLocationItem).toList(),
                             onChanged: (value) =>
                                 setState(() => branchValue = value),
@@ -190,7 +278,12 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                 const Spacer(),
                 MaterialButton(
                   onPressed: () {
-                    Navigator.push(context, FadeRoute(page: const ReservationOverviewScreen(),),);
+                    Navigator.push(
+                      context,
+                      FadeRoute(
+                        page: const ReservationOverviewScreen(),
+                      ),
+                    );
                   },
                   child: Container(
                     height: 50,
@@ -200,12 +293,12 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
                     ),
                     child: Center(
                         child: Text(
-                          LocaleKeys.BtnContinue.tr(),
-                          style: titleStyle.copyWith(
-                              fontSize: 20.0,
-                              color: whiteColor,
-                              fontWeight: FontWeight.normal),
-                        )),
+                      LocaleKeys.BtnContinue.tr(),
+                      style: titleStyle.copyWith(
+                          fontSize: 20.0,
+                          color: whiteColor,
+                          fontWeight: FontWeight.normal),
+                    )),
                   ),
                 ),
                 verticalMiniSpace,
@@ -227,7 +320,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
       );
 
   DropdownMenuItem<String> buildLocationItem(String item) => DropdownMenuItem(
-    value: item,
-    child: Text(item),
-  );
+        value: item,
+        child: Text(item),
+      );
 }

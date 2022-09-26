@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/models/model_test.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
+import 'package:hq/screens/main_screens/test_items_screen/test_details_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_items_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
 import 'package:hq/shared/components/general_components.dart';
@@ -306,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       FadeRoute(
-                        page: const TestItemsScreen(),
+                        page: const TestDetailsScreen(),
                       ),
                     );
                   },

@@ -210,10 +210,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 TextButton(
                   onPressed: () {
                     AppCubit.get(context).isVisitor = true;
-                    navigateAndFinish(
-                      context,
-                      const SelectCountryScreen(),
-                    );
+                    Navigator.push(context, FadeRoute(page: const SelectCountryScreen(),),);
                   },
                   child: Text(
                     LocaleKeys.BtnContinueAsGuest.tr(),

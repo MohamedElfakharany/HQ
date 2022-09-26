@@ -100,7 +100,7 @@ class AddressScreen extends StatelessWidget {
                                   height: 35,
                                   width: 90,
                                   decoration: BoxDecoration(
-                                    color: blueColor,
+                                    color: redColor,
                                     borderRadius:
                                         BorderRadius.circular(radius),
                                   ),
@@ -111,12 +111,12 @@ class AddressScreen extends StatelessWidget {
                                         CrossAxisAlignment.center,
                                     children: [
                                       const Icon(
-                                        Icons.edit,
+                                        Icons.delete,
                                         color: whiteColor,
                                       ),
                                       horizontalMicroSpace,
                                       Text(
-                                        'Edit',
+                                        LocaleKeys.BtnDelete.tr(),
                                         style: subTitleSmallStyle2.copyWith(
                                             color: whiteColor),
                                       ),

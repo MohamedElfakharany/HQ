@@ -11,6 +11,7 @@ import 'package:hq/screens/main_screens/profile/family/family_screen.dart';
 import 'package:hq/screens/main_screens/profile/medical_inquiries/medical_inquiries_screen.dart';
 import 'package:hq/screens/main_screens/profile/region_settings/region_settings.dart';
 import 'package:hq/screens/main_screens/profile/terms_conditions_screen.dart';
+import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -30,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        print (AppCubit.get(context).isVisitor);
         return Scaffold(
           backgroundColor: whiteColor,
           body: Column(
@@ -48,43 +50,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(70.0),
-                        child: CachedNetworkImage(
-                          imageUrl: imageTest,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => const SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              color: blueColor,
-                            )),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: whiteColor),
-                            child: const Icon(
-                              Icons.perm_identity,
-                              size: 100,
-                              color: blueColor,
+                      if (AppCubit.get(context).isVisitor == true)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(70.0),
+                          child: CachedNetworkImage(
+                            imageUrl: '',
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: blueColor,
+                              )),
                             ),
+                            errorWidget: (context, url, error) => Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: whiteColor),
+                              child: const Icon(
+                                Icons.perm_identity,
+                                size: 100,
+                                color: blueColor,
+                              ),
+                            ),
+                            width: 120,
+                            height: 120,
                           ),
-                          width: 120,
-                          height: 120,
                         ),
-                      ),
+                      if (AppCubit.get(context).isVisitor == false)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(70.0),
+                          child: CachedNetworkImage(
+                            imageUrl: imageTest,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: blueColor,
+                              )),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: whiteColor),
+                              child: const Icon(
+                                Icons.perm_identity,
+                                size: 100,
+                                color: blueColor,
+                              ),
+                            ),
+                            width: 120,
+                            height: 120,
+                          ),
+                        ),
                       horizontalSmallSpace,
+                      if (AppCubit.get(context).isVisitor == false)
                         Text(
-                          'Mohamed Elfakharany',
-                          style: titleStyle.copyWith(color: whiteColor),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                        ),
+                        'Mohamed Elfakharany',
+                        style: titleStyle.copyWith(color: whiteColor),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                      ),
                       verticalMiniSpace,
-                      Text(
+                      if (AppCubit.get(context).isVisitor == false)
+                        Text(
                         'mohmedelfakharany@gmail.com',
                         style: titleSmallStyle.copyWith(color: whiteColor),
                         overflow: TextOverflow.ellipsis,
@@ -103,7 +136,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
+                        if (AppCubit.get(context).isVisitor == false)
+                          Container(
                           height: 160,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(radius + 5),
@@ -203,12 +237,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         verticalSmallSpace,
                         InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              FadeRoute(
-                                page: const MedicalInquiriesScreen(),
-                              ),
-                            );
+                            if (AppCubit.get(context).isVisitor == true) {
+                              showPopUp(context, const VisitorHoldingPopUp(),);
+                            }
+                            else{
+                              Navigator.push(
+                                context,
+                                FadeRoute(
+                                  page: const MedicalInquiriesScreen(),
+                                ),
+                              );
+                            }
                           },
                           child: Row(
                             children: [
@@ -245,12 +284,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         verticalMediumSpace,
                         InkWell(
                           onTap: () {
+                            if (AppCubit.get(context).isVisitor == true) {
+                              showPopUp(context, const VisitorHoldingPopUp(),);
+                            }else{
                             Navigator.push(
                               context,
                               FadeRoute(
                                 page: const EditProfileScreen(),
                               ),
-                            );
+                            );}
                           },
                           child: Row(
                             children: [
@@ -276,12 +318,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         verticalMediumSpace,
                         InkWell(
                           onTap: () {
+                            if (AppCubit.get(context).isVisitor == true) {
+                              showPopUp(context, const VisitorHoldingPopUp(),);
+                            }else {
                             Navigator.push(
                               context,
                               FadeRoute(
                                 page: const FamilyScreen(),
                               ),
-                            );
+                            );}
                           },
                           child: Row(
                             children: [
@@ -307,12 +352,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         verticalMediumSpace,
                         InkWell(
                           onTap: () {
+                            if (AppCubit.get(context).isVisitor == true) {
+                              showPopUp(context, const VisitorHoldingPopUp(),);
+                            }else {
                             Navigator.push(
                               context,
                               FadeRoute(
                                 page: const AddressScreen(),
                               ),
-                            );
+                            );}
                           },
                           child: Row(
                             children: [
@@ -438,7 +486,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             FadeRoute(
                                               page: const OnBoardingScreen(),
                                             ),
-                                            (route) => false);
+                                            (route) => true);
                                       },
                                     ),
                                     verticalSmallSpace,

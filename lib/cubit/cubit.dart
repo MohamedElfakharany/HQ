@@ -17,7 +17,7 @@ class AppCubit extends Cubit<AppStates>{
   IconData loginSufIcon = Icons.visibility_off;
   bool loginIsPassword = true;
 
-  bool isVisitor = false;
+  bool? isVisitor;
 
   bool isEnglish = true;
 

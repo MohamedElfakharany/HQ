@@ -1,5 +1,7 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
+// ignore_for_file: constant_identifier_names
+
 abstract class  LocaleKeys {
   static const onboardingTitle = 'onboardingTitle';
   static const onboardingBody = 'onboardingBody';
@@ -218,6 +220,7 @@ abstract class  LocaleKeys {
   static const txtDidntReseveCode = 'txtDidntReseveCode';
   static const resetTxtForth = 'resetTxtForth';
   static const txtTestCategories = 'txtTestCategories';
+  static const txtPleaseSignInFirst = 'txtPleaseSignInFirst';
 }
 
 

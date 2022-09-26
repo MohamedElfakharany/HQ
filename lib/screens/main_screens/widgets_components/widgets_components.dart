@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/model_test.dart';
+import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_details_screen.dart';
@@ -985,6 +986,36 @@ class _TestItemCardState extends State<TestItemCard> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class VisitorHoldingPopUp extends StatelessWidget {
+  const VisitorHoldingPopUp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 350,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          verticalSmallSpace,
+          Image.asset(
+            'assets/images/logo.png',
+            width: 150,
+            height: 150,
+          ),
+          verticalLargeSpace,
+          Text(LocaleKeys.txtPleaseSignInFirst.tr(),style: titleStyle,),
+          verticalLargeSpace,
+          GeneralButton(title: LocaleKeys.BtnSignIn.tr(), onPress: (){
+            AppCubit.get(context).currentIndex = 0;
+            Navigator.pushAndRemoveUntil(context, FadeRoute(page: const OnBoardingScreen(),), (route) => false);
+          }),
+          verticalLargeSpace,
         ],
       ),
     );

@@ -8,6 +8,7 @@ import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/screens/main_screens/reservations/home_reservation_screen.dart';
 import 'package:hq/screens/main_screens/reservations/lab_reservation.dart';
 import 'package:hq/screens/main_screens/test_items_screen/read_more_screen.dart';
+import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -71,10 +72,13 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                             children: [
                               Text(
                                 LocaleKeys.Male.tr(),
-                                style: TextStyle(color: whiteColor),
+                                style: const TextStyle(color: whiteColor),
                               ),
                               horizontalMicroSpace,
-                              Icon(Icons.male,color: whiteColor,),
+                              const Icon(
+                                Icons.male,
+                                color: whiteColor,
+                              ),
                             ],
                           ),
                         ),
@@ -196,121 +200,159 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
               children: [
                 MaterialButton(
                   onPressed: () {
-                    showCustomBottomSheet(
-                      context,
-                      bottomSheetContent: Container(
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(radius),
-                            topRight: Radius.circular(radius),
+                    if (AppCubit.get(context).isVisitor == false) {
+                      showCustomBottomSheet(
+                        context,
+                        bottomSheetContent: Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(radius),
+                              topRight: Radius.circular(radius),
+                            ),
+                          ),
+                          padding: const EdgeInsetsDirectional.only(
+                              start: 20.0, end: 20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                LocaleKeys.TxtPopUpReservationType.tr(),
+                                style: titleStyle,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                              Text(
+                                LocaleKeys.TxtPopUpReservationTypeSecond.tr(),
+                                style: subTitleSmallStyle.copyWith(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              verticalSmallSpace,
+                              InkWell(
+                                onTap: () {
+                                  if (kDebugMode) {
+                                    print('lab');
+                                  }
+                                  Navigator.push(
+                                    context,
+                                    FadeRoute(
+                                      page: const LabReservationScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(radius),
+                                    border:
+                                        Border.all(width: 1, color: blueColor),
+                                    color: greyExtraLightColor,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      horizontalSmallSpace,
+                                      Text(
+                                        LocaleKeys.BtnAtLab.tr(),
+                                        style: titleStyle.copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          color: blueColor,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Image.asset('assets/images/atLabIcon.png',
+                                          height: 40,
+                                          width: 30,
+                                          color: blueColor),
+                                      horizontalSmallSpace,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              verticalSmallSpace,
+                              InkWell(
+                                onTap: () {
+                                  if (kDebugMode) {
+                                    print('home');
+                                  }
+                                  Navigator.push(
+                                    context,
+                                    FadeRoute(
+                                      page: const HomeReservationScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(radius),
+                                    color: greyExtraLightColor,
+                                    border:
+                                        Border.all(width: 1, color: blueColor),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      horizontalSmallSpace,
+                                      Text(
+                                        LocaleKeys.BtnAtHome.tr(),
+                                        style: titleStyle.copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          color: blueColor,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      const Icon(
+                                        Icons.home_outlined,
+                                        color: blueColor,
+                                        size: 40,
+                                      ),
+                                      horizontalSmallSpace,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              verticalSmallSpace,
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  decoration: BoxDecoration(
+                                    color: greyLightColor,
+                                    borderRadius: BorderRadius.circular(radius),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    LocaleKeys.BtnCancel.tr(),
+                                    style: titleStyle.copyWith(
+                                        fontSize: 25.0,
+                                        color: whiteColor,
+                                        fontWeight: FontWeight.normal),
+                                  )),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        padding: const EdgeInsetsDirectional.only(start: 20.0,end: 20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              LocaleKeys.TxtPopUpReservationType.tr(),
-                              style: titleStyle,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                            Text(
-                              LocaleKeys.TxtPopUpReservationTypeSecond.tr(),
-                              style: subTitleSmallStyle.copyWith(
-                                fontSize: 15,
-                              ),
-                            ),
-                            verticalSmallSpace,
-                            InkWell(
-                              onTap: (){
-                                if (kDebugMode) {
-                                  print('lab');
-                                }
-                                Navigator.push(context, FadeRoute(page: const LabReservationScreen(),),);
-                              },
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(radius),
-                                  border: Border.all(width: 1,color: blueColor),
-                                  color: greyExtraLightColor,
-                                ),
-                                child: Row(
-                                  children: [
-                                    horizontalSmallSpace,
-                                    Text(
-                                      LocaleKeys.BtnAtLab.tr(),
-                                      style: titleStyle.copyWith(fontWeight: FontWeight.normal,color: blueColor,fontSize: 20,),
-                                    ),
-                                    const Spacer(),
-                                    Image.asset('assets/images/atLabIcon.png',height: 40,width: 30,color: blueColor),
-                                    horizontalSmallSpace,
-                                  ],
-                                ),
-                              ),
-                            ),
-                            verticalSmallSpace,
-                            InkWell(
-                              onTap: (){
-                                if (kDebugMode) {
-                                  print('home');
-                                }
-                                Navigator.push(context, FadeRoute(page: const HomeReservationScreen(),),);
-                              },
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(radius),
-                                  color: greyExtraLightColor,
-                                  border: Border.all(width: 1,color: blueColor),
-                                ),
-                                child: Row(
-                                  children: [
-                                    horizontalSmallSpace,
-                                    Text(
-                                      LocaleKeys.BtnAtHome.tr(),
-                                      style: titleStyle.copyWith(fontWeight: FontWeight.normal,color: blueColor,fontSize: 20,),
-                                    ),
-                                    const Spacer(),
-                                    const Icon(Icons.home_outlined,color: blueColor,size: 40,),
-                                    horizontalSmallSpace,
-                                  ],
-                                ),
-                              ),
-                            ),
-                            verticalSmallSpace,
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                decoration: BoxDecoration(
-                                  color: greyLightColor,
-                                  borderRadius: BorderRadius.circular(radius),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                      LocaleKeys.BtnCancel.tr(),
-                                      style: titleStyle.copyWith(
-                                          fontSize: 25.0,
-                                          color: whiteColor,
-                                          fontWeight: FontWeight.normal),
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      bottomSheetHeight: 0.5,
-                    );
+                        bottomSheetHeight: 0.5,
+                      );
+                    } else {
+                      showPopUp(
+                        context,
+                        const VisitorHoldingPopUp(),
+                      );
+                    }
                   },
                   child: Container(
                     height: 50,
@@ -320,13 +362,14 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                       borderRadius: BorderRadius.circular(radius),
                     ),
                     child: Center(
-                        child: Text(
-                          LocaleKeys.TxtReservationScreenTitle.tr(),
-                      style: titleStyle.copyWith(
-                          fontSize: 20.0,
-                          color: whiteColor,
-                          fontWeight: FontWeight.normal),
-                    )),
+                      child: Text(
+                        LocaleKeys.TxtReservationScreenTitle.tr(),
+                        style: titleStyle.copyWith(
+                            fontSize: 20.0,
+                            color: whiteColor,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
                   ),
                 ),
                 MaterialButton(
@@ -342,7 +385,8 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                             topRight: Radius.circular(radius),
                           ),
                         ),
-                        padding: const EdgeInsetsDirectional.only(start: 20.0,end: 20.0),
+                        padding: const EdgeInsetsDirectional.only(
+                            start: 20.0, end: 20.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -350,7 +394,9 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                             verticalMicroSpace,
                             Row(
                               children: [
-                                SvgPicture.asset('assets/images/checkTrue.svg',),
+                                SvgPicture.asset(
+                                  'assets/images/checkTrue.svg',
+                                ),
                                 horizontalMiniSpace,
                                 Text(
                                   LocaleKeys.txtReservationSucceeded.tr(),
@@ -378,7 +424,8 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                                 ),
                               ),
                               alignment: AlignmentDirectional.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 4),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -394,17 +441,21 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                                   horizontalMiniSpace,
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         verticalMiniSpace,
                                         Text(
                                           'Fasting sugar FBS',
-                                          style: titleStyle.copyWith(fontWeight: FontWeight.normal),
+                                          style: titleStyle.copyWith(
+                                              fontWeight: FontWeight.normal),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 5.0),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 5.0),
                                           child: Text(
                                             'Sugar Checks',
                                             style: TextStyle(),
@@ -416,13 +467,16 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                                           children: [
                                             Text(
                                               '80 ${LocaleKeys.salary.tr()}',
-                                              style: titleStyle.copyWith(fontSize: 15),
+                                              style: titleStyle.copyWith(
+                                                  fontSize: 15),
                                             ),
                                             horizontalMiniSpace,
                                             Text(
                                               '100 ${LocaleKeys.salary.tr()}',
-                                              style: subTitleSmallStyle.copyWith(
-                                                decoration: TextDecoration.lineThrough,
+                                              style:
+                                                  subTitleSmallStyle.copyWith(
+                                                decoration:
+                                                    TextDecoration.lineThrough,
                                               ),
                                             ),
                                           ],
@@ -446,7 +500,8 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                                   horizontalSmallSpace,
                                   Text(
                                     LocaleKeys.txtTotal.tr(),
-                                    style: titleStyle.copyWith(fontWeight: FontWeight.normal),
+                                    style: titleStyle.copyWith(
+                                        fontWeight: FontWeight.normal),
                                   ),
                                   const Spacer(),
                                   Text(
@@ -467,32 +522,53 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                                   children: [
                                     Expanded(
                                       child: MaterialButton(
-                                          onPressed: () {
-                                            Navigator.push(context, FadeRoute(page: const CardScreen(),),);
-                                          },
-                                          height: 80.0,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: blueColor,
-                                              borderRadius: BorderRadius.circular(radius),
+                                        onPressed: () {
+
+                                          if (AppCubit.get(context).isVisitor == false) {
+                                            Navigator.push(
+                                              context,
+                                              FadeRoute(
+                                                page: const CardScreen(),
+                                              ),
+                                            );
+                                          } else {
+                                            showPopUp(
+                                              context,
+                                              const VisitorHoldingPopUp(),
+                                            );
+                                          }
+                                        },
+                                        height: 80.0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: blueColor,
+                                            borderRadius:
+                                                BorderRadius.circular(radius),
+                                          ),
+                                          height: 50.0,
+                                          width: double.infinity,
+                                          child: Center(
+                                            child: Text(
+                                              LocaleKeys.BtnCheckout.tr(),
+                                              style: titleSmallStyle.copyWith(
+                                                color: whiteColor,
+                                              ),
                                             ),
-                                            height: 50.0,
-                                            width: double.infinity,
-                                            child: Center(
-                                                child: Text(
-                                                   LocaleKeys.BtnCheckout.tr(),
-                                                  style:
-                                                  titleSmallStyle.copyWith(color: whiteColor),
-                                                )),
-                                          )),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     Expanded(
                                       child: GeneralUnfilledButton(
                                         width: double.infinity,
                                         title: LocaleKeys.BtnBrowse.tr(),
                                         onPress: () {
-                                          AppCubit.get(context).changeBottomScreen(0);
-                                          navigateAndFinish(context, const HomeLayoutScreen(),);
+                                          AppCubit.get(context)
+                                              .changeBottomScreen(0);
+                                          navigateAndFinish(
+                                            context,
+                                            const HomeLayoutScreen(),
+                                          );
                                         },
                                       ),
                                     ),

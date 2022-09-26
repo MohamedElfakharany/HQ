@@ -239,6 +239,7 @@ class CodegenLoader extends AssetLoader {
     "txtSummary": "Summary",
     "txtLabReservation": "Lab Reservation",
     "txtAnalysisPreparations": "Analysis preparations",
+    "txtPleaseSignInFirst": "Please Sign in First 😅 ",
   };
   static const Map<String, dynamic> ar = {
     "onboardingTitle": "عنوان رقم ١",
@@ -274,17 +275,17 @@ class CodegenLoader extends AssetLoader {
     "txtUpcoming": "القادمة",
     "txtCanceled": "تم الإلغاء",
     "txtFieldCoupon": "أدخل كود الخصم",
-    "BtnBrowse": "استكشف",
+    "BtnBrowse": "إستكشف",
     "BtnCheckout": "الدفع",
     "BtnRegister": "إنشاء حساب",
     "BtnContinueAsGuest": "أكمل كزائر",
-    "txtTestDetails": "تفاصيل الاختبار",
+    "txtTestDetails": "تفاصيل الإختبار",
     "txtReservationDetails": "تفاصيل الحجوزات",
     "loginTxtDontHaveAccount": "لا تملك حساب؟",
     "registerTxtMain": "إنضم الآن",
     "registerTxtSecondary": "قُم الآن بإدخال البيانات الخاصة بك لإنشاء حسابك",
     "txtFieldName": "إسم المستخدم",
-    "txtFieldEmail": "البريد الالكتروني",
+    "txtFieldEmail": "البريد الإلكتروني",
     "txtFieldIdNumber": "رقم الهوية",
     "txtFieldAge": "العمر",
     "txtFieldGender": "النوع",
@@ -292,15 +293,15 @@ class CodegenLoader extends AssetLoader {
     "verifyTxtMain": "رمز التأكيد",
     "verifyTxtSecondary": "برجاء التأكيد لإنشاء الحساب",
     "verifyTxtReceive":
-        "سوف يصلك رمز التأكيد على رقم \u000b              *******",
+        "سوف يصلك رمز التأكيد على الرقم",
     "BtnVerify": "تأكيد",
-    "BtnResend": "إعادة ارسال",
+    "BtnResend": "إعادة إرسال",
     "resetTxtMain": "إعادة تعيين كلمة المرور",
     "resetTxtSecondary": "قم بتغيير كلمة المرور",
     "resetTxtThird":
-        "قبل اعادة تعيين كلمة المرور يجب ادخال كلمة المرور التي تم ارسالها اليك",
+        "قبل إعادة تعيين كلمة المرور يجب إدخال كلمة المرور التي تم إرسالها اليك",
     "TxtFieldNewPassword": "كلمة المرور الجديدة",
-    "TxtFieldReEnterPassword": "أدخل كلمة المرور مرة اخرى",
+    "TxtFieldReEnterPassword": "أدخل كلمة المرور مرة أخرى",
     "BtnReset": "إعادة تعيين",
     "completeTxtMain": "إكتمال",
     "completeTxtSecondary": "مرحباً بك ، تم إنشاء الحساب بنجاح",
@@ -314,37 +315,37 @@ class CodegenLoader extends AssetLoader {
     "drawerLogout": "تسجيل الخروج",
     "homeTxtWelcome": "مرحباً بك",
     "homeTxtAppBarSecondary": "اكبر محمل تحاليل طبية!",
-    "homeTxtDiscover": "استكشف عروضنا الجديدة",
+    "homeTxtDiscover": "إستكشف عروضنا الجديدة",
     "BtnSeeAll": "المزيد",
-    "homeTxtTestLibrary": "الاختبارات",
+    "homeTxtTestLibrary": "الإختبارات",
     "txtPopUpMainCancelReservation": "هل أنت متأكد من إلغاء الحجز؟",
     "txtPopUpSecondaryCancelReservation": "إذا قمت بإلغاء حجزك ، فقد يتم محاسبتك على موعدك",
-    "txtUnderstandContinue": "اتفهم ذلك، تأكيد",
-    "txtThankYouForRating": "شكرا لتقييمنا ، نتمنى لك الصحة الجيدة!",
+    "txtUnderstandContinue": "أتفهم ذلك، تأكيد",
+    "txtThankYouForRating": "شكراً لتقييمنا ، نتمنى لك الصحة الجيدة 🥰 !",
     "homeTxtNotifications": "الإشعارات",
     "homeTxtOffers": "العروض",
-    "homeTxtContactUs": "اتصل بنا",
+    "homeTxtContactUs": "إتصل بنا",
     "BtnPrecautions": "الإحتياطات",
     "txtHaveCoupon": "هل لديك كود خصم ؟",
     "TxtPopUpReservationType": "نوع الحجز",
-    "TxtPopUpReservationTypeSecond": "يمكنك عرض أحدث الاختبارات المضافة إليك في القائمة لتتمكن من إكمال عملية الحجز",
+    "TxtPopUpReservationTypeSecond": "يمكنك عرض أحدث الإختبارات المضافة إليك في القائمة لتتمكن من إكمال عملية الحجز",
     "BtnAtHome": "في المنزل",
     "BtnAtLab": "في المعمل",
-    "txtTotal": "الاجمالي",
+    "txtTotal": "الإجمالي",
     "TxtHomeVisit": "الرئيسية",
-    "HomeVisitTxtMain": "ادخل بيانات المريض وسوف نتصل بك لتأكيد الحجز",
+    "HomeVisitTxtMain": "أدخل بيانات المريض وسوف نتصل بك لتأكيد الحجز",
     "BtnSubmit": "تأكيد",
     "TxtFieldSearch": "بحث",
     "contactUsMainTxt": "نحن هنا لمساعدتك، راحتك هي مهمتنا",
-    "BtnSend": "ارسال",
-    "txtTestName": "اسم التحليل",
-    "TxtFieldMessage": "اكتب رسالتك",
+    "BtnSend": "إرسال",
+    "txtTestName": "إسم التحليل",
+    "TxtFieldMessage": "أكتب رسالتك",
     "txtFieldDateOfBirth": "تاريخ الميلاد",
     "txtHomeVisitAppBar": "زيارة في المنزل",
-    "txtHomeMain": "ادخل بيانات المريض وسوف نتواصل معك لتأكيد الحجز",
+    "txtHomeMain": "أدخل بيانات المريض وسوف نتواصل معك لتأكيد الحجز",
     "txtFieldAddress": "العنوان",
     "TxtFieldDateOfVisit": "تاريخ الزيارة",
-    "TxtFieldTimeOfVisit": "اختر المعاد",
+    "TxtFieldTimeOfVisit": "إختر المعاد",
     "BtnSaveChanges": "حفظ التغييرات",
     "BtnChangePassword": "تغيير كلمة المرور",
     "drawerLogOutMain": "هل حقاً تريد تسجيل الخروج؟",
@@ -353,9 +354,9 @@ class CodegenLoader extends AssetLoader {
     "BtnResult": "النتائج",
     "TxtdeleteMain": "هل تريد حذف الحجز؟",
     "TxtCancelMain": "هل تريد إلغاء الحجز ؟",
-    "TxtTestResult": "نتيجة الاختبار",
+    "TxtTestResult": "نتيجة الإختبار",
     "TxtLabVisit": "حجز في المعمل",
-    "MyResultScreenWeHope": "نأمل أن تكون بخير",
+    "MyResultScreenWeHope": "♥️ نأمل أن تكون بخير",
     "MyResultScreenNew": "جديد",
     "MyResultScreenChecked": "السابق",
     "txtWeAreHappy": "ونحن سعداء لخدمتك!",
@@ -375,50 +376,50 @@ class CodegenLoader extends AssetLoader {
     "OffersScreenTxtIndividual": "العروض في المنزل",
     "BtnUploadImage": "تحميل صورة",
     "TxtFieldServiceType": "سبب التواصل",
-    "TxtSearchScreenNew": "الاحدث",
+    "TxtSearchScreenNew": "الأحدث",
     "TxtSearchScreenchecked": "التحاليل السابقة",
     "TxtReservationScreenTitle": "حجز",
     "BtnDownload": "تحميل",
-    "BtnContinue": "اكمل",
+    "BtnContinue": "أكمل",
     "TxtFieldConfirmPassword": "تأكيد كلمه المرور",
     "TxtFieldOldPassword": "كلمة المرور القديمة",
-    "txthomeOfferCardDays": "ايام",
+    "txthomeOfferCardDays": "أيام",
     "txtDuration": "مدة انتظار النتيجة",
-    "txtPickImage": "اختر الصورة",
+    "txtPickImage": "إختر الصورة",
     "BtnOpenCamera": "الكاميرا",
     "BtnGallery": "معرض الصور",
     "languageA": "اللغة",
     "txtError": "حدث خطأ ما ...!",
     "txtComplaint": "شكوى",
-    "txtExplanation": "استفسار",
-    "txtThank": "شكرا لك",
-    "txtThankSecond": "شكرا لك تم ارسال رسالتك وسنقوم بالرد عليك قريبا",
+    "txtExplanation": "إستفسار",
+    "txtThank": "شكراً لك",
+    "txtThankSecond": "شكراً لك تم إرسال رسالتك وسنقوم بالرد عليك قريباً",
     "txtFieldCodeReset": "الكود المرسل",
-    "txtNewOldPasswordsNotMatch": "لا يمكن استخدام كلمة المرور القديمة",
+    "txtNewOldPasswordsNotMatch": "لا يمكن إستخدام كلمة المرور القديمة",
     "txtPasswordsNotMatch": "كلمة المرور غير متطابقه",
-    "txtMobileLessNine": "رقم الجوال يجب ان يكون اكثر من ٨ ارقام",
-    "txtPasswordValidate": "كلمة المرور يجب ان تكون ع الاقل ٨ خانات",
+    "txtMobileLessNine": "رقم الجوال يجب أن يكون أكثر من ٨ ارقام",
+    "txtPasswordValidate": "كلمة المرور يجب أن تكون ع الأقل ٨ خانات",
     "txtChangeMobile": "طلب تغيير رقم الجوال",
-    "txtChangeEmail": "تغيير البريد الالكتروني",
-    "txtChangeEmailSecond": "قم الآن بتغيير البريد الالكتروني",
-    "txtChangeEmailThird": "قم بادخال كلمة المرور للتعرف عليك",
+    "txtChangeEmail": "تغيير البريد الإلكتروني",
+    "txtChangeEmailSecond": "قم الآن بتغيير البريد الإلكتروني",
+    "txtChangeEmailThird": "قم بإدخال كلمة المرور للتعرف عليك",
     "txtCheckCode":
-        "قبل التأكيد يجب ان تقوم بإدخال الكود الذي تم ارساله الى الرقم الخاص بك",
+        "قبل التأكيد يجب أن تقوم بإدخال الكود الذي تم إرساله الى الرقم الخاص بك",
     "txtAway": "قيد المراجعة",
     "txtLabReservationSucceeded": "تم الحجز بنجاح",
-    "txtReservationSucceeded": "تمت الإضافة بنجاح إلى قائمة الاختبارات",
-    "txtHomeReservationSucceeded": "تم استلام الطلب، سنتواصل معك التأكيد",
+    "txtReservationSucceeded": "تمت الإضافة بنجاح إلى قائمة الإختبارات",
+    "txtHomeReservationSucceeded": "تم إستلام الطلب، سنتواصل معك التأكيد",
     "txtThereIsNo": "لا يوجد",
     "txtYet": "بعد",
-    "txtNoNotifications": "لا يوجد لديك اشعارات",
+    "txtNoNotifications": "لا يوجد لديك إشعارات",
     "txtNoResults": "لا يوجد نتائج",
-    "txtDeleteNotifications": "هل انت متأكد انك تريد حذف الاشعارات...؟",
+    "txtDeleteNotifications": "هل أنت متأكد أنك تريد حذف الإشعارات...؟",
     "txtServiceType": "نوع الخدمة",
-    "txtCheckCodeTrue": "ادخل كود صالح",
+    "txtCheckCodeTrue": "أدخل كود صالح",
     "BtnContact": "للتواصل",
     "txtHomeReserveAccepted": "تم قبول طلبك بنجاح ",
     "BtnOk": "حسناً",
-    "BtnContactT": "اتصل الآن",
+    "BtnContactT": "إتصل الآن",
     "txtRate": "ما مدي رضائك عن الخدمة التي تلقيتها ؟",
     "txtTrustThanks": "! شكراً لثقتك بمعملنا",
     "BtnBackMain": "العودة للرئيسية",
@@ -431,38 +432,39 @@ class CodegenLoader extends AssetLoader {
     "txtFloorNumber": "رقم الطابق",
     "txtBuildingNumber": "رقم المبنى",
     "txtFill": "قم بمليء",
-    "Female": "انثى",
+    "Female": "أنثى",
     "Male": "ذكر",
     "txtOverview": "نظرة عامة",
     "txtSkip": "تخطي ...",
-    "txtFinished": "انتهت",
+    "txtFinished": "إنتهت",
     "txtLoginAgain":
-        "الايميل او رقم الهاتف موجود بالفعل قم بتسجيل الدخول للتأكيد",
+        "الإيميل او رقم الهاتف موجود بالفعل قم بتسجيل الدخول للتأكيد",
     "txtDownloadedSuccess": "تم التحميل بنجاح",
     "txtHint": "ملاحظة ....",
-    "txtHintFirst": "اذا اردت تغيير رقم الجوال، قم بالتواصل معنا",
+    "txtHintFirst": "اذا أردت تغيير رقم الجوال، قم بالتواصل معنا",
     "btnChangeNumber": "تغيير رقم الجوال",
     "txtAgree": "بالتسجيل أنت توافق على التالي",
     "txtTitleOfOurTermsOfService": "شروط الخدمة",
     "txtTitleOfOurPrivacyPolicy": "سياسة الخصوصية",
     "txtCountry": "الدولة",
     "txtCity": "المدينة",
-    "BtnLater": "لاحقا",
+    "BtnLater": "لاحقاً",
     "txtBranch": "الفرع",
-    "txtSayYourExperience": "اخبرنا بتجربتك معنا",
-    "BtnSelect": "اختر",
-    "forgetTxtMain": "اعادة تعيين كلمة المرور",
+    "txtSayYourExperience": "أخبرنا بتجربتك معنا",
+    "BtnSelect": "إختر",
+    "forgetTxtMain": "إعادة تعيين كلمة المرور",
     "txtHaveProblem": "هل تواجه اي مشكلة ؟",
     "txtDidntReseveCode": "لم يصلك الكود ؟",
-    "resetTxtForth": "يرجى اتباع التعليمات أدناه لعمل كلمة مرور صالحة",
+    "resetTxtForth": "يرجى إتباع التعليمات أدناه لعمل كلمة مرور صالحة",
     "txtTestCategories": "أقسام التحاليل",
     "txtReserved": "الحجوزات",
     "txtDetails": "التفاصيل",
     "txtSummary": "كشف الحساب",
     "txtLabReservation": "حجز  في المعمل",
     "txtHomeReservation": "حجز  في المنزل",
-    "txtPatient": "المريض",
+    "txtPatient": "إسم المريض",
     "txtAnalysisPreparations": "تحضيرات التحاليل",
+    "txtPleaseSignInFirst": "الرجاء تسجيل الدخول أولاً 😅",
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {
     "en": en,
