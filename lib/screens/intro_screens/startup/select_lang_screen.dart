@@ -11,7 +11,6 @@ import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
-import 'package:hq/translations/locale_keys.g.dart';
 
 class SelectLangScreen extends StatefulWidget {
   const SelectLangScreen({Key? key}) : super(key: key);
@@ -52,14 +51,14 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                               .setLocale(Locale(sharedLanguage!))
                               .then((value) {
                             Navigator.push(
-                                context, FadeRoute(page: const OnBoardingScreen()));
+                                context, FadeRoute(page:  OnBoardingScreen()));
                           });
                         } else if (sharedLanguage == 'ar') {
                           await context
                               .setLocale(Locale(sharedLanguage!))
                               .then((value) {
                             Navigator.push(
-                                context, FadeRoute(page: const OnBoardingScreen()));
+                                context, FadeRoute(page:  OnBoardingScreen()));
                           });
                         }else {
                           await context
@@ -67,7 +66,7 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                               .then((value) {
                             CacheHelper.saveData(key: 'local', value: 'ar');
                             Navigator.push(
-                                context, FadeRoute(page: const OnBoardingScreen()));
+                                context, FadeRoute(page:  OnBoardingScreen()));
                           });
                         }
                         // if (AppCubit.get(context).isEnglish) {
@@ -127,14 +126,14 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                           await context.setLocale(Locale(sharedLanguage!))
                               .then((value) {
                             Navigator.push(
-                                context, FadeRoute(page: const OnBoardingScreen()));
+                                context, FadeRoute(page:  OnBoardingScreen()));
                           });
                         } else if (sharedLanguage == 'en'){
                           await context
                               .setLocale(Locale(sharedLanguage!))
                               .then((value) {
                             Navigator.push(
-                                context, FadeRoute(page: const OnBoardingScreen()));
+                                context, FadeRoute(page:  OnBoardingScreen()));
                           });
                         }else {
                           await context
@@ -142,7 +141,7 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                               .then((value) {
                             CacheHelper.saveData(key: 'local', value: 'en');
                             Navigator.push(
-                                context, FadeRoute(page: const OnBoardingScreen()));
+                                context, FadeRoute(page:  OnBoardingScreen()));
                           });
                         }
                         // if (!AppCubit.get(context).isEnglish) {
@@ -202,7 +201,7 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                   //       Navigator.push(
                   //         context,
                   //         FadeRoute(
-                  //           page: const OnBoardingScreen(),
+                  //           page:  OnBoardingScreen(),
                   //         ),
                   //       );
                   //     }),

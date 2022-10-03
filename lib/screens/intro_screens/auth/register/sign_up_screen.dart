@@ -1,13 +1,13 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gender_picker/source/enums.dart';
-import 'package:gender_picker/source/gender_picker.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/intro_screens/auth/login_screen.dart';
-import 'package:hq/screens/intro_screens/auth/register/select_country_screen.dart';
+import 'package:hq/screens/intro_screens/reset_password/verification_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -26,16 +26,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final userNameController = TextEditingController();
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
-  final idNumberController = TextEditingController();
+  final nationalIdController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   final _focusNodes =
       Iterable<int>.generate(4).map((_) => FocusNode()).toList();
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  String verificationId = "";
+
+  Future<void> fetchOtp(String number) async {
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+2$number',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          if (kDebugMode) {
+            print('The provided phone number is not valid.');
+          }
+        }
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        this.verificationId = verificationId;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var cubit = AppCubit.get(context);
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppRegisterSuccessState) {
+          if (state.userResourceModel.status) {
+            extraToken = state.userResourceModel.extra!.token;
+            fetchOtp(mobileController.text.toString()).then((value) => {
+                  Navigator.push(
+                    context,
+                    FadeRoute(
+                      page: VerificationScreen(verificationId: verificationId, isRegister: true, mobileNumber: mobileController.text.toString(),),
+                    ),
+                  )
+                });
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(state.userResourceModel.message),
+                    content: Text(LocaleKeys.txtLoginAgain.tr()),
+                  );
+                });
+          }
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: whiteColor,
@@ -91,13 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         focusNode: _focusNodes[0],
                         controller: userNameController,
                         type: TextInputType.text,
-                        validate: (value) {
-                          if (formKey.currentState!.validate()) {
-                            if (value!.isEmpty) {
-                              return LocaleKeys.txtFieldName.tr();
-                            }
-                          }
-                        },
+                        validatedText: LocaleKeys.txtFieldName.tr(),
                         label: LocaleKeys.txtFieldName.tr(),
                         onTap: () {},
                       ),
@@ -110,13 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         focusNode: _focusNodes[1],
                         controller: mobileController,
                         type: TextInputType.text,
-                        validate: (value) {
-                          if (formKey.currentState!.validate()) {
-                            if (value!.isEmpty) {
-                              return LocaleKeys.txtFieldMobile.tr();
-                            }
-                          }
-                        },
+                        validatedText: LocaleKeys.txtFieldMobile.tr(),
                         label: LocaleKeys.txtFieldMobile.tr(),
                         onTap: () {},
                       ),
@@ -129,19 +165,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         focusNode: _focusNodes[2],
                         controller: passwordController,
                         type: TextInputType.text,
-                        validate: (value) {
-                          if (formKey.currentState!.validate()) {
-                            if (value!.isEmpty) {
-                              return LocaleKeys.txtFieldPassword.tr();
-                            }
-                          }
-                        },
-                        obscureText: AppCubit.get(context).signUpIsPassword,
-                        suffixIcon: AppCubit.get(context).signUpSufIcon,
+                        validatedText: LocaleKeys.txtFieldPassword.tr(),
+                        obscureText: cubit.signUpIsPassword,
+                        suffixIcon: cubit.signUpSufIcon,
                         label: LocaleKeys.txtFieldPassword.tr(),
                         suffixPressed: () {
-                          AppCubit.get(context)
-                              .signUpChangePasswordVisibility();
+                          cubit.signUpChangePasswordVisibility();
                         },
                         onTap: () {},
                       ),
@@ -152,47 +181,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: DefaultFormField(
                         height: 90,
                         focusNode: _focusNodes[3],
-                        controller: idNumberController,
+                        controller: nationalIdController,
                         type: TextInputType.number,
                         label: LocaleKeys.txtFieldIdNumber.tr(),
                         onTap: () {},
-                        validate: (value) {
-                          if (formKey.currentState!.validate()) {
-                            if (value!.isEmpty) {
-                              return LocaleKeys.txtFieldIdNumber.tr();
-                            }
-                          }
-                        },
+                        validatedText: LocaleKeys.txtFieldIdNumber.tr(),
                       ),
                     ),
-                    GenderPickerWithImage(
-                      maleText: LocaleKeys.Male.tr(),
-                      //default Male
-                      femaleText: LocaleKeys.Female.tr(),
-                      //default Female
-                      selectedGenderTextStyle:
-                          titleStyle.copyWith(color: greenColor),
-                      verticalAlignedText: true,
-                      equallyAligned: true,
-                      animationDuration: const Duration(milliseconds: 300),
-                      isCircular: true,
-                      // default : true,
-                      opacityOfGradient: 0.3,
-                      linearGradient: blueGreenGradient.scale(0.2),
-                      padding: const EdgeInsets.all(3),
-                      size: 120,
-                      //default : 120
-                      femaleImage: const AssetImage('assets/images/female.jpg'),
-                      maleImage: const AssetImage('assets/images/male.jpg'),
-                      onChanged: (Gender? value) {
-                        if (value != null) {
-                          if (kDebugMode) {
-                            print(value.index);
-                          }
-                        }
-                      },
-                    ),
-                    // verticalMiniSpace,
+                    verticalMiniSpace,
                     Column(
                       children: [
                         Text(
@@ -228,7 +224,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                LocaleKeys.txtTitleOfOurTermsOfService.tr(),
+                                                LocaleKeys
+                                                    .txtTitleOfOurTermsOfService
+                                                    .tr(),
                                                 style: const TextStyle(
                                                   fontSize: 20,
                                                   fontFamily: fontFamily,
@@ -246,7 +244,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                   physics:
                                                       const BouncingScrollPhysics(),
                                                   child: Text(
-                                                    LocaleKeys.onboardingBody.tr(),
+                                                    LocaleKeys.onboardingBody
+                                                        .tr(),
                                                     textAlign: TextAlign.center,
                                                     style: subTitleSmallStyle,
                                                   ),
@@ -290,19 +289,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         end: 30.0),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         verticalMediumSpace,
                                         Padding(
                                           padding:
-                                          const EdgeInsetsDirectional.only(
-                                              start: 20.0),
+                                              const EdgeInsetsDirectional.only(
+                                                  start: 20.0),
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                LocaleKeys.txtTitleOfOurPrivacyPolicy.tr(),
+                                                LocaleKeys
+                                                    .txtTitleOfOurPrivacyPolicy
+                                                    .tr(),
                                                 style: const TextStyle(
                                                   fontSize: 20,
                                                   fontFamily: fontFamily,
@@ -316,11 +317,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 height: 350.0,
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
-                                                  Axis.vertical,
+                                                      Axis.vertical,
                                                   physics:
-                                                  const BouncingScrollPhysics(),
+                                                      const BouncingScrollPhysics(),
                                                   child: Text(
-                                                    LocaleKeys.onboardingBody.tr(),
+                                                    LocaleKeys.onboardingBody
+                                                        .tr(),
                                                     textAlign: TextAlign.center,
                                                     style: subTitleSmallStyle,
                                                   ),
@@ -351,17 +353,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                     horizontalMiniSpace,
-                    GeneralButton(
-                      title: LocaleKeys.BtnSignUp.tr(),
-                      onPress: () {
-                        AppCubit.get(context).isVisitor = false;
-                        Navigator.push(
-                          context,
-                          FadeRoute(
-                            page: const SelectCountryScreen(),
-                          ),
-                        );
-                      },
+                    ConditionalBuilder(
+                      condition: state is! AppRegisterLoadingState,
+                      builder: (context) => GeneralButton(
+                        title: LocaleKeys.BtnSignUp.tr(),
+                        onPress: () {
+                          if (formKey.currentState!.validate()) {
+                            cubit.register(
+                              name: userNameController.text,
+                              nationalID: nationalIdController.text,
+                              password: passwordController.text,
+                              mobile: mobileController.text,
+                            );
+                          }
+                          cubit.isVisitor = false;
+                        },
+                      ),
+                      fallback: (context) =>
+                          const Center(child: CircularProgressIndicator()),
                     ),
                     verticalMediumSpace,
                     Row(
@@ -381,7 +390,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             );
                           },
                           child: Text(
-                              LocaleKeys.BtnSignIn.tr(),
+                            LocaleKeys.BtnSignIn.tr(),
                             style: titleSmallStyle.copyWith(color: blueColor),
                           ),
                         ),

@@ -68,7 +68,7 @@ class CodegenLoader extends AssetLoader {
     "resetTxtSecondary": "Get new password",
     "resetTxtForth": "Please follow the instructions below to make a valid password",
     "resetTxtThird":
-        "Before you reset your password, you have\u000b to enter the password sent to your Mobile",
+        "Enter the Code we sent to your Mobile",
     "TxtFieldNewPassword": "New Password",
     "TxtFieldReEnterPassword": "Re-enter Password",
     "BtnReset": "Reset",
@@ -218,6 +218,7 @@ class CodegenLoader extends AssetLoader {
     "txtFinished": "Finished",
     "BtnBrowse": "Browse",
     "BtnCheckout": "Checkout",
+    "txtLoginError": "Mobile or Password wrong",
     "txtLoginAgain": "Email or Mobile already exist Go to Login",
     "txtDownloadedSuccess": "Downloaded Successfully",
     "txtHint": "Hint ....",
@@ -299,7 +300,7 @@ class CodegenLoader extends AssetLoader {
     "resetTxtMain": "إعادة تعيين كلمة المرور",
     "resetTxtSecondary": "قم بتغيير كلمة المرور",
     "resetTxtThird":
-        "قبل إعادة تعيين كلمة المرور يجب إدخال كلمة المرور التي تم إرسالها اليك",
+        "أدخل الكود الذي تم ارساله اليك",
     "TxtFieldNewPassword": "كلمة المرور الجديدة",
     "TxtFieldReEnterPassword": "أدخل كلمة المرور مرة أخرى",
     "BtnReset": "إعادة تعيين",
@@ -437,6 +438,7 @@ class CodegenLoader extends AssetLoader {
     "txtOverview": "نظرة عامة",
     "txtSkip": "تخطي ...",
     "txtFinished": "إنتهت",
+    "txtLoginError": "رقم الهاتف او كلمة المرور خطأ",
     "txtLoginAgain":
         "الإيميل او رقم الهاتف موجود بالفعل قم بتسجيل الدخول للتأكيد",
     "txtDownloadedSuccess": "تم التحميل بنجاح",

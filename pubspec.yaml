@@ -30,6 +30,11 @@ dependencies:
   gender_picker: ^1.1.0
   flutter_launcher_icons: ^0.9.3
   easy_localization: ^3.0.0
+  badges: ^2.0.3
+
+  #firebase
+  firebase_auth:
+  firebase_core:
 
   #map
   google_maps_flutter: ^2.1.8

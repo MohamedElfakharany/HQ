@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/main_screens/home_layout_screen.dart';
+import 'package:hq/screens/intro_screens/auth/register/select_gender_screen.dart';
+import 'package:hq/screens/intro_screens/widget_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -11,7 +12,9 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class SelectBranchScreen extends StatelessWidget {
-  const SelectBranchScreen({Key? key}) : super(key: key);
+  const SelectBranchScreen({Key? key, required this.countryId, required this.cityId}) : super(key: key);
+  final int countryId;
+  final int cityId;
 
   @override
   Widget build(BuildContext context) {
@@ -37,45 +40,20 @@ class SelectBranchScreen extends StatelessWidget {
                     style: subTitleSmallStyle,
                   ),
                   verticalSmallSpace,
-                  LinearProgressIndicator(value: 0.875,backgroundColor: greyLightColor.withOpacity(0.3),color: greenColor),
+                  LinearProgressIndicator(value: 0.775,backgroundColor: greyLightColor.withOpacity(0.3),color: greenColor),
                   verticalLargeSpace,
                   Expanded(
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => InkWell(
                         onTap: () {
-                          navigateAndFinish(context, const HomeLayoutScreen(),);
+                          print('countryId : $countryId cityId : $cityId branchID : $index');
+                          Navigator.push(context, FadeRoute(page: SelectGenderScreen(branchId: index, countryId: countryId,cityId: cityId ),),);
                         },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(radius),
-                              border: Border.all(
-                                  color: greyLightColor,
-                                  width: 1),
-                              color: whiteColor
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5.0),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.location_on,color: greyLightColor),
-                                horizontalMiniSpace,
-                                Text(
-                                  '${LocaleKeys.txtBranch.tr()}  ${index+1}',
-                                  style: titleSmallStyle,
-                                ),
-                                const Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: RegionCard(title: AppCubit.get(context).branchModel!.data![index].title,),
                       ),
                       separatorBuilder: (context, index) => verticalSmallSpace,
-                      itemCount: 4,
+                      itemCount: AppCubit.get(context).branchModel!.data!.length,
                     ),
                   ),
                 ],

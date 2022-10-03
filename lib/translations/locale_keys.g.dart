@@ -205,6 +205,7 @@ abstract class  LocaleKeys {
   static const txtSkip = 'txtSkip';
   static const txtFinished = 'txtFinished';
   static const txtLoginAgain = 'txtLoginAgain';
+  static const txtLoginError = 'txtLoginError';
   static const txtDownloadedSuccess = 'txtDownloadedSuccess';
   static const txtHint = 'txtHint';
   static const txtHintFirst = 'txtHintFirst';

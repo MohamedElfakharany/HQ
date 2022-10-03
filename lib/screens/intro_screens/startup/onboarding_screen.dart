@@ -27,8 +27,8 @@ class BoardingModel {
 }
 
 class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({Key? key}) : super(key: key);
-
+  OnBoardingScreen({Key? key, this.isSignOut}) : super(key: key);
+  bool? isSignOut = false;
   @override
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
@@ -67,7 +67,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               padding: const EdgeInsetsDirectional.only(start: 20),
               child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                    Navigator.pop(context);
                 },
                 alignment: AlignmentDirectional.topStart,
                 icon: const Icon(

@@ -1,12 +1,11 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/intro_screens/auth/register/select_branch_screen.dart';
 import 'package:hq/screens/intro_screens/auth/register/select_city_screen.dart';
+import 'package:hq/screens/intro_screens/widget_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -18,8 +17,21 @@ class SelectCountryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = AppCubit.get(context);
+    var countryId;
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppGetCitiesSuccessState) {
+          if (state.cityModel.status) {
+            Navigator.push(
+              context,
+              FadeRoute(
+                page: SelectCityScreen(countryId: countryId,),
+              ),
+            );
+          }
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: GeneralAppBar(title: ''),
@@ -46,47 +58,19 @@ class SelectCountryScreen extends StatelessWidget {
                       color: greenColor),
                   verticalLargeSpace,
                   Expanded(
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            FadeRoute(
-                              page: const SelectCityScreen(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(radius),
-                              border: Border.all(
-                                  color: greyLightColor,
-                                  width: 1),
-                              color: whiteColor
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5.0),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.location_on,color: greyLightColor),
-                                horizontalMiniSpace,
-                                Text(
-                                  '${LocaleKeys.txtCountry.tr()}  ${index+1}',
-                                  style: titleSmallStyle,
-                                ),
-                                const Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
+                    child: ConditionalBuilder(
+                      condition: state is! AppGetCountriesLoadingState && state is! AppGetCitiesLoadingState && state is! AppGetVerifyLoadingState,
+                      builder: (context) => ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) => InkWell(onTap: (){
+                          countryId = index;
+                          extraCountryId = index;
+                          AppCubit.get(context).getCity(countryId: index);
+                        },child: RegionCard(title: cubit.countryModel!.data![index].title)),
+                        separatorBuilder: (context, index) => verticalSmallSpace,
+                        itemCount: cubit.countryModel!.data!.length,
                       ),
-                      separatorBuilder: (context, index) => verticalSmallSpace,
-                      itemCount: 3,
+                      fallback: (context) => const Center(child: CircularProgressIndicator()),
                     ),
                   ),
                 ],

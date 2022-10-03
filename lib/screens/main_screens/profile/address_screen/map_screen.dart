@@ -164,11 +164,6 @@ class _MapScreenState extends State<MapScreen> {
                             suffixIcon: Icons.location_searching,
                             controller: addressController,
                             type: TextInputType.text,
-                            validate: (value){
-                              if (value!.isEmpty){
-                                return '';
-                              }
-                            },
                             label: LocaleKeys.txtFieldAddress.tr(),
                             onTap: () {},
                           ),
@@ -176,11 +171,6 @@ class _MapScreenState extends State<MapScreen> {
                           DefaultFormField(
                             controller: markOfPlaceController,
                             type: TextInputType.text,
-                            validate: (value){
-                              if (value!.isEmpty){
-                                return '';
-                              }
-                            },
                             label: LocaleKeys.txtMarkOfThePlace.tr(),
                             onTap: () {},
                           ),
@@ -188,11 +178,6 @@ class _MapScreenState extends State<MapScreen> {
                           DefaultFormField(
                             controller: floorController,
                             type: TextInputType.number,
-                            validate: (value){
-                              if (value!.isEmpty){
-                                return '';
-                              }
-                            },
                             label: LocaleKeys.txtFloorNumber.tr(),
                             onTap: () {},
                           ),
@@ -200,11 +185,6 @@ class _MapScreenState extends State<MapScreen> {
                           DefaultFormField(
                             controller: buildingController,
                             type: TextInputType.number,
-                            validate: (value){
-                              if (value!.isEmpty){
-                                return '';
-                              }
-                            },
                             label: LocaleKeys.txtBuildingNumber.tr(),
                             onTap: () {},
                           ),

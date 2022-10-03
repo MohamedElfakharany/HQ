@@ -1,8 +1,20 @@
 String? token;
 
-bool? verified;
+String? extraToken;
 
-String? email;
+int? extraCountryId;
+
+String? extraCountryTitle = '';
+
+int? extraCityId;
+
+String? extraCityTitle = '';
+
+int? extraBranchId;
+
+String? extraBranchTitle = '';
+
+String? verified;
 
 String? deviceToken;
 

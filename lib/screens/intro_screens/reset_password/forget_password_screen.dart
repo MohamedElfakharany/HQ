@@ -56,13 +56,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 height: 90,
                 controller: mobileController,
                 type: TextInputType.text,
-                validate: (value){
-                  if (formKey.currentState!.validate()){
-                    if (value!.isEmpty){
-                      return LocaleKeys.txtFieldMobile.tr();
-                    }
-                  }
-                },
+                validatedText: LocaleKeys.txtFieldMobile.tr(),
                 label: LocaleKeys.txtFieldMobile.tr(),
                 onTap: () {},
               ),
@@ -71,7 +65,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             GeneralButton(
               title: LocaleKeys.BtnContinue.tr(),
               onPress: () {
-                Navigator.push(context, FadeRoute(page: const VerificationScreen(),),);
+                Navigator.push(context, FadeRoute(page: VerificationScreen(isRegister: false, mobileNumber: mobileController.text.toString(),),),);
               },
             ),
             verticalMediumSpace,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/profile/address_screen/address_screen.dart';
 import 'package:hq/screens/main_screens/profile/edit_profile/edit_profile.dart';
 import 'package:hq/screens/main_screens/profile/family/family_screen.dart';
@@ -31,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        print (AppCubit.get(context).isVisitor);
+        var user = AppCubit.get(context).userResourceModel!.data!;
         return Scaffold(
           backgroundColor: whiteColor,
           body: Column(
@@ -82,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(70.0),
                           child: CachedNetworkImage(
-                            imageUrl: imageTest,
+                            imageUrl: user.profile,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => const SizedBox(
                               width: 30,
@@ -109,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       horizontalSmallSpace,
                       if (AppCubit.get(context).isVisitor == false)
                         Text(
-                        'Mohamed Elfakharany',
+                        user.name,
                         style: titleStyle.copyWith(color: whiteColor),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -118,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       verticalMiniSpace,
                       if (AppCubit.get(context).isVisitor == false)
                         Text(
-                        'mohmedelfakharany@gmail.com',
+                        user.phone,
                         style: titleSmallStyle.copyWith(color: whiteColor),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -134,9 +133,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.only(
                       right: 20.0, left: 20.0, bottom: 20.0),
                   child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        if (AppCubit.get(context).isVisitor == false)
+                        if (AppCubit.get(context).isVisitor == true || AppCubit.get(context).userResourceModel!.data!.isCompleted == 0)
                           Container(
                           height: 160,
                           decoration: BoxDecoration(
@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: LinearProgressIndicator(
                                         minHeight: 5,
                                         color: greenColor,
-                                        value: 0.75,
+                                        value: 0.5,
                                         backgroundColor:
                                             greyLightColor.withOpacity(0.4),
                                       ),
@@ -178,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   horizontalSmallSpace,
                                   const Text(
-                                    '75 %',
+                                    '50 %',
                                   ),
                                 ],
                               ),
@@ -481,12 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       title: LocaleKeys.drawerLogout.tr(),
                                       onPress: () {
                                         AppCubit.get(context).currentIndex = 0;
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            FadeRoute(
-                                              page: const OnBoardingScreen(),
-                                            ),
-                                            (route) => true);
+                                        AppCubit.get(context).signOut(context);
                                       },
                                     ),
                                     verticalSmallSpace,

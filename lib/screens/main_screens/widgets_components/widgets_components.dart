@@ -1013,7 +1013,7 @@ class VisitorHoldingPopUp extends StatelessWidget {
           verticalLargeSpace,
           GeneralButton(title: LocaleKeys.BtnSignIn.tr(), onPress: (){
             AppCubit.get(context).currentIndex = 0;
-            Navigator.pushAndRemoveUntil(context, FadeRoute(page: const OnBoardingScreen(),), (route) => false);
+            Navigator.pushAndRemoveUntil(context, FadeRoute(page: OnBoardingScreen(),), (route) => false);
           }),
           verticalLargeSpace,
         ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/screens/intro_screens/widget_components.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -41,39 +42,11 @@ class ProfileChangeBranchScreen extends StatelessWidget {
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(radius),
-                              border: Border.all(
-                                  color: greyLightColor,
-                                  width: 1),
-                              color: whiteColor
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5.0),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.location_on,color: greyLightColor),
-                                horizontalMiniSpace,
-                                Text(
-                                  '${LocaleKeys.txtBranch.tr()} ${index+1}',
-                                  style: titleSmallStyle,
-                                ),
-                                const Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
+                        onTap: () {},
+                        child: RegionCard(title: AppCubit.get(context).branchModel!.data![index].title,),
                       ),
                       separatorBuilder: (context, index) => verticalSmallSpace,
-                      itemCount: 4,
+                      itemCount: AppCubit.get(context).branchModel?.data?.length ?? 0,
                     ),
                   ),
                 ],

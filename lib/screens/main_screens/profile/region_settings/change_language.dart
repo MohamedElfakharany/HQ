@@ -40,7 +40,7 @@ class VisitorHolderScreenState extends State<VisitorHolderScreen> {
                 verticalLargeSpace,
                 GeneralButton(title: 'Sign In', onPress: (){
                   AppCubit.get(context).currentIndex = 0;
-                  Navigator.pushAndRemoveUntil(context, FadeRoute(page: const OnBoardingScreen(),), (route) => false);
+                  Navigator.pushAndRemoveUntil(context, FadeRoute(page: OnBoardingScreen(),), (route) => false);
                 }),
                 verticalLargeSpace,
               ],

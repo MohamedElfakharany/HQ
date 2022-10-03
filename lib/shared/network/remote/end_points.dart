@@ -1,71 +1,43 @@
-const mainURL = 'https://orcalab.orcav.com/api/';
+const mainURL = 'https://hq.orcav.com/api';
 
-const loginURL = '${mainURL}login';
+const authURL = '/auth';
 
-const registerURL = '${mainURL}register';
+const coreURL = '/core';
 
-const updateProfileURL = '${mainURL}update_profile';
+const testURL = '/test';
 
-const changePasswordURL = '${mainURL}changePassword';
+      ///Auth
 
-const confirmPasswordURL = '${mainURL}confirm_password';
+const registerURL = '$mainURL$authURL/register';
 
-const sendEmailURL = '${mainURL}code_check_email';
+const loginURL = '$mainURL$authURL/login';
 
-const sendNewEmailURL = '${mainURL}send_new_email';
+const verificationURL = '$mainURL$authURL/verify';
 
-const resetPasswordURL = '${mainURL}Reset_password';
+const completeProfileURL = '$mainURL$authURL/complete-profile';
 
-const resetEmailURL = '${mainURL}reset_email';
+const createTokenURL = '$mainURL$authURL/create-token';
 
-const homeReservationURL = '${mainURL}homeReservation';
+const resetPasswordURL = '$mainURL$authURL/reset-password';
 
-const labReservationUrl = '${mainURL}LabReservation';
+      ///Core
 
-const getProfileURL = '${mainURL}profile';
+const countryURL = '$mainURL$coreURL/countries';
 
-const getTechnicalProfileURL = '${mainURL}technician';
+const cityURL = '$mainURL$coreURL/cities';
 
-const rateTechnicalProfileURL = '${mainURL}rate_tech';
+const branchURL = '$mainURL$coreURL/branches';
 
-const getAllResultsURL = '${mainURL}all_results';
+const relationsURL = '$mainURL$coreURL/relations';
 
-const getAppointmentsURL = '${mainURL}appointments';
+const slidersURL = '$mainURL$coreURL/sliders';
 
-const getHomeAppointmentsURL = '${mainURL}home_appointments';
+      ///Tests
 
-const contactURL = '${mainURL}contact';
+const categoriesURL = '$mainURL$testURL/categories';
 
-const getTestNamesURL = '${mainURL}get_test';
+const testsURL = '$mainURL$testURL/tests';
 
-const verificationURL = '${mainURL}code_check';
+const offersURL = '$mainURL$testURL/offers';
 
-const resendCodeURL = '${mainURL}resendCode';
-
-const cancelReservationURL = '${mainURL}CancelReservation';
-
-const deleteReservationURL = '${mainURL}DeleteReservation';
-
-const getOffersURL = '${mainURL}UserOffers';
-
-const getHomeOfferURL = '${mainURL}home_offer';
-
-const getLabOfferURL = '${mainURL}lap_offer';
-
-const userReservationUrl = '${mainURL}UserReservation';
-
-const getTestsURL = '${mainURL}test';
-
-const getTestResultURL = '${mainURL}ReservationResult';
-
-const getOffersDetailsURL = '${mainURL}OfferDetails';
-
-const userNotificationsURL = '${mainURL}UserNotifications';
-
-const deleteNotificationURL = '${mainURL}DeleteNotification';
-
-const deleteOneNotificationURL = '${mainURL}delete_one_notification';
-
-const notificationSeenURL = '${mainURL}notification_seen';
-
-const countriesURL = '${mainURL}countries';
+      ///Reservations

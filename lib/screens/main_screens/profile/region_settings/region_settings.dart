@@ -73,7 +73,7 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                           ),
                           horizontalMiniSpace,
                           Text(
-                            LocaleKeys.txtCountry.tr(),
+                            '${AppCubit.get(context).countryModel!.data![extraCountryId!].title}',
                             style: titleSmallStyle,
                           ),
                           const Spacer(),
@@ -116,7 +116,7 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                           const Icon(Icons.location_on, color: greyLightColor),
                           horizontalMiniSpace,
                           Text(
-                            LocaleKeys.txtCity.tr(),
+                            '${AppCubit.get(context).cityModel?.data?[extraCityId!].title ?? extraCityTitle}',
                             style: titleSmallStyle,
                           ),
                           const Spacer(),
@@ -156,7 +156,7 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                               color: greyLightColor),
                           horizontalMiniSpace,
                           Text(
-                            LocaleKeys.txtBranch.tr(),
+                            '${AppCubit.get(context).branchModel?.data?[extraBranchId!].title}',
                             style: titleSmallStyle,
                           ),
                           const Spacer(),
@@ -189,7 +189,6 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                             .setLocale(Locale(AppCubit.get(context).local!))
                             .then(
                               (value) => {
-                                // AppCubit.get(context).currentIndex = 0 ,
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     FadeRoute(page: const HomeLayoutScreen()),

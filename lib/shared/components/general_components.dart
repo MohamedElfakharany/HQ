@@ -1,12 +1,12 @@
 // ignore_for_file: must_be_immutable, body_might_complete_normally_nullable, library_private_types_in_public_api
 
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
@@ -273,6 +273,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var cubit = AppCubit.get(context);
         return AppBar(
           backgroundColor: greyExtraLightColor,
           elevation: 0.0,
@@ -297,7 +298,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     child: CachedNetworkImage(
                       imageUrl:
-                          'https://avatars.githubusercontent.com/u/34916493?s=400&u=e7300b829193270fbcd03a813551a3702299cbb1&v=4',
+                      AppCubit.get(context).userResourceModel!.data!.profile,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const SizedBox(
                         width: 30,
@@ -326,7 +327,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
               if (AppCubit.get(context).isVisitor == false)
                 Expanded(
                   child: Text(
-                    '${LocaleKeys.homeTxtWelcome.tr()} Mohamed ,',
+                    '${LocaleKeys.homeTxtWelcome.tr()} ${cubit.userResourceModel!.data!.name} ,',
                     textAlign: TextAlign.start,
                     style: titleSmallStyle,
                     maxLines: 1,
@@ -370,39 +371,16 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                   ),
                 );
               },
-              child: Stack(
+              child: Badge(
                 alignment: AlignmentDirectional.centerEnd,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        FadeRoute(
-                          page: const CardScreen(),
-                        ),
-                      );
-                    },
-                    icon: const ImageIcon(
-                      AssetImage(
-                        'assets/images/lab.png',
-                      ),
-                      color: blueColor,
+                animationType: BadgeAnimationType.slide,
+                badgeContent: const Text('3'),
+                child: const ImageIcon(
+                    AssetImage(
+                      'assets/images/lab.png',
                     ),
+                    color: blueColor,
                   ),
-                  // Image.asset('assets/images/science.png',color: blueColor,),
-                  const CircleAvatar(
-                    radius: 12,
-                    backgroundColor: whiteColor,
-                    child: CircleAvatar(
-                      radius: 10,
-                      backgroundColor: redColor,
-                      child: Text(
-                        '3',
-                        style: TextStyle(color: whiteColor),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
             IconButton(
@@ -427,7 +405,6 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  //  TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(40);
 }
 
@@ -473,7 +450,7 @@ class DefaultFormField extends StatelessWidget {
   TextInputType type;
   Function? onSubmit;
   Function? onChange;
-  dynamic validate;
+  dynamic validatedText;
   dynamic onTap;
   bool obscureText = false;
   String label;
@@ -503,7 +480,7 @@ class DefaultFormField extends StatelessWidget {
     this.expend = false,
     this.onSubmit,
     this.onChange,
-    this.validate,
+    this.validatedText,
     this.onTap,
     this.hintText,
     this.removeBorder = true,
@@ -533,7 +510,34 @@ class DefaultFormField extends StatelessWidget {
         focusNode: focusNode,
         expands: expend,
         validator: (value) {
-          validate;
+          if (value!.isEmpty) {
+            return '${LocaleKeys.txtFill.tr()} $validatedText';
+          }
+          if (isConfirm == true) {
+            if (value != confirm
+            // && validatedText == LocaleKeys.TxtFieldReEnterPassword.tr()
+            ) {
+              return LocaleKeys.txtPasswordsNotMatch.tr();
+            }
+          }
+          if (validatedText == LocaleKeys.txtFieldMobile.tr()) {
+            if (value.length < 9) {
+              return LocaleKeys.txtMobileLessNine.tr();
+            }
+          }
+          if (validatedText == LocaleKeys.txtFieldPassword.tr() ||
+              validatedText == LocaleKeys.TxtFieldNewPassword.tr() ||
+              validatedText == LocaleKeys.TxtFieldReEnterPassword.tr() ||
+              validatedText == LocaleKeys.TxtFieldOldPassword.tr()) {
+            if (value.length < 8) {
+              return LocaleKeys.txtPasswordValidate.tr();
+            }
+          }
+          if (validatedText == LocaleKeys.txtFieldCodeReset.tr()) {
+            if (value.length != 4) {
+              return LocaleKeys.txtCheckCodeTrue.tr();
+            }
+          }
         },
         autofocus: autoFocus,
         controller: controller,
@@ -800,7 +804,7 @@ class ScreenHolder extends StatelessWidget {
         'There is no $msg Yet',
         textAlign: TextAlign.center,
         style:
-            Theme.of(context).textTheme.headline5?.copyWith(color: blueColor),
+            Theme.of(context).textTheme.headlineSmall?.copyWith(color: blueColor),
       ),
     );
   }
