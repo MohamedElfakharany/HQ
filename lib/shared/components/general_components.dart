@@ -534,7 +534,7 @@ class DefaultFormField extends StatelessWidget {
             }
           }
           if (validatedText == LocaleKeys.txtFieldCodeReset.tr()) {
-            if (value.length != 4) {
+            if (value.length != 6) {
               return LocaleKeys.txtCheckCodeTrue.tr();
             }
           }

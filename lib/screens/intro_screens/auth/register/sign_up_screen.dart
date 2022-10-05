@@ -51,7 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       codeSent: (String verificationId, int? resendToken) async {
         this.verificationId = verificationId;
       },
-      codeAutoRetrievalTimeout: (String verificationId) {},
+      codeAutoRetrievalTimeout: (String verificationId) {
+      },
     );
   }
 
@@ -64,14 +65,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (state is AppRegisterSuccessState) {
           if (state.userResourceModel.status) {
             extraToken = state.userResourceModel.extra!.token;
-            fetchOtp(mobileController.text.toString()).then((value) => {
-                  Navigator.push(
-                    context,
-                    FadeRoute(
-                      page: VerificationScreen(verificationId: verificationId, isRegister: true, mobileNumber: mobileController.text.toString(),),
+            fetchOtp(mobileController.text.toString()).then(
+              (value) async => {
+                if (verificationId != "")
+                  {
+                    await Navigator.push(
+                      context,
+                      FadeRoute(
+                        page: VerificationScreen(
+                          verificationId: verificationId,
+                          isRegister: true,
+                          mobileNumber: mobileController.text.toString(),
+                        ),
+                      ),
                     ),
-                  )
-                });
+                  },
+              },
+            );
           } else {
             showDialog(
                 context: context,
@@ -82,6 +92,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   );
                 });
           }
+        } else if (state is AppRegisterErrorState) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text(LocaleKeys.txtLoginAgain.tr()),
+                );
+              });
         }
       },
       builder: (context, state) {

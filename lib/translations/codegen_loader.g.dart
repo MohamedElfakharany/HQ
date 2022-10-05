@@ -219,7 +219,7 @@ class CodegenLoader extends AssetLoader {
     "BtnBrowse": "Browse",
     "BtnCheckout": "Checkout",
     "txtLoginError": "Mobile or Password wrong",
-    "txtLoginAgain": "Email or Mobile already exist Go to Login",
+    "txtLoginAgain": "Mobile already exist Go to Login",
     "txtDownloadedSuccess": "Downloaded Successfully",
     "txtHint": "Hint ....",
     "txtHintFirst": "If you want, Please contact Us",
@@ -440,7 +440,7 @@ class CodegenLoader extends AssetLoader {
     "txtFinished": "إنتهت",
     "txtLoginError": "رقم الهاتف او كلمة المرور خطأ",
     "txtLoginAgain":
-        "الإيميل او رقم الهاتف موجود بالفعل قم بتسجيل الدخول للتأكيد",
+        "رقم الهاتف موجود بالفعل قم بتسجيل الدخول للتأكيد",
     "txtDownloadedSuccess": "تم التحميل بنجاح",
     "txtHint": "ملاحظة ....",
     "txtHintFirst": "اذا أردت تغيير رقم الجوال، قم بالتواصل معنا",

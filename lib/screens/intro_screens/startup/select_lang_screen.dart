@@ -43,6 +43,8 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                   verticalLargeSpace,
                   InkWell(
                     onTap: () {
+                      isFirst = false;
+                      CacheHelper.saveData(key: 'isFirst', value: false);
                       setState(() async {
                         if (sharedLanguage == 'en') {
                           await AppCubit.get(context)
@@ -119,6 +121,8 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                   verticalSmallSpace,
                   InkWell(
                     onTap: () {
+                      isFirst = false;
+                      CacheHelper.saveData(key: 'isFirst', value: false);
                       setState(() async {
                         if (sharedLanguage == 'ar') {
                           await AppCubit.get(context)

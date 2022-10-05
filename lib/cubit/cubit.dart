@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/auth_models/create_token_model.dart';
+import 'package:hq/models/auth_models/reset_password_model.dart';
 import 'package:hq/models/cores_model/branch_model.dart';
 import 'package:hq/models/cores_model/carousel_model.dart';
 import 'package:hq/models/cores_model/city_model.dart';
@@ -12,6 +13,7 @@ import 'package:hq/models/cores_model/country_model.dart';
 import 'package:hq/models/cores_model/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/model_test.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/home_screen.dart';
 import 'package:hq/screens/main_screens/profile/profile_screen.dart';
@@ -36,6 +38,8 @@ class AppCubit extends Cubit<AppStates> {
   CarouselModel? carouselModel;
   RelationsModel? relationsModel;
   CreateTokenModel? createTokenModel;
+  ResetPasswordModel? resetPasswordModel;
+  TestsModel? testsModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -126,15 +130,14 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print('responseJson login $responseJson');
       userResourceModel = UserResourceModel.fromJson(responseJson);
-      if (kDebugMode) {
-        print('response : $response');
-        print('responseJsonB : $responseJsonB');
-        print('convertedResponse : $convertedResponse');
-        print('responseJson : $responseJson');
-        print('userResourceModel : ${userResourceModel?.extra?.token}');
-      }
+      // if (kDebugMode) {
+      //   print('response : $response');
+      //   print('responseJsonB : $responseJsonB');
+      //   print('convertedResponse : $convertedResponse');
+      //   print('responseJson : $responseJson');
+      //   print('userResourceModel : ${userResourceModel?.extra?.token}');
+      // }
       emit(AppLoginSuccessState(userResourceModel!));
     } catch (error) {
       if (kDebugMode) {
@@ -230,6 +233,44 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppCreateTokenSuccessState(createTokenModel!));
     } catch (error) {
       emit(AppCreateTokenErrorState(error.toString()));
+    }
+  }
+
+  Future resetPassword({
+    required String newPassword,
+    required String? resetToken,
+  }) async {
+    emit(AppResetPasswordLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+    };
+    var formData = {
+      'newPassword': newPassword,
+      'resetToken': resetToken,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        resetPasswordURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
+      resetPasswordModel = ResetPasswordModel.fromJson(responseJson);
+      emit(AppResetPasswordSuccessState(resetPasswordModel!));
+    } catch (error) {
+      emit(AppResetPasswordErrorState(error.toString()));
     }
   }
 
@@ -406,6 +447,45 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppGetVerifySuccessState(verifyModel!));
     } catch (error) {
       emit(AppGetVerifyErrorState());
+    }
+  }
+
+
+  Future getTests({
+    required String categoriesId,
+  }) async {
+    try {
+      emit(AppGetTestsLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$testsURL?categoryId=$categoriesId',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      testsModel = TestsModel.fromJson(responseJson);
+      // if (kDebugMode) {
+      //   print('response : $response');
+      //   print('responseJsonB : $responseJsonB');
+      //   print('convertedResponse : $convertedResponse');
+      //   print('responseJson : $responseJson');
+      //   print('testsModel : ${testsModel?.extra?.token}');
+      // }
+      emit(AppGetTestsSuccessState(testsModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppLoginErrorState(error.toString()));
     }
   }
 

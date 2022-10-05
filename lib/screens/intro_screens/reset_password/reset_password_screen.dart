@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,12 @@ import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  ResetPasswordScreen({
+    Key? key,
+    required this.resetToken,
+  }) : super(key: key);
+
+  String? resetToken = '';
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -69,8 +75,24 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+        if (state is AppResetPasswordSuccessState){
+          if (state.resetPasswordModel.status){
+            Navigator.pushAndRemoveUntil(
+                context,
+                FadeRoute(
+                  page: const LoginScreen(),
+                ),
+                    (route) => false);
+          }else{
+            showDialog(context: context,builder: (context)=> Text(state.resetPasswordModel.message));
+          }
+        }
+
+      },
       builder: (context, state) {
+        print(widget.resetToken);
         return Scaffold(
           backgroundColor: whiteColor,
           appBar: GeneralAppBar(
@@ -280,22 +302,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                   verticalMiniSpace,
-                  GeneralButton(
-                    title: LocaleKeys.BtnReset.tr(),
-                    onPress: () {
-                      if (formKey.currentState!.validate()) {
-                        if (kDebugMode) {
-                          print(passwordStrength);
-                          print(passwordController.text);
+                  ConditionalBuilder(
+                    condition: state is! AppResetPasswordLoadingState,
+                    builder: (context) => GeneralButton(
+                      title: LocaleKeys.BtnReset.tr(),
+                      onPress: () {
+                        if (formKey.currentState!.validate()) {
+                          AppCubit.get(context).resetPassword(resetToken: widget.resetToken ,newPassword: passwordController.text);
                         }
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            FadeRoute(
-                              page: const LoginScreen(),
-                            ),
-                            (route) => false);
-                      }
-                    },
+                      },
+                    ),
+                    fallback: (context) => const Center(child: CircularProgressIndicator(),),
                   ),
                 ],
               ),

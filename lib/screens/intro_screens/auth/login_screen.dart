@@ -52,16 +52,19 @@ class _LoginScreenState extends State<LoginScreen> {
     extraCityId = cityId;
     extraBranchId = branchId;
   }
+  bool isLoading = false;
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
   String verificationId = "";
 
   Future<void> fetchOtp(String number) async {
+    isLoading = true;
     await auth.verifyPhoneNumber(
       phoneNumber: '+2$number',
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential);
+        isLoading = false;
       },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
@@ -69,12 +72,20 @@ class _LoginScreenState extends State<LoginScreen> {
             print('The provided phone number is not valid.');
           }
         }
+        isLoading = false;
       },
       codeSent: (String verificationId, int? resendToken) async {
         this.verificationId = verificationId;
+        isLoading = false;
       },
-      codeAutoRetrievalTimeout: (String verificationId) {},
+      codeAutoRetrievalTimeout: (String verificationId) {
+        isLoading = false;
+      },
     );
+
+    if (kDebugMode) {
+      print('verificationId Sign In : $verificationId');
+    }
   }
 
   @override
@@ -85,15 +96,16 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is AppLoginSuccessState) {
           if (state.userResourceModel.status) {
             if (state.userResourceModel.data!.isVerified == '0') {
-              fetchOtp(mobileController.text.toString()).then((value) => {
-                    Navigator.push(
-                      context,
-                      FadeRoute(
-                        page: VerificationScreen(
-                            mobileNumber: mobileController.text.toString(),verificationId: verificationId, isRegister: true,),
-                      ),
-                    ),
-                  });
+              Navigator.push(
+                context,
+                FadeRoute(
+                  page: VerificationScreen(
+                    mobileNumber: mobileController.text.toString(),
+                    verificationId: verificationId,
+                    isRegister: true,
+                  ),
+                ),
+              );
             } else {
               if (state.userResourceModel.data!.isCompleted == 0) {
                 Navigator.push(
@@ -228,9 +240,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             FadeRoute(
-                              page: const ForgetPasswordScreen(),
+                              page: ForgetPasswordScreen(
+                                verificationId: verificationId,
+                              ),
                             ),
                           );
+                          print (verificationId);
                         },
                         child: Text(
                           LocaleKeys.BtnForgetPassword.tr(),

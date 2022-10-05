@@ -1,4 +1,5 @@
 import 'package:hq/models/auth_models/create_token_model.dart';
+import 'package:hq/models/auth_models/reset_password_model.dart';
 import 'package:hq/models/cores_model/branch_model.dart';
 import 'package:hq/models/cores_model/carousel_model.dart';
 import 'package:hq/models/cores_model/city_model.dart';
@@ -6,6 +7,7 @@ import 'package:hq/models/cores_model/country_model.dart';
 import 'package:hq/models/cores_model/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 
 abstract class AppStates {}
 
@@ -106,6 +108,10 @@ class AppGetCitiesErrorState extends AppStates{
   AppGetCitiesErrorState(this.error);
 }
 
+class AppStartLoadingState extends AppStates{}
+
+class AppEndLoadingState extends AppStates{}
+
 class AppCreateTokenLoadingState extends AppStates{}
 
 class AppCreateTokenSuccessState extends AppStates{
@@ -116,6 +122,18 @@ class AppCreateTokenSuccessState extends AppStates{
 class AppCreateTokenErrorState extends AppStates{
   final String error;
   AppCreateTokenErrorState(this.error);
+}
+
+class AppResetPasswordLoadingState extends AppStates{}
+
+class AppResetPasswordSuccessState extends AppStates{
+  final ResetPasswordModel resetPasswordModel;
+  AppResetPasswordSuccessState(this.resetPasswordModel);
+}
+
+class AppResetPasswordErrorState extends AppStates{
+  final String error;
+  AppResetPasswordErrorState(this.error);
 }
 
 class AppGetBranchesLoadingState extends AppStates{}
@@ -140,6 +158,18 @@ class AppGetCarouselSuccessState extends AppStates{
 class AppGetCarouselErrorState extends AppStates{
   final String error;
   AppGetCarouselErrorState(this.error);
+}
+
+class AppGetTestsLoadingState extends AppStates{}
+
+class AppGetTestsSuccessState extends AppStates{
+  final TestsModel testsModel;
+  AppGetTestsSuccessState(this.testsModel);
+}
+
+class AppGetTestsErrorState extends AppStates{
+  final String error;
+  AppGetTestsErrorState(this.error);
 }
 
 class AppLogoutSuccessState extends AppStates{}

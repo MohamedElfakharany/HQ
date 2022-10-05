@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -13,12 +14,17 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class VerificationScreen extends StatefulWidget {
-  VerificationScreen(
-      {Key? key,required this.mobileNumber, this.verificationId, this.isRegister})
-      : super(key: key);
+  VerificationScreen({
+    Key? key,
+    required this.mobileNumber,
+    this.verificationId,
+    this.resetToken,
+    this.isRegister,
+  }) : super(key: key);
   bool? isRegister;
   String? verificationId = "";
   String mobileNumber = "";
+  String? resetToken = "";
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
@@ -28,6 +34,40 @@ class _VerificationScreenState extends State<VerificationScreen> {
   final codeController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
+
+
+  bool isLoading = false;
+
+  Future<void> fetchOtp({required String number}) async {
+    isLoading = true;
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+2$number',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential).then((v)=>{
+          isLoading = false,
+        });
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          if (kDebugMode) {
+            print('The provided phone number is not valid.');
+          }
+        }
+        isLoading = false;
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        widget.verificationId = verificationId;
+        isLoading = false;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        isLoading = false;
+      },
+    );
+
+    if (kDebugMode) {
+      print('verificationId Sign In : ${widget.verificationId}');
+    }
+  }
 
   Future<void> verify() async {
     PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
@@ -42,44 +82,48 @@ class _VerificationScreenState extends State<VerificationScreen> {
       final authCredential =
           await auth.signInWithCredential(phoneAuthCredential);
       if (authCredential.user != null) {
-        AppCubit.get(context).verify();
-        AppCubit.get(context).getCountry().then((value) => {
-              Navigator.push(
-                context,
-                FadeRoute(
-                  page: const SelectCountryScreen(),
+        if (widget.isRegister == true) {
+          await AppCubit.get(context).verify();
+          await AppCubit.get(context).getCountry().then((value) => {
+                Navigator.push(
+                  context,
+                  FadeRoute(
+                    page: const SelectCountryScreen(),
+                  ),
                 ),
-              ),
-            });
+              });
+        } else {
+          Navigator.push(
+            context,
+            FadeRoute(
+              page: ResetPasswordScreen(resetToken: widget.resetToken),
+            ),
+          );
+        }
       }
     } on FirebaseAuthException catch (e) {
       print(e);
-      print("catch");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            // title: Text(state.userResourceModel.message),
+            content: Text(e.message!),
+          );
+        },
+      );
+      if (kDebugMode) {
+        print("catch");
+      }
     }
-  }
-
-  Future<void> fetchOtp({required String number}) async {
-    await auth.verifyPhoneNumber(
-      phoneNumber: '+2$number',
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential);
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          if (kDebugMode) {
-            print('The provided phone number is not valid.');
-          }
-        }
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        widget.verificationId = verificationId;
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print(widget.mobileNumber.toString());
+      print(widget.verificationId);
+    }
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: GeneralAppBar(
@@ -128,20 +172,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
             GeneralButton(
               title: LocaleKeys.BtnVerify.tr(),
               onPress: () {
-                if (widget.isRegister == false) {
-                  if (kDebugMode) {
-                    print('ResetPasswordScreen');
-                  }
-                  Navigator.push(
-                    context,
-                    FadeRoute(
-                      page: const ResetPasswordScreen(),
-                    ),
-                  );
-                } else {
-                  if (kDebugMode) {
-                    print('SelectCountryScreen');
-                  }
+                if(formKey.currentState!.validate()){
                   verify();
                 }
               },
@@ -154,13 +185,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   LocaleKeys.txtDidntReseveCode.tr(),
                   style: subTitleSmallStyle,
                 ),
-                TextButton(
-                  onPressed: () {
-                    fetchOtp(number: widget.mobileNumber.toString());
-                  },
-                  child: Text(
-                    LocaleKeys.BtnResend.tr(),
-                    style: titleSmallStyle.copyWith(color: blueColor),
+                ConditionalBuilder(
+                  condition: !isLoading,
+                  builder: (context) => TextButton(
+                    onPressed: () {
+                      fetchOtp(number: widget.mobileNumber);
+                    },
+                    child: Text(
+                      LocaleKeys.BtnResend.tr(),
+                      style: titleSmallStyle.copyWith(color: blueColor),
+                    ),
+                  ),
+                  fallback: (context) => const Center(
+                    child: CircularProgressIndicator(),
                   ),
                 ),
               ],
