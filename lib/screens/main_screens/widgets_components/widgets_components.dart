@@ -8,7 +8,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/models/model_test.dart';
+import 'package:hq/models/test_models/categories_model.dart';
+import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
@@ -161,7 +163,7 @@ class _LabCalenderViewState extends State<LabCalenderView> {
                       ),
                       calendarStyle: const CalendarStyle(
                         selectedTextStyle:
-                        TextStyle(color: whiteColor, fontSize: 20),
+                            TextStyle(color: whiteColor, fontSize: 20),
                         todayDecoration: BoxDecoration(),
                         todayTextStyle: TextStyle(
                             color: greenColor,
@@ -171,16 +173,16 @@ class _LabCalenderViewState extends State<LabCalenderView> {
                             color: greenColor, shape: BoxShape.circle),
                         defaultDecoration: BoxDecoration(),
                         holidayDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         weekendDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         rangeEndDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         outsideDecoration: BoxDecoration(
                           shape: BoxShape.circle,
                         ),
                         disabledDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         // weekendTextStyle: const TextStyle(
                         //   color: blueColor,
                         // ),
@@ -363,7 +365,7 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
                       ),
                       calendarStyle: const CalendarStyle(
                         selectedTextStyle:
-                        TextStyle(color: whiteColor, fontSize: 20),
+                            TextStyle(color: whiteColor, fontSize: 20),
                         todayDecoration: BoxDecoration(),
                         todayTextStyle: TextStyle(
                             color: greenColor,
@@ -373,16 +375,16 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
                             color: greenColor, shape: BoxShape.circle),
                         defaultDecoration: BoxDecoration(),
                         holidayDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         weekendDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         rangeEndDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         outsideDecoration: BoxDecoration(
                           shape: BoxShape.circle,
                         ),
                         disabledDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         // weekendTextStyle: const TextStyle(
                         //   color: blueColor,
                         // ),
@@ -425,26 +427,18 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
   }
 }
 
-class OffersCard extends StatefulWidget {
-  const OffersCard({Key? key, required this.index}) : super(key: key);
-  final int index;
+class OffersCard extends StatelessWidget {
+  const OffersCard({Key? key, required this.offersDataModel}) : super(key: key);
+  final OffersDataModel offersDataModel;
 
-  @override
-  State<OffersCard> createState() => _OffersCardState();
-}
-
-class _OffersCardState extends State<OffersCard> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.9,
-          height: 230,
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 235,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
           ),
@@ -457,12 +451,9 @@ class _OffersCardState extends State<OffersCard> {
                   alignment: AlignmentDirectional.topStart,
                   children: [
                     CachedNetworkImageNormal(
-                      imageUrl: offersModelData[widget.index].image,
+                      imageUrl: offersDataModel.image,
                       height: 165,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.9,
+                      width: MediaQuery.of(context).size.width * 0.9,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -477,13 +468,13 @@ class _OffersCardState extends State<OffersCard> {
                             ),
                             child: Center(
                               child: Text(
-                                '${offersModelData[widget.index].percent}% Off',
+                                '${offersDataModel.discount}% Off',
                                 style: const TextStyle(color: whiteColor),
                               ),
                             ),
                           ),
                           const Spacer(),
-                          if (offersModelData[widget.index].gender == 'male')
+                          if (offersDataModel.gender == 'Male')
                             Container(
                               height: 30,
                               width: 80,
@@ -496,7 +487,7 @@ class _OffersCardState extends State<OffersCard> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      offersModelData[widget.index].gender,
+                                      offersDataModel.gender,
                                       style: const TextStyle(color: whiteColor),
                                     ),
                                     horizontalMicroSpace,
@@ -507,33 +498,31 @@ class _OffersCardState extends State<OffersCard> {
                                   ],
                                 ),
                               ),
-                            ) else
-                            if (offersModelData[widget.index].gender == 'female')
-                              Container(
-                                height: 30,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  color: pinkColor,
-                                  borderRadius: BorderRadius.circular(radius),
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        offersModelData[widget.index].gender,
-                                        style: const TextStyle(
-                                            color: whiteColor),
-                                      ),
-                                      horizontalMicroSpace,
-                                      const Icon(
-                                        Icons.female,
-                                        color: whiteColor,
-                                      )
-                                    ],
-                                  ),
+                            )
+                          else if (offersDataModel.gender == 'Female')
+                            Container(
+                              height: 30,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                color: pinkColor,
+                                borderRadius: BorderRadius.circular(radius),
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      offersDataModel.gender,
+                                      style: const TextStyle(color: whiteColor),
+                                    ),
+                                    const Icon(
+                                      Icons.female,
+                                      color: whiteColor,
+                                    )
+                                  ],
                                 ),
                               ),
+                            ),
                         ],
                       ),
                     ),
@@ -542,9 +531,9 @@ class _OffersCardState extends State<OffersCard> {
               ),
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 child: Text(
-                  offersModelData[widget.index].body,
+                  offersDataModel.description,
                   style: titleSmallStyle2,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
@@ -555,12 +544,12 @@ class _OffersCardState extends State<OffersCard> {
                 child: Row(
                   children: [
                     Text(
-                      '${offersModelData[widget.index].discount} ${LocaleKeys.salary.tr()}',
+                      '${offersDataModel.discount} ${LocaleKeys.salary.tr()}',
                       style: titleSmallStyle2,
                     ),
                     horizontalMiniSpace,
                     Text(
-                      '${offersModelData[widget.index].price} ${LocaleKeys.salary.tr()}',
+                      '${offersDataModel.price} ${LocaleKeys.salary.tr()}',
                       style: subTitleSmallStyle2.copyWith(
                         decoration: TextDecoration.lineThrough,
                       ),
@@ -576,15 +565,13 @@ class _OffersCardState extends State<OffersCard> {
   }
 }
 
-class TestsCard extends StatefulWidget {
-  const TestsCard({Key? key, required this.index}) : super(key: key);
-  final int index;
+class CategoriesCard extends StatelessWidget {
+  const CategoriesCard({
+    Key? key,
+    required this.categoriesDataModel,
+  }) : super(key: key);
+  final CategoriesDataModel categoriesDataModel;
 
-  @override
-  State<TestsCard> createState() => _TestsCardState();
-}
-
-class _TestsCardState extends State<TestsCard> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -606,15 +593,15 @@ class _TestsCardState extends State<TestsCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                alignment: Alignment.center,
-                testsModelData[widget.index].image,
+              verticalMiniSpace,
+              CachedNetworkImageNormal(
+                imageUrl: categoriesDataModel.icon,
                 width: 65,
                 height: 65,
               ),
-              verticalSmallSpace,
+              verticalMicroSpace,
               Text(
-                testsModelData[widget.index].body,
+                categoriesDataModel.title,
                 textAlign: TextAlign.center,
                 style: subTitleSmallStyle,
                 maxLines: 1,
@@ -628,17 +615,14 @@ class _TestsCardState extends State<TestsCard> {
   }
 }
 
-class TestItemCard extends StatefulWidget {
+class TestItemCard extends StatelessWidget {
   const TestItemCard({Key? key, required this.index}) : super(key: key);
   final int index;
 
   @override
-  State<TestItemCard> createState() => _TestItemCardState();
-}
-
-class _TestItemCardState extends State<TestItemCard> {
-  @override
   Widget build(BuildContext context) {
+    TestsDataModel testsModelData =
+        AppCubit.get(context).testsModel!.data![index];
     return Container(
       height: 110.0,
       width: 110.0,
@@ -661,7 +645,7 @@ class _TestItemCardState extends State<TestItemCard> {
                 children: [
                   horizontalMicroSpace,
                   CachedNetworkImageNormal(
-                    imageUrl: imageTest,
+                    imageUrl: testsModelData.image,
                     width: 80,
                     height: 80,
                   ),
@@ -672,13 +656,13 @@ class _TestItemCardState extends State<TestItemCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          offersModelData[widget.index].title,
+                          testsModelData.title,
                           style: titleStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          offersModelData[widget.index].body,
+                          testsModelData.description,
                           style: subTitleSmallStyle2,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -686,15 +670,15 @@ class _TestItemCardState extends State<TestItemCard> {
                         Row(
                           children: [
                             Text(
-                              '${offersModelData[widget.index].discount} ${LocaleKeys.salary.tr()}',
+                              '${testsModelData.price} ${LocaleKeys.salary.tr()}',
                               style: titleSmallStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            if (widget.index % 2 != 0) horizontalMiniSpace,
-                            if (widget.index % 2 != 0)
+                            if (index % 2 != 0) horizontalMiniSpace,
+                            if (index % 2 != 0)
                               Text(
-                                '${offersModelData[widget.index].price} ${LocaleKeys.salary.tr()}',
+                                '${testsModelData.price} ${LocaleKeys.salary.tr()}',
                                 style: subTitleSmallStyle2.copyWith(
                                   decoration: TextDecoration.lineThrough,
                                 ),
@@ -714,7 +698,10 @@ class _TestItemCardState extends State<TestItemCard> {
                             Navigator.push(
                               context,
                               FadeRoute(
-                                page: const TestDetailsScreen(),
+                                page: TestDetailsScreen(
+                                    testsDataModel: AppCubit.get(context)
+                                        .testsModel!
+                                        .data![index]),
                               ),
                             );
                           },
@@ -743,7 +730,7 @@ class _TestItemCardState extends State<TestItemCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         horizontalMicroSpace,
-                        if (offersModelData[widget.index].gender == 'male')
+                        if (testsModelData.gender == 'male')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
@@ -755,7 +742,7 @@ class _TestItemCardState extends State<TestItemCard> {
                               ),
                             ),
                           ),
-                        if (offersModelData[widget.index].gender == 'female')
+                        if (testsModelData.gender == 'female')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
@@ -790,7 +777,8 @@ class _TestItemCardState extends State<TestItemCard> {
                                 topRight: Radius.circular(radius),
                               ),
                             ),
-                            padding: const EdgeInsetsDirectional.only(start: 20.0,end: 20.0),
+                            padding: const EdgeInsetsDirectional.only(
+                                start: 20.0, end: 20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -798,7 +786,9 @@ class _TestItemCardState extends State<TestItemCard> {
                                 verticalMicroSpace,
                                 Row(
                                   children: [
-                                    SvgPicture.asset('assets/images/checkTrue.svg',),
+                                    SvgPicture.asset(
+                                      'assets/images/checkTrue.svg',
+                                    ),
                                     horizontalMiniSpace,
                                     Text(
                                       LocaleKeys.txtReservationSucceeded.tr(),
@@ -826,13 +816,16 @@ class _TestItemCardState extends State<TestItemCard> {
                                     ),
                                   ),
                                   alignment: AlignmentDirectional.center,
-                                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 4),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsetsDirectional.only(
-                                            start: 10.0, top: 10.0),
+                                        padding:
+                                            const EdgeInsetsDirectional.only(
+                                                start: 10.0, top: 10.0),
                                         child: Image.asset(
                                           'assets/images/logo.png',
                                           width: 80,
@@ -842,17 +835,22 @@ class _TestItemCardState extends State<TestItemCard> {
                                       horizontalMiniSpace,
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             verticalMiniSpace,
                                             Text(
                                               'Fasting sugar FBS',
-                                              style: titleStyle.copyWith(fontWeight: FontWeight.normal),
+                                              style: titleStyle.copyWith(
+                                                  fontWeight:
+                                                      FontWeight.normal),
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             const Padding(
-                                              padding: EdgeInsets.symmetric(vertical: 5.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 5.0),
                                               child: Text(
                                                 'Sugar Checks',
                                                 style: TextStyle(),
@@ -864,13 +862,16 @@ class _TestItemCardState extends State<TestItemCard> {
                                               children: [
                                                 Text(
                                                   '80 ${LocaleKeys.salary.tr()}',
-                                                  style: titleStyle.copyWith(fontSize: 15),
+                                                  style: titleStyle.copyWith(
+                                                      fontSize: 15),
                                                 ),
                                                 horizontalMiniSpace,
                                                 Text(
                                                   '100 ${LocaleKeys.salary.tr()}',
-                                                  style: subTitleSmallStyle.copyWith(
-                                                    decoration: TextDecoration.lineThrough,
+                                                  style: subTitleSmallStyle
+                                                      .copyWith(
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
                                                   ),
                                                 ),
                                               ],
@@ -884,7 +885,8 @@ class _TestItemCardState extends State<TestItemCard> {
                                 verticalMicroSpace,
                                 Container(
                                   height: 50,
-                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(radius),
                                     color: greyExtraLightColor,
@@ -894,12 +896,14 @@ class _TestItemCardState extends State<TestItemCard> {
                                       horizontalSmallSpace,
                                       Text(
                                         LocaleKeys.txtTotal.tr(),
-                                        style: titleStyle.copyWith(fontWeight: FontWeight.normal),
+                                        style: titleStyle.copyWith(
+                                            fontWeight: FontWeight.normal),
                                       ),
                                       const Spacer(),
                                       Text(
                                         '80 ${LocaleKeys.salary.tr()}',
-                                        style: titleStyle.copyWith(fontSize: 18),
+                                        style:
+                                            titleStyle.copyWith(fontSize: 18),
                                       ),
                                       horizontalSmallSpace,
                                     ],
@@ -910,28 +914,38 @@ class _TestItemCardState extends State<TestItemCard> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Center(
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: MaterialButton(
                                               onPressed: () {
-                                                Navigator.push(context, FadeRoute(page: const CardScreen(),),);
+                                                Navigator.push(
+                                                  context,
+                                                  FadeRoute(
+                                                    page: const CardScreen(),
+                                                  ),
+                                                );
                                               },
                                               height: 80.0,
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   color: blueColor,
-                                                  borderRadius: BorderRadius.circular(radius),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          radius),
                                                 ),
                                                 height: 50.0,
                                                 width: double.infinity,
                                                 child: Center(
                                                     child: Text(
-                                                      LocaleKeys.BtnCheckout.tr(),
-                                                      style:
-                                                      titleSmallStyle.copyWith(color: whiteColor),
-                                                    )),
+                                                  LocaleKeys.BtnCheckout.tr(),
+                                                  style:
+                                                      titleSmallStyle.copyWith(
+                                                          color: whiteColor),
+                                                )),
                                               )),
                                         ),
                                         Expanded(
@@ -939,8 +953,12 @@ class _TestItemCardState extends State<TestItemCard> {
                                             width: double.infinity,
                                             title: LocaleKeys.BtnBrowse.tr(),
                                             onPress: () {
-                                              AppCubit.get(context).changeBottomScreen(0);
-                                              navigateAndFinish(context, const HomeLayoutScreen(),);
+                                              AppCubit.get(context)
+                                                  .changeBottomScreen(0);
+                                              navigateAndFinish(
+                                                context,
+                                                const HomeLayoutScreen(),
+                                              );
                                             },
                                           ),
                                         ),
@@ -968,7 +986,7 @@ class _TestItemCardState extends State<TestItemCard> {
               )
             ],
           ),
-          if (widget.index % 2 != 0)
+          if (index % 2 != 0)
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
               child: Container(
@@ -998,7 +1016,7 @@ class VisitorHoldingPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 350,
+      height: 355,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -1009,12 +1027,22 @@ class VisitorHoldingPopUp extends StatelessWidget {
             height: 150,
           ),
           verticalLargeSpace,
-          Text(LocaleKeys.txtPleaseSignInFirst.tr(),style: titleStyle,),
+          Text(
+            LocaleKeys.txtPleaseSignInFirst.tr(),
+            style: titleStyle,
+          ),
           verticalLargeSpace,
-          GeneralButton(title: LocaleKeys.BtnSignIn.tr(), onPress: (){
-            AppCubit.get(context).currentIndex = 0;
-            Navigator.pushAndRemoveUntil(context, FadeRoute(page: OnBoardingScreen(),), (route) => false);
-          }),
+          GeneralButton(
+              title: LocaleKeys.BtnSignIn.tr(),
+              onPress: () {
+                AppCubit.get(context).currentIndex = 0;
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    FadeRoute(
+                      page: OnBoardingScreen(),
+                    ),
+                    (route) => false);
+              }),
           verticalLargeSpace,
         ],
       ),

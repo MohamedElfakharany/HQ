@@ -13,6 +13,7 @@ import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/notification_screen.dart';
 import 'package:hq/screens/main_screens/search_screen.dart';
+import 'package:hq/shared/components/cached_network_image.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
@@ -283,12 +284,8 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 CircleAvatar(
                   backgroundColor: whiteColor,
                   radius: 15,
-                  child: Image.asset(
-                    'assets/images/profile.png',
-                    width: 25,
-                    height: 35,
-                    color: blueColor,
-                  ),
+                  child: CachedNetworkImageCircular(
+                      imageUrl: cubit.userResourceModel?.data?.profile ?? ''),
                 ),
               if (AppCubit.get(context).isVisitor == false)
                 CircleAvatar(
@@ -297,8 +294,11 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),
                     child: CachedNetworkImage(
-                      imageUrl:
-                      AppCubit.get(context).userResourceModel!.data!.profile,
+                      imageUrl: AppCubit.get(context)
+                              .userResourceModel
+                              ?.data
+                              ?.profile ??
+                          'mohamed',
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const SizedBox(
                         width: 30,
@@ -327,7 +327,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
               if (AppCubit.get(context).isVisitor == false)
                 Expanded(
                   child: Text(
-                    '${LocaleKeys.homeTxtWelcome.tr()} ${cubit.userResourceModel!.data!.name} ,',
+                    '${LocaleKeys.homeTxtWelcome.tr()} ${cubit.userResourceModel?.data?.name ?? ''} ,',
                     textAlign: TextAlign.start,
                     style: titleSmallStyle,
                     maxLines: 1,
@@ -376,11 +376,11 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 animationType: BadgeAnimationType.slide,
                 badgeContent: const Text('3'),
                 child: const ImageIcon(
-                    AssetImage(
-                      'assets/images/lab.png',
-                    ),
-                    color: blueColor,
+                  AssetImage(
+                    'assets/images/lab.png',
                   ),
+                  color: blueColor,
+                ),
               ),
             ),
             IconButton(
@@ -405,7 +405,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(40);
+  Size get preferredSize => const Size.fromHeight(45);
 }
 
 class DefaultTextButton extends StatelessWidget {
@@ -515,8 +515,8 @@ class DefaultFormField extends StatelessWidget {
           }
           if (isConfirm == true) {
             if (value != confirm
-            // && validatedText == LocaleKeys.TxtFieldReEnterPassword.tr()
-            ) {
+                // && validatedText == LocaleKeys.TxtFieldReEnterPassword.tr()
+                ) {
               return LocaleKeys.txtPasswordsNotMatch.tr();
             }
           }
@@ -803,8 +803,10 @@ class ScreenHolder extends StatelessWidget {
       child: Text(
         'There is no $msg Yet',
         textAlign: TextAlign.center,
-        style:
-            Theme.of(context).textTheme.headlineSmall?.copyWith(color: blueColor),
+        style: Theme.of(context)
+            .textTheme
+            .headlineSmall
+            ?.copyWith(color: blueColor),
       ),
     );
   }

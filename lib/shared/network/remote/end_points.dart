@@ -6,6 +6,8 @@ const coreURL = '/core';
 
 const testURL = '/test';
 
+const profileURL = '/profile';
+
       ///Auth
 
 const registerURL = '$mainURL$authURL/register';
@@ -39,5 +41,9 @@ const categoriesURL = '$mainURL$testURL/categories';
 const testsURL = '$mainURL$testURL/tests';
 
 const offersURL = '$mainURL$testURL/offers';
+
+      ///Profile
+
+const getProfileURL = '$mainURL$profileURL/get_profile';
 
       ///Reservations

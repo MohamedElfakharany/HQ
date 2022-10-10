@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/models/model_test.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_details_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_items_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
@@ -36,20 +35,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ..getCity(countryId: extraCountryId!)
         ..getBranch(cityID: extraCityId!)
         ..getCarouselData()
-        ..getRelations(),
+        ..getRelations()
+        ..getCategories()
+        ..getOffers(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
           var cubit = AppCubit.get(context);
           return Scaffold(
             backgroundColor: greyExtraLightColor,
-            appBar: const GeneralHomeLayoutAppBar(),
             body: ConditionalBuilder(
               condition: state is! AppGetBranchesLoadingState &&
                   state is! AppGetCarouselLoadingState &&
                   state is! AppGetCitiesLoadingState &&
                   state is! AppGetCountriesLoadingState &&
-                  state is! AppGetRelationsLoadingState,
+                  state is! AppGetRelationsLoadingState &&
+                  state is! AppGetCategoriesLoadingState &&
+                  state is! AppGetOffersLoadingState &&
+                  state is! AppGetTestsLoadingState,
               builder: (context) => Container(
                 color: greyExtraLightColor,
                 padding: const EdgeInsets.only(
@@ -205,8 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            AppCubit.get(context).changeBottomScreen(1);
-                            // Navigator.push(context, FadeRoute(page: const TestsScreen(),),);
+                            cubit.changeBottomScreen(1);
                           },
                           child: Text(
                             LocaleKeys.BtnSeeAll.tr(),
@@ -227,17 +229,27 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               FadeRoute(
-                                page: const TestItemsScreen(),
+                                page: TestItemsScreen(
+                                    categoryId: AppCubit.get(context)
+                                        .categoriesModel!
+                                        .data![index]
+                                        .id),
                               ),
                             );
                           },
-                          child: TestsCard(
-                            index: index,
+                          child: CategoriesCard(
+                            categoriesDataModel: AppCubit.get(context)
+                                .categoriesModel!
+                                .data![index],
                           ),
                         ),
                         separatorBuilder: (context, index) =>
                             horizontalMiniSpace,
-                        itemCount: testsModelData.length,
+                        itemCount: AppCubit.get(context)
+                                .categoriesModel
+                                ?.data
+                                ?.length ??
+                            0,
                       ),
                     ),
                     verticalMediumSpace,
@@ -248,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         TextButton(
                           onPressed: () {
                             AppCubit.get(context).fromHome = true;
-                            AppCubit.get(context).changeBottomScreen(1);
+                            cubit.changeBottomScreen(1);
                           },
                           child: Text(
                             LocaleKeys.BtnSeeAll.tr(),
@@ -257,29 +269,41 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 235.0,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              FadeRoute(
-                                page: const TestDetailsScreen(),
-                              ),
-                            );
-                          },
-                          child: OffersCard(
-                            index: index,
+                    ConditionalBuilder(
+                      condition: cubit.offersModel?.data != null,
+                      builder: (context) => SizedBox(
+                        height: 235.0,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                FadeRoute(
+                                  page: TestDetailsScreen(
+                                    offersDataModel: AppCubit.get(context)
+                                        .offersModel!
+                                        .data![index],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: OffersCard(
+                              offersDataModel: AppCubit.get(context)
+                                  .offersModel!
+                                  .data![index],
+                            ),
                           ),
+                          separatorBuilder: (context, index) =>
+                              horizontalMiniSpace,
+                          itemCount:
+                              AppCubit.get(context).offersModel!.data!.length,
                         ),
-                        separatorBuilder: (context, index) =>
-                            horizontalMiniSpace,
-                        itemCount: offersModelData.length,
                       ),
+                      fallback: (context) =>
+                          const Center(child: CircularProgressIndicator()),
                     ),
                     verticalMiniSpace,
                   ],

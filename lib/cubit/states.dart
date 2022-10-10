@@ -7,6 +7,8 @@ import 'package:hq/models/cores_model/country_model.dart';
 import 'package:hq/models/cores_model/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/test_models/categories_model.dart';
+import 'package:hq/models/test_models/offers_model.dart';
 import 'package:hq/models/test_models/tests_model.dart';
 
 abstract class AppStates {}
@@ -49,6 +51,18 @@ class AppLoginSuccessState extends AppStates{
 class AppLoginErrorState extends AppStates{
   final String error;
   AppLoginErrorState(this.error);
+}
+
+class AppGetProfileLoadingState extends AppStates{}
+
+class AppGetProfileSuccessState extends AppStates{
+  final UserResourceModel userResourceModel;
+  AppGetProfileSuccessState(this.userResourceModel);
+}
+
+class AppGetProfileErrorState extends AppStates{
+  final String error;
+  AppGetProfileErrorState(this.error);
 }
 
 class AppCompleteProfileLoadingState extends AppStates{}
@@ -158,6 +172,30 @@ class AppGetCarouselSuccessState extends AppStates{
 class AppGetCarouselErrorState extends AppStates{
   final String error;
   AppGetCarouselErrorState(this.error);
+}
+
+class AppGetCategoriesLoadingState extends AppStates{}
+
+class AppGetCategoriesSuccessState extends AppStates{
+  final CategoriesModel categoriesModel;
+  AppGetCategoriesSuccessState(this.categoriesModel);
+}
+
+class AppGetCategoriesErrorState extends AppStates{
+  final String error;
+  AppGetCategoriesErrorState(this.error);
+}
+
+class AppGetOffersLoadingState extends AppStates{}
+
+class AppGetOffersSuccessState extends AppStates{
+  final OffersModel offersModel;
+  AppGetOffersSuccessState(this.offersModel);
+}
+
+class AppGetOffersErrorState extends AppStates{
+  final String error;
+  AppGetOffersErrorState(this.error);
 }
 
 class AppGetTestsLoadingState extends AppStates{}

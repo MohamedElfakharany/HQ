@@ -1,8 +1,13 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hq/cubit/cubit.dart';
+import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/screens/main_screens/reservations/home_reservation_screen.dart';
@@ -15,14 +20,11 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class TestDetailsScreen extends StatefulWidget {
-  const TestDetailsScreen({Key? key}) : super(key: key);
+class TestDetailsScreen extends StatelessWidget {
+  TestDetailsScreen({Key? key,this.offersDataModel, this.testsDataModel}) : super(key: key);
+  TestsDataModel? testsDataModel;
+  OffersDataModel? offersDataModel;
 
-  @override
-  State<TestDetailsScreen> createState() => _TestDetailsScreenState();
-}
-
-class _TestDetailsScreenState extends State<TestDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +37,9 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
             Stack(
               alignment: AlignmentDirectional.topStart,
               children: [
-                Image.asset(
-                  'assets/images/lastOffer.png',
+                CachedNetworkImage(
+                  imageUrl: testsDataModel?.image ?? offersDataModel?.image,
+                  fit: BoxFit.cover,
                   height: 200,
                   width: MediaQuery.of(context).size.width * 0.9,
                 ),
@@ -46,52 +49,77 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                     children: [
                       Container(
                         height: 30,
-                        width: 80,
+                        width: 30,
                         decoration: BoxDecoration(
                           color: redColor,
                           borderRadius: BorderRadius.circular(radius),
                         ),
                         child: const Center(
                           child: Text(
-                            '16% Off',
-                            style: TextStyle(color: whiteColor),
+                            '%',
+                            style: TextStyle(color: whiteColor,fontSize: 20),
                           ),
                         ),
                       ),
                       const Spacer(),
-                      Container(
-                        height: 30,
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: blueLightColor,
-                          borderRadius: BorderRadius.circular(radius),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                LocaleKeys.Male.tr(),
-                                style: const TextStyle(color: whiteColor),
-                              ),
-                              horizontalMicroSpace,
-                              const Icon(
-                                Icons.male,
-                                color: whiteColor,
-                              ),
-                            ],
+                      if (offersDataModel?.gender == 'Male' || testsDataModel?.gender == 'Male')
+                        Container(
+                          height: 30,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: blueLightColor,
+                            borderRadius: BorderRadius.circular(radius),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  offersDataModel?.gender ?? testsDataModel?.gender,
+                                  style: const TextStyle(color: whiteColor),
+                                ),
+                                horizontalMicroSpace,
+                                const Icon(
+                                  Icons.male,
+                                  color: whiteColor,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      else if (offersDataModel?.gender == 'Female' || testsDataModel?.gender == 'Male')
+                        Container(
+                          height: 30,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: pinkColor,
+                            borderRadius: BorderRadius.circular(radius),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  offersDataModel?.gender,
+                                  style: const TextStyle(color: whiteColor),
+                                ),
+                                const Icon(
+                                  Icons.female,
+                                  color: whiteColor,
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
               child: Text(
-                'Glaciated Hemoglobin HBA1C',
+                testsDataModel?.title ?? offersDataModel?.title,
                 style: titleSmallStyle2,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -102,21 +130,23 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
               child: Row(
                 children: [
                   Text(
-                    '60 ${LocaleKeys.salary.tr()}',
+                    '${testsDataModel?.price ?? offersDataModel?.discount} ${LocaleKeys.salary.tr()}',
                     style: titleStyle,
                   ),
                   horizontalMiniSpace,
+                  if(offersDataModel != null)
                   Text(
-                    '100 ${LocaleKeys.salary.tr()}',
+                    '${offersDataModel?.price} ${LocaleKeys.salary.tr()}',
                     style: subTitleSmallStyle.copyWith(
                       decoration: TextDecoration.lineThrough,
                     ),
                   ),
+                  horizontalMiniSpace,
                 ],
               ),
             ),
             Text(
-              'It includes a set of medical tests that are done periodically (every six months), and they are as follows:It is required to count the two hours from the start of eating and it is required to eat within the first ten minutes from the beginning of the two hours. It is not allowed to eat any food during the two hours. It is only allowed to take water and medication, if available. Please come to the laboratory at least a quarter of an hour before the end of the two hours.',
+              testsDataModel?.description ?? offersDataModel?.description,
               style: subTitleSmallStyle.copyWith(
                 fontSize: 15,
               ),
@@ -158,9 +188,9 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                           style: titleSmallStyle,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const Text(
-                          'Fasting is required from 6-8 hours, and only water is allowed during the fasting period the fasting period ',
-                          style: TextStyle(),
+                        Text(
+                          testsDataModel?.preparation ?? offersDataModel?.preparation,
+                          style: const TextStyle(),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -169,8 +199,7 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                             Navigator.push(
                               context,
                               FadeRoute(
-                                page: const ReadMoreScreen(),
-                              ),
+                                page: ReadMoreScreen(testsDataModel: testsDataModel,offersDataModel: offersDataModel,)),
                             );
                           },
                           child: Row(
@@ -523,8 +552,8 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                                     Expanded(
                                       child: MaterialButton(
                                         onPressed: () {
-
-                                          if (AppCubit.get(context).isVisitor == false) {
+                                          if (AppCubit.get(context).isVisitor ==
+                                              false) {
                                             Navigator.push(
                                               context,
                                               FadeRoute(

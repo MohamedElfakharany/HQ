@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hq/cubit/cubit.dart';
 import 'package:hq/screens/intro_screens/auth/login_screen.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/intro_screens/startup/select_lang_screen.dart';
@@ -25,6 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
     Widget widget;
     token = CacheHelper.getData(key: 'token');
     isFirst = CacheHelper.getData(key: 'isFirst');
+    sharedLanguage = CacheHelper.getData(key: 'local');
+    verified = CacheHelper.getData(key: 'verified');
     extraCountryId = CacheHelper.getData(key: 'extraCountryId');
     extraCityId = CacheHelper.getData(key: 'extraCityId');
     extraBranchId = CacheHelper.getData(key: 'extraBranchId');
@@ -40,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (token != null) {
       if (verified == '1') {
+        AppCubit.get(context).isVisitor = false;
         widget = const HomeLayoutScreen();
       } else {
         widget = const LoginScreen();

@@ -178,7 +178,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               Navigator.push(
                                 context,
                                 FadeRoute(
-                                  page: const SignUpScreen(),
+                                  page: SignUpScreen(),
                                 ),
                               );
                             },
@@ -210,6 +210,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 TextButton(
                   onPressed: () {
                     AppCubit.get(context).isVisitor = true;
+                    AppCubit.get(context).getCountry();
                     Navigator.push(context, FadeRoute(page: const SelectCountryScreen(),),);
                   },
                   child: Text(

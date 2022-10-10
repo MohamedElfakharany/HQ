@@ -17,7 +17,6 @@ class SelectCountryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cubit = AppCubit.get(context);
     var countryId;
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
@@ -33,6 +32,7 @@ class SelectCountryScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        var cubit = AppCubit.get(context);
         return Scaffold(
           appBar: GeneralAppBar(title: ''),
           body: Container(
@@ -68,7 +68,7 @@ class SelectCountryScreen extends StatelessWidget {
                           AppCubit.get(context).getCity(countryId: index);
                         },child: RegionCard(title: cubit.countryModel!.data![index].title)),
                         separatorBuilder: (context, index) => verticalSmallSpace,
-                        itemCount: cubit.countryModel!.data!.length,
+                        itemCount: cubit.countryModel?.data?.length ?? 0,
                       ),
                       fallback: (context) => const Center(child: CircularProgressIndicator()),
                     ),

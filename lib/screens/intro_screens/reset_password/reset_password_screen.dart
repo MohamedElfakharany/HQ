@@ -1,6 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
@@ -32,16 +33,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _focusNodes =
       Iterable<int>.generate(2).map((_) => FocusNode()).toList();
 
-  // regular expression to check if string
-  RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
-  double passwordStrength = 0;
-
   // 0: No password
   // 1/4: Weak
   // 2/4: Medium
   // 3/4: Strong
   //   1:   Great
   //A function that validate user entered password
+
+  // regular expression to check if string
+  RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+  double passwordStrength = 0;
+
+
   bool validatePassword(String pass) {
     String password = pass.trim();
     if (password.isEmpty) {
@@ -89,10 +92,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             showDialog(context: context,builder: (context)=> Text(state.resetPasswordModel.message));
           }
         }
-
       },
       builder: (context, state) {
-        print(widget.resetToken);
         return Scaffold(
           backgroundColor: whiteColor,
           appBar: GeneralAppBar(
@@ -206,7 +207,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               // create account event
                               return null;
                             } else {
-                              return "* Must be at least 8 characters \n* Uppercase and lowercase letters ( A-z)\n* Contains at least one number & Symbols";
+                              return LocaleKeys.passwordConditions.tr();
                             }
                           }
                         },

@@ -33,7 +33,6 @@ class _ResultsScreenState extends State<ResultsScreen> {
         }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
-          appBar: const GeneralHomeLayoutAppBar(),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

@@ -34,37 +34,38 @@ class _LoginScreenState extends State<LoginScreen> {
       Iterable<int>.generate(2).map((_) => FocusNode()).toList();
 
   dataSaving({
-    required String tokenSave,
+    required String extraTokenSave,
     required int countryId,
     required int cityId,
     required int branchId,
     required String isVerifiedSave,
   }) async {
-    (await SharedPreferences.getInstance()).setString('token', tokenSave);
+    (await SharedPreferences.getInstance()).setString('extraToken', extraTokenSave);
     (await SharedPreferences.getInstance()).setInt('extraCountryId', countryId);
     (await SharedPreferences.getInstance()).setInt('extraCityId', cityId);
     (await SharedPreferences.getInstance()).setInt('extraBranchId', branchId);
     (await SharedPreferences.getInstance())
         .setString('verified', isVerifiedSave);
-    token = tokenSave;
+    token = extraTokenSave;
     verified = isVerifiedSave;
     extraCountryId = countryId;
     extraCityId = cityId;
     extraBranchId = branchId;
   }
+  saveExtraToken({required String extraToken1})async{
+    (await SharedPreferences.getInstance()).setString('token',extraToken1);
+  }
   bool isLoading = false;
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  String? verificationId = "";
 
-  String verificationId = "";
-
-  Future<void> fetchOtp(String number) async {
-    isLoading = true;
+  Future<void> fetchOtp({required String number}) async {
     await auth.verifyPhoneNumber(
       phoneNumber: '+2$number',
       verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential);
-        isLoading = false;
+        await auth.signInWithCredential(credential).then((v) => {
+        });
       },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
@@ -72,19 +73,16 @@ class _LoginScreenState extends State<LoginScreen> {
             print('The provided phone number is not valid.');
           }
         }
-        isLoading = false;
       },
       codeSent: (String verificationId, int? resendToken) async {
-        this.verificationId = verificationId;
-        isLoading = false;
+        verificationId = verificationId;
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        isLoading = false;
       },
     );
 
     if (kDebugMode) {
-      print('verificationId Sign In : $verificationId');
+      print('verificationId Sign In : ${verificationId}');
     }
   }
 
@@ -92,11 +90,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var cubit = AppCubit.get(context);
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AppLoginSuccessState) {
           if (state.userResourceModel.status) {
             if (state.userResourceModel.data!.isVerified == '0') {
-              Navigator.push(
+              saveExtraToken(extraToken1: state.userResourceModel.extra?.token);
+              fetchOtp(number: mobileController.text.toString());
+              await Navigator.push(
                 context,
                 FadeRoute(
                   page: VerificationScreen(
@@ -108,6 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
               );
             } else {
               if (state.userResourceModel.data!.isCompleted == 0) {
+                saveExtraToken(extraToken1: state.userResourceModel.extra?.token);
+                AppCubit.get(context).getCountry();
                 Navigator.push(
                   context,
                   FadeRoute(
@@ -116,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               } else {
                 dataSaving(
-                  tokenSave: state.userResourceModel.extra?.token,
+                  extraTokenSave: state.userResourceModel.extra?.token,
                   isVerifiedSave: state.userResourceModel.data?.isVerified,
                   countryId: state.userResourceModel.data!.country!.id,
                   cityId: state.userResourceModel.data!.city!.id,
@@ -207,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 90,
                       focusNode: _focusNodes[0],
                       controller: mobileController,
-                      type: TextInputType.text,
+                      type: TextInputType.phone,
                       validatedText: LocaleKeys.txtFieldMobile.tr(),
                       label: LocaleKeys.txtFieldMobile.tr(),
                       onTap: () {},
@@ -241,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             context,
                             FadeRoute(
                               page: ForgetPasswordScreen(
-                                verificationId: verificationId,
+                                verificationId: verificationId ?? '',
                               ),
                             ),
                           );
@@ -284,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             FadeRoute(
-                              page: const SignUpScreen(),
+                              page: SignUpScreen(),
                             ),
                           );
                         },

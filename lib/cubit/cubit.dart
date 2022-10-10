@@ -13,7 +13,8 @@ import 'package:hq/models/cores_model/country_model.dart';
 import 'package:hq/models/cores_model/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
-import 'package:hq/models/model_test.dart';
+import 'package:hq/models/test_models/categories_model.dart';
+import 'package:hq/models/test_models/offers_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/home_screen.dart';
 import 'package:hq/screens/main_screens/profile/profile_screen.dart';
@@ -24,6 +25,7 @@ import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppStates());
@@ -40,6 +42,8 @@ class AppCubit extends Cubit<AppStates> {
   CreateTokenModel? createTokenModel;
   ResetPasswordModel? resetPasswordModel;
   TestsModel? testsModel;
+  CategoriesModel? categoriesModel;
+  OffersModel? offersModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -84,16 +88,6 @@ class AppCubit extends Cubit<AppStates> {
         print('responseJson : $responseJson');
       }
       userResourceModel = UserResourceModel.fromJson(responseJson);
-      if (kDebugMode) {
-        print('userResourceModel : $userResourceModel');
-      }
-      if (kDebugMode) {
-        print('response : $response');
-        print('responseJsonB : $responseJsonB');
-        print('convertedResponse : $convertedResponse');
-        print('responseJson : $responseJson');
-        print('userResourceModel : ${userResourceModel?.extra?.token}');
-      }
       emit(AppRegisterSuccessState(userResourceModel!));
     } catch (error) {
       if (kDebugMode) {
@@ -172,7 +166,7 @@ class AppCubit extends Cubit<AppStates> {
           headers: {
             'Accept': 'application/json',
             'Accept-Language': sharedLanguage,
-            'Authorization': 'Bearer $extraToken',
+            'Authorization': 'Bearer $token',
           },
         ),
       );
@@ -200,6 +194,45 @@ class AppCubit extends Cubit<AppStates> {
         print(error);
       }
       emit(AppCompleteProfileErrorState(error.toString()));
+    }
+  }
+
+  Future getProfile({
+    required String token,
+  }) async {
+    try {
+      emit(AppGetProfileLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        getProfileURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      userResourceModel = UserResourceModel.fromJson(responseJson);
+      // if (kDebugMode) {
+      //   print('response : $response');
+      //   print('responseJsonB : $responseJsonB');
+      //   print('convertedResponse : $convertedResponse');
+      //   print('responseJson : $responseJson');
+      //   print('userResourceModel : ${userResourceModel?.extra?.token}');
+      // }
+      emit(AppGetProfileSuccessState(userResourceModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetProfileErrorState(error.toString()));
     }
   }
 
@@ -443,16 +476,80 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print(responseJson);
+        print(headers.entries);
+      }
       verifyModel = VerifyModel.fromJson(responseJson);
+      if (kDebugMode) {
+        print('verifyModel : ${verifyModel!.status}');
+      }
       emit(AppGetVerifySuccessState(verifyModel!));
     } catch (error) {
       emit(AppGetVerifyErrorState());
     }
   }
 
+  Future getCategories() async {
+    try {
+      emit(AppGetCategoriesLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        categoriesURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      categoriesModel = CategoriesModel.fromJson(responseJson);
+      emit(AppGetCategoriesSuccessState(categoriesModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetCategoriesErrorState(error.toString()));
+    }
+  }
+
+  Future getOffers() async {
+    try {
+      emit(AppGetOffersLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        offersURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      offersModel = OffersModel.fromJson(responseJson);
+      emit(AppGetOffersSuccessState(offersModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetOffersErrorState(error.toString()));
+    }
+  }
 
   Future getTests({
-    required String categoriesId,
+    required var categoriesId,
   }) async {
     try {
       emit(AppGetTestsLoadingState());
@@ -473,19 +570,15 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       testsModel = TestsModel.fromJson(responseJson);
-      // if (kDebugMode) {
-      //   print('response : $response');
-      //   print('responseJsonB : $responseJsonB');
-      //   print('convertedResponse : $convertedResponse');
-      //   print('responseJson : $responseJson');
-      //   print('testsModel : ${testsModel?.extra?.token}');
-      // }
+      if (kDebugMode) {
+        print('testsModel responseJson : $responseJson');
+      }
       emit(AppGetTestsSuccessState(testsModel!));
     } catch (error) {
       if (kDebugMode) {
         print(error);
       }
-      emit(AppLoginErrorState(error.toString()));
+      emit(AppGetTestsErrorState(error.toString()));
     }
   }
 
@@ -511,8 +604,10 @@ class AppCubit extends Cubit<AppStates> {
     getCountry();
     getCity(countryId: extraCountryId!);
     getBranch(cityID: extraCityId!);
-    getCarouselData();
     getRelations();
+    getCarouselData();
+    getCategories();
+    getOffers();
   }
 
   void loginChangePasswordVisibility() {
@@ -545,7 +640,7 @@ class AppCubit extends Cubit<AppStates> {
   void resetConfirmChangePasswordVisibility() {
     resetConfirmIsPassword = !resetConfirmIsPassword;
     resetConfirmSufIcon =
-    resetConfirmIsPassword ? Icons.visibility : Icons.visibility_off;
+        resetConfirmIsPassword ? Icons.visibility : Icons.visibility_off;
     emit(AppResetConfirmChangePasswordVisibilityState());
   }
 
@@ -555,7 +650,7 @@ class AppCubit extends Cubit<AppStates> {
   void idNumberChangeVisibility() {
     idNumberIsPassword = !idNumberIsPassword;
     idNumberSufIcon =
-    idNumberIsPassword ? Icons.visibility : Icons.visibility_off;
+        idNumberIsPassword ? Icons.visibility : Icons.visibility_off;
     emit(AppIdNumberVisibilityState());
   }
 
@@ -586,6 +681,7 @@ class AppCubit extends Cubit<AppStates> {
       fromHome = false;
       currentIndex = index;
     }
+    print(currentIndex);
     emit(AppChangeBottomNavState());
   }
 
@@ -600,6 +696,8 @@ class AppCubit extends Cubit<AppStates> {
     CacheHelper.removeData(key: 'verified').then((value) {
       CacheHelper.removeData(key: 'token').then((value) {
         extraToken = null;
+        token = null;
+
         if (value) {
           navigateAndFinish(
             context,
@@ -610,5 +708,4 @@ class AppCubit extends Cubit<AppStates> {
       });
     });
   }
-
 }

@@ -27,8 +27,11 @@ class SelectGenderScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is AppCompleteProfileSuccessState) {
           if (state.userResourceModel.status) {
-            Navigator.pushAndRemoveUntil(context, FadeRoute(page: const HomeLayoutScreen(),), (route) => false);
+            navigateAndFinish(context,const HomeLayoutScreen());
           }
+        }
+        if (AppCubit.get(context).isVisitor == true ){
+          navigateAndFinish(context,const HomeLayoutScreen());
         }
       },
       builder: (context, state) {

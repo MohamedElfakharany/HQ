@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var user = AppCubit.get(context).userResourceModel!.data!;
+        // var user = AppCubit.get(context).userResourceModel!.data!;
         return Scaffold(
           backgroundColor: whiteColor,
           body: Column(
@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(70.0),
                           child: CachedNetworkImage(
-                            imageUrl: user.profile,
+                            imageUrl: AppCubit.get(context).userResourceModel?.data?.profile ?? '',
                             fit: BoxFit.cover,
                             placeholder: (context, url) => const SizedBox(
                               width: 30,
@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       horizontalSmallSpace,
                       if (AppCubit.get(context).isVisitor == false)
                         Text(
-                        user.name,
+                        AppCubit.get(context).userResourceModel?.data?.name ?? '',
                         style: titleStyle.copyWith(color: whiteColor),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -117,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       verticalMiniSpace,
                       if (AppCubit.get(context).isVisitor == false)
                         Text(
-                        user.phone,
+                        AppCubit.get(context).userResourceModel?.data?.phone ?? '',
                         style: titleSmallStyle.copyWith(color: whiteColor),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        if (AppCubit.get(context).isVisitor == true || AppCubit.get(context).userResourceModel!.data!.isCompleted == 0)
+                        if (AppCubit.get(context).isVisitor == true || AppCubit.get(context).userResourceModel?.data?.isCompleted == 0)
                           Container(
                           height: 160,
                           decoration: BoxDecoration(

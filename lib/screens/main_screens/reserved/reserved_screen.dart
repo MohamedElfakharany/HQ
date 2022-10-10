@@ -11,14 +11,8 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class ReservedScreen extends StatefulWidget {
+class ReservedScreen extends StatelessWidget {
   const ReservedScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ReservedScreen> createState() => _ReservedScreenState();
-}
-
-class _ReservedScreenState extends State<ReservedScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -28,7 +22,6 @@ class _ReservedScreenState extends State<ReservedScreen> {
           length: 3,
           child: Scaffold(
             backgroundColor: greyExtraLightColor,
-            appBar: const GeneralHomeLayoutAppBar(),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(

@@ -65,6 +65,8 @@ abstract class  LocaleKeys {
   static const resetTxtMain = 'resetTxtMain';
   static const resetTxtSecondary = 'resetTxtSecondary';
   static const resetTxtThird = 'resetTxtThird';
+  static const resetEnterMobile = 'resetEnterMobile';
+  static const passwordConditions = 'passwordConditions';
   static const TxtFieldNewPassword = 'TxtFieldNewPassword';
   static const TxtFieldReEnterPassword = 'TxtFieldReEnterPassword';
   static const BtnReset = 'BtnReset';

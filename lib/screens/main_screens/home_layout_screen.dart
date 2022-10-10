@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/shared/components/general_components.dart';
@@ -18,6 +17,7 @@ class HomeLayoutScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: whiteColor,
+          appBar: GeneralHomeLayoutAppBar(),
           body: cubit.bottomScreens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             onTap: (index) {

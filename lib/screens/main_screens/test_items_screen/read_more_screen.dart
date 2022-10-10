@@ -1,17 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class ReadMoreScreen extends StatefulWidget {
-  const ReadMoreScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ReadMoreScreen> createState() => _ReadMoreScreenState();
-}
-
-class _ReadMoreScreenState extends State<ReadMoreScreen> {
+class ReadMoreScreen extends StatelessWidget {
+  ReadMoreScreen({Key? key, this.testsDataModel, this.offersDataModel}) : super(key: key);
+  TestsDataModel? testsDataModel;
+  OffersDataModel? offersDataModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,19 +19,20 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
         child: ListView(
           children: [
-          Image.asset(
-          'assets/images/lastOffer.png',
-          height: 200,
-          width: MediaQuery.of(context).size.width * 0.9,
+          CachedNetworkImage(
+            imageUrl: testsDataModel?.image ?? offersDataModel?.image,
+            height: 200,
+            width: MediaQuery.of(context).size.width * 0.9,
+            fit: BoxFit.cover,
           ),
-            const Text(
-              'Glaciated Hemoglobin HBA1C',
+            Text(
+              testsDataModel?.title ?? offersDataModel?.title,
               style: titleStyle,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
             Text(
-              'It includes a set of medical tests that are done periodically (every six months), and they are as follows:It is required to count the two hours from the start of eating and it is required to eat within the first ten minutes from the beginning of the two hours. It is not allowed to eat any food during the two hours. It is only allowed to take water and medication, if available. Please come to the laboratory at least a quarter of an hour before the end of the two hours.',
+              testsDataModel?.description ?? offersDataModel?.description,
               style: subTitleSmallStyle.copyWith(
                 fontSize: 15,
               ),
