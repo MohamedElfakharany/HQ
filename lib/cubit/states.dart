@@ -1,12 +1,13 @@
 import 'package:hq/models/auth_models/create_token_model.dart';
 import 'package:hq/models/auth_models/reset_password_model.dart';
-import 'package:hq/models/cores_model/branch_model.dart';
-import 'package:hq/models/cores_model/carousel_model.dart';
-import 'package:hq/models/cores_model/city_model.dart';
-import 'package:hq/models/cores_model/country_model.dart';
-import 'package:hq/models/cores_model/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/cores_models/branch_model.dart';
+import 'package:hq/models/cores_models/carousel_model.dart';
+import 'package:hq/models/cores_models/city_model.dart';
+import 'package:hq/models/cores_models/country_model.dart';
+import 'package:hq/models/cores_models/relations_model.dart';
+import 'package:hq/models/profile_models/terms_model.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
 import 'package:hq/models/test_models/tests_model.dart';
@@ -104,11 +105,21 @@ class AppGetRelationsErrorState extends AppStates{
 class AppGetVerifyLoadingState extends AppStates{}
 
 class AppGetVerifySuccessState extends AppStates{
-  final VerifyModel verifyModel;
-  AppGetVerifySuccessState(this.verifyModel);
+  final SuccessModel successModel;
+  AppGetVerifySuccessState(this.successModel);
 }
 
 class AppGetVerifyErrorState extends AppStates{}
+
+class AppEditProfileLoadingState extends AppStates{}
+
+class AppEditProfileSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppEditProfileSuccessState(this.successModel);
+}
+
+class AppEditProfileErrorState extends AppStates{}
+
 
 class AppGetCitiesLoadingState extends AppStates{}
 
@@ -208,6 +219,22 @@ class AppGetTestsSuccessState extends AppStates{
 class AppGetTestsErrorState extends AppStates{
   final String error;
   AppGetTestsErrorState(this.error);
+}
+
+class AppProfileImagePickedSuccessState extends AppStates{}
+
+class AppProfileImagePickedErrorState extends AppStates{}
+
+class AppGetTermsLoadingState extends AppStates{}
+
+class AppGetTermsSuccessState extends AppStates{
+  final TermsModel termsModel;
+  AppGetTermsSuccessState(this.termsModel);
+}
+
+class AppGetTermsErrorState extends AppStates{
+  final String error;
+  AppGetTermsErrorState(this.error);
 }
 
 class AppLogoutSuccessState extends AppStates{}

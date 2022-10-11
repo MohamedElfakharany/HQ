@@ -31,6 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
     extraCountryId = CacheHelper.getData(key: 'extraCountryId');
     extraCityId = CacheHelper.getData(key: 'extraCityId');
     extraBranchId = CacheHelper.getData(key: 'extraBranchId');
+    extraBranchTitle = CacheHelper.getData(key: 'extraBranchTitle');
+    extraBranchIndexId = CacheHelper.getData(key: 'extraBranchIndexId');
     if (kDebugMode) {
       printWrapped('from main the token is $token');
       printWrapped('from main the isFirst is $isFirst');
@@ -39,6 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
       printWrapped('from main the extraCountryId is $extraCountryId');
       printWrapped('from main the extraCityId is $extraCityId');
       printWrapped('from main the extraBranchId is $extraBranchId');
+      printWrapped('from main the extraBranchTitle is $extraBranchTitle');
+      printWrapped('from main the extraBranchIndexId is $extraBranchIndexId');
     }
 
     if (token != null) {

@@ -44,6 +44,10 @@ const offersURL = '$mainURL$testURL/offers';
 
       ///Profile
 
-const getProfileURL = '$mainURL$profileURL/get_profile';
+const getProfileURL = '$mainURL$profileURL/get-profile';
+
+const editProfileURL = '$mainURL$profileURL/edit-profile';
+
+const getTermsPrivacyURL = '$mainURL$profileURL/terms-privacy';
 
       ///Reservations

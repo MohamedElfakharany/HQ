@@ -4,15 +4,17 @@ bool? isFirst = true;
 
 String? extraToken;
 
-int? extraCountryId;
+int? extraCountryId = 1;
 
 String? extraCountryTitle = '';
 
-int? extraCityId;
+int? extraCityId = 1;
 
 String? extraCityTitle = '';
 
-int? extraBranchId;
+int? extraBranchId = 1;
+
+int? extraBranchIndexId = 1;
 
 String? extraBranchTitle = '';
 

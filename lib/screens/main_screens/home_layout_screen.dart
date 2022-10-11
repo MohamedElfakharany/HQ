@@ -17,7 +17,7 @@ class HomeLayoutScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: whiteColor,
-          appBar: GeneralHomeLayoutAppBar(),
+          appBar: const GeneralHomeLayoutAppBar(),
           body: cubit.bottomScreens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             onTap: (index) {

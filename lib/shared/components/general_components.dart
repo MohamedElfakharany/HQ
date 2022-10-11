@@ -298,7 +298,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                               .userResourceModel
                               ?.data
                               ?.profile ??
-                          'mohamed',
+                          '',
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const SizedBox(
                         width: 30,
@@ -372,6 +372,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 );
               },
               child: Badge(
+                position: BadgePosition.topEnd(top: 0),
                 alignment: AlignmentDirectional.centerEnd,
                 animationType: BadgeAnimationType.slide,
                 badgeContent: const Text('3'),
@@ -405,7 +406,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(45);
+  Size get preferredSize => const Size.fromHeight(40);
 }
 
 class DefaultTextButton extends StatelessWidget {

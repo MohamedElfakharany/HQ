@@ -26,8 +26,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   var idNumberController = TextEditingController();
   var mobileNumberController = TextEditingController();
   var emailController = TextEditingController();
-  var maleController = TextEditingController();
-  var femaleController = TextEditingController();
   var birthdayController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   final _focusNodes =
@@ -38,6 +36,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var cubit = AppCubit.get(context);
+        var profileImage = AppCubit.get(context).profileImage;
+        Gender gender = Gender.Female;
+        userNameController.text = cubit.userResourceModel?.data?.name ?? '';
+        idNumberController.text =
+            cubit.userResourceModel?.data?.id.toString() ?? '';
+        mobileNumberController.text =
+            cubit.userResourceModel?.data?.phone ?? '';
+        emailController.text = cubit.userResourceModel?.data?.email ?? '';
+        birthdayController.text = cubit.userResourceModel?.data?.birthday ?? '';
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -68,35 +76,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(100.0),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://avatars.githubusercontent.com/u/34916493?s=400&u=e7300b829193270fbcd03a813551a3702299cbb1&v=4',
-                              placeholder: (context, url) => const SizedBox(
-                                width: 30,
-                                height: 30,
-                                child:
-                                    Center(child: CircularProgressIndicator()),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                              width: 100,
-                              height: 100,
-                            ),
+                            child: profileImage == null
+                                ? CachedNetworkImage(
+                                    imageUrl: cubit
+                                            .userResourceModel?.data?.profile ??
+                                        '',
+                                    placeholder: (context, url) =>
+                                        const SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    width: 100,
+                                    height: 100,
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(83),
+                                    child: Image.file(
+                                      profileImage,
+                                      height: 140,
+                                      width: 140,
+                                      fit: BoxFit.cover,
+                                    )),
                           ),
-                          const CircleAvatar(
-                            radius: 15.0,
-                            backgroundColor: blueColor,
-                            child: Icon(
-                              Icons.edit,
-                              color: whiteColor,
-                              size: 20,
+                          InkWell(
+                            onTap: () {
+                              AppCubit.get(context).getProfileImage();
+                            },
+                            child: const CircleAvatar(
+                              radius: 15.0,
+                              backgroundColor: blueColor,
+                              child: Icon(
+                                Icons.edit,
+                                color: whiteColor,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     verticalMediumSpace,
-                    textLabel(title: LocaleKeys.txtFieldName.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldName.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       height: 90,
@@ -107,7 +133,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onTap: () {},
                     ),
                     verticalSmallSpace,
-                    textLabel(title: LocaleKeys.txtFieldIdNumber.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldIdNumber.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       height: 90,
@@ -123,7 +151,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       },
                     ),
                     verticalSmallSpace,
-                    textLabel(title: LocaleKeys.txtFieldMobile.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldMobile.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       height: 90,
@@ -134,7 +164,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onTap: () {},
                     ),
                     verticalSmallSpace,
-                    textLabel(title: LocaleKeys.txtFieldEmail.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldEmail.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       height: 90,
@@ -145,7 +177,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onTap: () {},
                     ),
                     verticalSmallSpace,
-                    textLabel(title: LocaleKeys.txtFieldDateOfBirth.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldDateOfBirth.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       controller: birthdayController,
@@ -154,15 +188,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       readOnly: true,
                       onTap: () {
                         showDatePicker(
-                          initialEntryMode:
-                          DatePickerEntryMode.calendarOnly,
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
                           context: context,
                           initialDate: DateTime?.now(),
                           firstDate: DateTime.parse('1950-01-01'),
                           lastDate: DateTime?.now(),
                         ).then((value) {
-                          if (value != null){
-                            birthdayController.text = '${value.year}-${value.month}-${value.day}';
+                          if (value != null) {
+                            birthdayController.text =
+                                '${value.year}-${value.month}-${value.day}';
                           }
                           //     DateFormat.yMd().format(value!);
                         }).catchError((error) {
@@ -175,7 +209,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       suffixIcon: Icons.calendar_month,
                     ),
                     verticalSmallSpace,
-                    textLabel(title: LocaleKeys.txtFieldGender.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldGender.tr(),
+                    ),
                     verticalSmallSpace,
                     GenderPickerWithImage(
                       maleText: LocaleKeys.Male.tr(),
@@ -183,23 +219,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       femaleText: LocaleKeys.Female.tr(),
                       //default Female
                       selectedGenderTextStyle:
-                      titleStyle.copyWith(color: greenColor),
+                          titleStyle.copyWith(color: greenColor),
                       verticalAlignedText: true,
                       equallyAligned: true,
                       animationDuration: const Duration(milliseconds: 300),
-                      isCircular: true,
+                      isCircular: false,
                       // default : true,
                       opacityOfGradient: 0.3,
                       linearGradient: blueGreenGradient.scale(0.2),
                       padding: const EdgeInsets.all(3),
                       size: 120,
+                      selectedGender: gender,
                       //default : 120
                       femaleImage: const AssetImage('assets/images/female.jpg'),
                       maleImage: const AssetImage('assets/images/male.jpg'),
                       onChanged: (Gender? value) {
-                        if (value != null){
+                        if (value != null) {
+                          gender = value;
                           if (kDebugMode) {
                             print(value.index);
+                            print(value.name);
+                            print(gender.name);
                           }
                         }
                       },
@@ -216,7 +256,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       title: LocaleKeys.BtnChangePassword.tr(),
                       width: double.infinity,
                       onPress: () {
-                        Navigator.push(context, FadeRoute(page: const ChangePasswordScreen(),),);
+                        Navigator.push(
+                          context,
+                          FadeRoute(
+                            page: const ChangePasswordScreen(),
+                          ),
+                        );
                       },
                     ),
                   ],

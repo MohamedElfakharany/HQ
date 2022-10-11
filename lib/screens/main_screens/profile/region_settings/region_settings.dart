@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
-import 'package:hq/screens/main_screens/profile/region_settings/profile_change_branch.dart';
-import 'package:hq/screens/main_screens/profile/region_settings/profile_change_city.dart';
 import 'package:hq/screens/main_screens/profile/region_settings/profile_change_country.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -23,6 +23,19 @@ class RegionSettingsScreen extends StatefulWidget {
 }
 
 class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(milliseconds: 0),
+          () {
+        AppCubit.get(context).getBranch(cityID: extraCityId!);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -36,7 +49,7 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
             centerTitle: false,
           ),
           body: ConditionalBuilder(
-            condition: state is! AppGetCountriesLoadingState,
+            condition: state is! AppGetBranchesLoadingState,
             builder: (context) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
@@ -44,160 +57,25 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                 children: [
                   verticalSmallSpace,
                   textLabel(
-                    title: LocaleKeys.txtCountry.tr(),
-                  ),
-                  verticalSmallSpace,
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        FadeRoute(
-                          page: const ProfileChangeCountryScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(radius),
-                          border: Border.all(color: greyLightColor, width: 1),
-                          color: whiteColor),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 5.0),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/images/americanFlag.svg',
-                              height: 40,
-                              width: 60,
-                            ),
-                            horizontalMiniSpace,
-                            Text(
-                              '${AppCubit.get(context).countryModel?.data?[extraCountryId!].title}',
-                              style: titleSmallStyle,
-                            ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              color: greyLightColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  verticalSmallSpace,
-                  textLabel(
-                    title: LocaleKeys.txtCity.tr(),
-                  ),
-                  verticalSmallSpace,
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        FadeRoute(
-                          page: const ProfileChangeCityScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(radius),
-                          border: Border.all(color: greyLightColor, width: 1),
-                          color: whiteColor),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 5.0),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.location_on, color: greyLightColor),
-                            horizontalMiniSpace,
-                            Text(
-                              '${AppCubit.get(context).cityModel?.data?[extraCityId!].title ?? extraCityTitle}',
-                              style: titleSmallStyle,
-                            ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              color: greyLightColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  verticalSmallSpace,
-                  textLabel(
-                    title: LocaleKeys.txtBranch.tr(),
-                  ),
-                  verticalSmallSpace,
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          FadeRoute(page: const ProfileChangeBranchScreen()));
-                    },
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(radius),
-                          border: Border.all(color: greyLightColor, width: 1),
-                          color: whiteColor),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 5.0),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.science_outlined,
-                                color: greyLightColor),
-                            horizontalMiniSpace,
-                            Text(
-                              '${AppCubit.get(context).branchModel?.data?[extraBranchId!].title}',
-                              style: titleSmallStyle,
-                            ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              color: greyLightColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  verticalSmallSpace,
-                  textLabel(
                     title: LocaleKeys.languageA.tr(),
                   ),
                   verticalSmallSpace,
                   InkWell(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   FadeRoute(
-                      //     page: const ChangeLangScreen(),
-                      //   ),
-                      // );
                       setState(
-                            () async {
+                        () async {
                           AppCubit.get(context).changeLanguage();
                           await context
                               .setLocale(Locale(AppCubit.get(context).local!))
                               .then(
                                 (value) => {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  FadeRoute(page: const HomeLayoutScreen()),
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      FadeRoute(
+                                          page: const HomeLayoutScreen()),
                                       (route) => false)
-                            },
-                          );
+                                },
+                              );
                         },
                       );
                     },
@@ -235,11 +113,57 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  verticalSmallSpace,
+                  textLabel(
+                    title: LocaleKeys.txtBranch.tr(),
+                  ),
+                  verticalSmallSpace,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: const ProfileChangeCountryScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(radius),
+                          border: Border.all(color: greyLightColor, width: 1),
+                          color: whiteColor),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 5.0),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.science_outlined,
+                                color: greyLightColor),
+                            horizontalMiniSpace,
+                            Text(
+                              // '${AppCubit.get(context).branchModel!.data![extraBranchId!].title ?? ''}',
+                              extraBranchTitle ?? '',
+                              style: titleSmallStyle,
+                            ),
+                            const Spacer(),
+                            const Icon(
+                              Icons.arrow_forward_ios_sharp,
+                              color: greyLightColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            fallback: (context) => const Center(child: CircularProgressIndicator()),
+            fallback: (context) =>
+                const Center(child: CircularProgressIndicator()),
           ),
         );
       },

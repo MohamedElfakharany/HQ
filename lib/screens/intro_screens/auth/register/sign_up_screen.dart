@@ -102,6 +102,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return false;
   }
 
+  bool isPasswordTyping = false;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -162,7 +164,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     .toList(),
               ),
               child: Column(
-
                 children: [
                   Align(
                     alignment: AlignmentDirectional.centerStart,
@@ -189,6 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   verticalMiniSpace,
+                  if (isPasswordTyping == false)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: DefaultFormField(
@@ -200,8 +202,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       label: LocaleKeys.txtFieldName.tr(),
                       onTap: () {},
                     ),
-                  ),
-                  verticalMiniSpace,
+                  ),if (isPasswordTyping == false)
+                  verticalMiniSpace,if (isPasswordTyping == false)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: DefaultFormField(
@@ -213,7 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       label: LocaleKeys.txtFieldMobile.tr(),
                       onTap: () {},
                     ),
-                  ),
+                  ),if (isPasswordTyping == false)
                   verticalMiniSpace,
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -235,6 +237,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           vertical: 0, horizontal: 4),
                       child: TextFormField(
                         focusNode: _focusNodes[2],
+                        onEditingComplete: (){
+                          isPasswordTyping = false;
+                        },
+                        onTapOutside: (value){
+                          isPasswordTyping = false;
+                        },
+                        onFieldSubmitted: (value){
+                          isPasswordTyping = false;
+                        },
                         controller: passwordController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
@@ -276,6 +287,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         obscureText: AppCubit.get(context).resetIsPassword,
                         obscuringCharacter: '*',
                         onChanged: (value) {
+                          isPasswordTyping = true;
                           formKey.currentState!.validate();
                         },
                         validator: (value) {

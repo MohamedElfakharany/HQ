@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/auth_models/create_token_model.dart';
 import 'package:hq/models/auth_models/reset_password_model.dart';
-import 'package:hq/models/cores_model/branch_model.dart';
-import 'package:hq/models/cores_model/carousel_model.dart';
-import 'package:hq/models/cores_model/city_model.dart';
-import 'package:hq/models/cores_model/country_model.dart';
-import 'package:hq/models/cores_model/relations_model.dart';
+import 'package:hq/models/cores_models/branch_model.dart';
+import 'package:hq/models/cores_models/carousel_model.dart';
+import 'package:hq/models/cores_models/city_model.dart';
+import 'package:hq/models/cores_models/country_model.dart';
+import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/profile_models/terms_model.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
@@ -26,6 +28,7 @@ import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/models/test_models/tests_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppStates());
@@ -36,7 +39,7 @@ class AppCubit extends Cubit<AppStates> {
   CountryModel? countryModel;
   CityModel? cityModel;
   BranchModel? branchModel;
-  VerifyModel? verifyModel;
+  SuccessModel? successModel;
   CarouselModel? carouselModel;
   RelationsModel? relationsModel;
   CreateTokenModel? createTokenModel;
@@ -44,6 +47,7 @@ class AppCubit extends Cubit<AppStates> {
   TestsModel? testsModel;
   CategoriesModel? categoriesModel;
   OffersModel? offersModel;
+  TermsModel? termsModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -197,9 +201,7 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future getProfile({
-    required String token,
-  }) async {
+  Future getProfile() async {
     try {
       emit(AppGetProfileLoadingState());
       Dio dio = Dio();
@@ -219,20 +221,88 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
+        if (kDebugMode) {
+          print('responseJson : $responseJson');
+        }
       userResourceModel = UserResourceModel.fromJson(responseJson);
-      // if (kDebugMode) {
-      //   print('response : $response');
-      //   print('responseJsonB : $responseJsonB');
-      //   print('convertedResponse : $convertedResponse');
-      //   print('responseJson : $responseJson');
-      //   print('userResourceModel : ${userResourceModel?.extra?.token}');
-      // }
+      if (kDebugMode) {
+        print('userResourceModel : ${userResourceModel?.data?.profile}');
+      }
       emit(AppGetProfileSuccessState(userResourceModel!));
     } catch (error) {
       if (kDebugMode) {
         print(error);
       }
       emit(AppGetProfileErrorState(error.toString()));
+    }
+  }
+
+  Future editProfile({
+    required String name,
+    required String email,
+    required String gender,
+    required String birthday,
+  }) async {
+    emit(AppEditProfileLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+    };
+    var formData = {
+      'name': name,
+      'email': email,
+      'gender': gender,
+      'birthday': birthday,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        editProfileURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppResetPasswordSuccessState(resetPasswordModel!));
+    } catch (error) {
+      emit(AppResetPasswordErrorState(error.toString()));
+    }
+  }
+
+  Future getTerms() async {
+    try {
+      emit(AppGetTermsLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        getTermsPrivacyURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      termsModel = TermsModel.fromJson(responseJson);
+      emit(AppGetTermsSuccessState(termsModel!));
+    } catch (error) {
+      emit(AppGetTermsErrorState(error.toString()));
     }
   }
 
@@ -443,11 +513,15 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      branchModel = null;
+      // branchModel = null;
       branchModel = BranchModel.fromJson(responseJson);
       branchNames = branchModel?.data;
       for (var i = 0; i < branchNames!.length; i++) {
         branchName.add(branchNames?[i].title);
+      }
+      if (kDebugMode) {
+        print('branchNames!.length : ${branchNames!.length}');
+        print('branchNames![1].title : ${branchNames![1].title}');
       }
       emit(AppGetBranchesSuccessState(branchModel!));
     } catch (error) {
@@ -460,7 +534,7 @@ class AppCubit extends Cubit<AppStates> {
     var headers = {
       'Accept': 'application/json',
       'Accept-Language': sharedLanguage,
-      'Authorization': 'Bearer $extraToken',
+      'Authorization': 'Bearer $token',
     };
     try {
       Dio dio = Dio();
@@ -480,11 +554,11 @@ class AppCubit extends Cubit<AppStates> {
         print(responseJson);
         print(headers.entries);
       }
-      verifyModel = VerifyModel.fromJson(responseJson);
+      successModel = SuccessModel.fromJson(responseJson);
       if (kDebugMode) {
-        print('verifyModel : ${verifyModel!.status}');
+        print('successModel : ${successModel!.status}');
       }
-      emit(AppGetVerifySuccessState(verifyModel!));
+      emit(AppGetVerifySuccessState(successModel!));
     } catch (error) {
       emit(AppGetVerifyErrorState());
     }
@@ -601,13 +675,29 @@ class AppCubit extends Cubit<AppStates> {
       print('local $local');
     }
     changeBottomScreen(0);
-    getCountry();
-    getCity(countryId: extraCountryId!);
-    getBranch(cityID: extraCityId!);
-    getRelations();
-    getCarouselData();
-    getCategories();
-    getOffers();
+    // getCountry().then(
+    //   (v) => {
+    //     getCity(countryId: extraCountryId!).then(
+    //       (v) => {
+    //         getBranch(cityID: extraCityId!).then(
+    //           (v) => {
+    //             getRelations().then(
+    //               (v) => {
+    //                 getCarouselData().then(
+    //                   (v) => {
+    //                     getCategories().then(
+    //                       (v) => {getOffers()},
+    //                     ),
+    //                   },
+    //                 ),
+    //               },
+    //             ),
+    //           },
+    //         ),
+    //       },
+    //     ),
+    //   },
+    // );
   }
 
   void loginChangePasswordVisibility() {
@@ -681,7 +771,6 @@ class AppCubit extends Cubit<AppStates> {
       fromHome = false;
       currentIndex = index;
     }
-    print(currentIndex);
     emit(AppChangeBottomNavState());
   }
 
@@ -690,6 +779,31 @@ class AppCubit extends Cubit<AppStates> {
   void changeCarouselState(int newIndex) {
     currentCarouselIndex = newIndex;
     emit(AppChangeCarouselState());
+  }
+
+  File? profileImage;
+  var picker = ImagePicker();
+
+  Future<void> getProfileImage() async {
+    try {
+      XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        profileImage = File(pickedImage.path);
+        emit(AppProfileImagePickedSuccessState());
+      } else {
+        if (kDebugMode) {
+          print('no image selected');
+          print(profileImage);
+        }
+        emit(AppProfileImagePickedErrorState());
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        // print('no');
+        // print(profileImage);
+        print(e.toString());
+      }
+    }
   }
 
   void signOut(context) async {

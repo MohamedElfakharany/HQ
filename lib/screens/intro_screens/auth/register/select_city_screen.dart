@@ -9,7 +9,7 @@ import 'package:hq/screens/intro_screens/widget_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/const_shared.dart';
+import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class SelectCityScreen extends StatelessWidget {
@@ -33,6 +33,7 @@ class SelectCityScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        var cubit = AppCubit.get(context);
         print(countryId);
         return Scaffold(
           appBar: GeneralAppBar(title: ''),
@@ -64,12 +65,12 @@ class SelectCityScreen extends StatelessWidget {
                       builder: (context) => ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) => InkWell(
-                            onTap: () {
-                              cityId = index;
-                              AppCubit.get(context).getBranch(cityID: index);
+                            onTap: () async {
+                              cityId = cubit.cityModel!.data![index].id;
+                              cubit.getBranch(cityID: cubit.cityModel!.data![index].id);
                             },
                             child: RegionCard(
-                              title: AppCubit.get(context)
+                              title: cubit
                                   .cityModel!
                                   .data![index]
                                   .title,
@@ -77,7 +78,7 @@ class SelectCityScreen extends StatelessWidget {
                         separatorBuilder: (context, index) =>
                             verticalSmallSpace,
                         itemCount:
-                            AppCubit.get(context).cityModel!.data!.length,
+                            cubit.cityModel!.data!.length,
                       ),
                       fallback: (context) => const Center(
                         child: CircularProgressIndicator(),

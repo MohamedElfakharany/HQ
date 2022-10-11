@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-VerifyModel verifyModelFromJson(dynamic str) => VerifyModel.fromJson(json.decode(str));
+SuccessModel successModelFromJson(dynamic str) => SuccessModel.fromJson(json.decode(str));
 
-class VerifyModel {
-  VerifyModel({
+class SuccessModel {
+  SuccessModel({
     this.status,
   });
 
   dynamic status;
 
-  factory VerifyModel.fromJson(Map<dynamic, dynamic> json) => VerifyModel(
+  factory SuccessModel.fromJson(Map<dynamic, dynamic> json) => SuccessModel(
   status: json["status"]);
 }

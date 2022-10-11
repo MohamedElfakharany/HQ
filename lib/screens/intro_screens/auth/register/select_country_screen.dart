@@ -63,9 +63,9 @@ class SelectCountryScreen extends StatelessWidget {
                       builder: (context) => ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) => InkWell(onTap: (){
-                          countryId = index;
-                          extraCountryId = index;
-                          AppCubit.get(context).getCity(countryId: index);
+                          countryId = cubit.countryModel!.data![index].id;
+                          extraCountryId = cubit.countryModel!.data![index].id;
+                          AppCubit.get(context).getCity(countryId: cubit.countryModel!.data![index].id);
                         },child: RegionCard(title: cubit.countryModel!.data![index].title)),
                         separatorBuilder: (context, index) => verticalSmallSpace,
                         itemCount: cubit.countryModel?.data?.length ?? 0,

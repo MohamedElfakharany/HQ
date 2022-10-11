@@ -118,7 +118,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
         if (state is AppGetVerifySuccessState) {
-          if (state.verifyModel.status) {
+          if (state.successModel.status) {
             saveVerified(verified1: '1');
             AppCubit.get(context).getCountry().then((value) => {
                   Navigator.push(

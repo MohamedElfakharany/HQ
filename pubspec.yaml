@@ -31,6 +31,9 @@ dependencies:
   flutter_launcher_icons: ^0.9.3
   easy_localization: ^3.0.0
   badges: ^2.0.3
+  never_behind_keyboard: ^1.0.1
+  flutter_image_compress: ^1.1.0
+  image_picker: ^0.8.5
 
   #firebase
   firebase_auth: ^3.11.1
@@ -40,6 +43,9 @@ dependencies:
   google_maps_flutter: ^2.1.8
   location: ^4.4.0
   geocoding: ^2.0.4
+
+dependency_overrides:
+  image_picker_android: 0.8.4+13
 
 dev_dependencies:
   flutter_test:
