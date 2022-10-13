@@ -327,7 +327,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
               if (AppCubit.get(context).isVisitor == false)
                 Expanded(
                   child: Text(
-                    '${LocaleKeys.homeTxtWelcome.tr()} ${cubit.userResourceModel?.data?.name ?? ''} ,',
+                    '${cubit.userResourceModel?.data?.name ?? ''} ,',
                     textAlign: TextAlign.start,
                     style: titleSmallStyle,
                     maxLines: 1,

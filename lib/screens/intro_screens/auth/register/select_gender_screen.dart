@@ -15,10 +15,17 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class SelectGenderScreen extends StatelessWidget {
-  const SelectGenderScreen({Key? key, required this.countryId, required this.cityId, required this.branchId}) : super(key: key);
+  const SelectGenderScreen(
+      {Key? key,
+      required this.countryId,
+      required this.cityId,
+      required this.branchId})
+      : super(key: key);
   final int countryId;
   final int cityId;
   final int branchId;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +34,37 @@ class SelectGenderScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is AppCompleteProfileSuccessState) {
           if (state.userResourceModel.status) {
-            navigateAndFinish(context,const HomeLayoutScreen());
+            AppCubit.get(context).dataSaving(
+              extraTokenSave: state.userResourceModel.extra?.token,
+              isVerifiedSave: state.userResourceModel.data?.isVerified ?? 0,
+              countryId: state.userResourceModel.data!.country!.id,
+              cityId: state.userResourceModel.data!.city!.id,
+              branchId: state.userResourceModel.data!.branch!.id,
+              extraBranchTitle1: state.userResourceModel.data!.branch!.title,
+            );
+            navigateAndFinish(
+              context,
+              const HomeLayoutScreen(),
+            );
+            navigateAndFinish(context, const HomeLayoutScreen());
           }
         }
-        if (AppCubit.get(context).isVisitor == true ){
-          navigateAndFinish(context,const HomeLayoutScreen());
+        if (AppCubit.get(context).isVisitor == true) {
+          if (state is AppCompleteProfileSuccessState) {
+            AppCubit.get(context).dataSaving(
+              extraTokenSave: state.userResourceModel.extra?.token,
+              isVerifiedSave: state.userResourceModel.data?.isVerified ?? 0,
+              countryId: state.userResourceModel.data!.country!.id,
+              cityId: state.userResourceModel.data!.city!.id,
+              branchId: state.userResourceModel.data!.branch!.id,
+              extraBranchTitle1: state.userResourceModel.data!.branch!.title,
+            );
+            navigateAndFinish(
+              context,
+              const HomeLayoutScreen(),
+            );
+          }
+          navigateAndFinish(context, const HomeLayoutScreen());
         }
       },
       builder: (context, state) {
@@ -41,13 +74,12 @@ class SelectGenderScreen extends StatelessWidget {
             color: whiteColor,
             child: Padding(
               padding:
-              const EdgeInsets.only(bottom: 20.0, right: 20.0, left: 20.0),
+                  const EdgeInsets.only(bottom: 20.0, right: 20.0, left: 20.0),
               child: Column(
                 children: [
                   verticalSmallSpace,
                   Text(
-                    '${LocaleKeys.BtnSelect.tr()} ${LocaleKeys.txtFieldGender
-                        .tr()}',
+                    '${LocaleKeys.BtnSelect.tr()} ${LocaleKeys.txtFieldGender.tr()}',
                     style: titleStyle.copyWith(fontSize: 30),
                   ),
                   Text(
@@ -66,7 +98,7 @@ class SelectGenderScreen extends StatelessWidget {
                     femaleText: LocaleKeys.Female.tr(),
                     //default Female
                     selectedGenderTextStyle:
-                    titleStyle.copyWith(color: greenColor),
+                        titleStyle.copyWith(color: greenColor),
                     verticalAlignedText: true,
                     equallyAligned: true,
                     animationDuration: const Duration(milliseconds: 300),
@@ -82,7 +114,7 @@ class SelectGenderScreen extends StatelessWidget {
 
                     onChanged: (Gender? value) {
                       if (value != null) {
-                        selectedGender = value.name ;
+                        selectedGender = value.name;
                         if (kDebugMode) {
                           print(value.index);
                           print(value.name);
@@ -94,8 +126,9 @@ class SelectGenderScreen extends StatelessWidget {
                   verticalSmallSpace,
                   ConditionalBuilder(
                     condition: state is! AppCompleteProfileLoadingState,
-                    builder: (context) =>
-                        GeneralButton(title: 'start', onPress: () {
+                    builder: (context) => GeneralButton(
+                        title: 'start',
+                        onPress: () {
                           extraCountryId = countryId;
                           extraCityId = cityId;
                           extraBranchId = branchId;
@@ -103,10 +136,12 @@ class SelectGenderScreen extends StatelessWidget {
                             countryId: countryId,
                             cityId: cityId,
                             branchId: branchId,
-                            gender: selectedGender,);
+                            gender: selectedGender,
+                          );
                         }),
-                    fallback: (context) =>
-                    const Center(child: CircularProgressIndicator(),),
+                    fallback: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ],
               ),

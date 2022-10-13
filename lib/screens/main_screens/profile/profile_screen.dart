@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -27,19 +29,28 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(milliseconds: 0),
+          () async {
+        AppCubit.get(context).getProfile();
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           backgroundColor: whiteColor,
           body: ConditionalBuilder(
             condition: state is! AppGetProfileLoadingState,
-            builder: (context)=> ListView(
-              physics: const BouncingScrollPhysics(),
+            builder: (context)=> Column(
               children: [
                 Container(
                   width: double.infinity,
@@ -141,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.only(
                         right: 20.0, left: 20.0, bottom: 20.0),
                     child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       child: Column(
                         children: [
                           if (AppCubit.get(context).isVisitor == true || AppCubit.get(context).userResourceModel?.data?.isCompleted == 0)

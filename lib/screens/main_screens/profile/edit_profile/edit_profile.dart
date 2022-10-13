@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +35,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) async {
+        if (state is AppEditProfileSuccessState) {
+          if (state.successModel.status) {
+            showToast(msg: LocaleKeys.BtnDone.tr(), state: ToastState.success);
+            await AppCubit.get(context).getProfile().then((v) {
+              Navigator.pop(context);
+            });
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text(LocaleKeys.txtBirthDayError.tr()),
+                  );
+                });
+          }
+        }
+      },
       builder: (context, state) {
         var cubit = AppCubit.get(context);
         var profileImage = AppCubit.get(context).profileImage;
-        Gender gender = Gender.Female;
+        Gender gender;
+        if (cubit.userResourceModel?.data?.gender == 'Male') {
+          gender = Gender.Male;
+        } else {
+          gender = Gender.Female;
+        }
         userNameController.text = cubit.userResourceModel?.data?.name ?? '';
         idNumberController.text =
-            cubit.userResourceModel?.data?.id.toString() ?? '';
+            cubit.userResourceModel?.data?.nationalId.toString() ?? '';
         mobileNumberController.text =
             cubit.userResourceModel?.data?.phone ?? '';
         emailController.text = cubit.userResourceModel?.data?.email ?? '';
@@ -69,6 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       .toList(),
                 ),
                 child: ListView(
+                  physics: const BouncingScrollPhysics(),
                   children: [
                     Center(
                       child: Stack(
@@ -131,6 +155,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       type: TextInputType.text,
                       label: LocaleKeys.txtFieldName.tr(),
                       onTap: () {},
+                      validatedText: LocaleKeys.txtFieldName.tr(),
                     ),
                     verticalSmallSpace,
                     textLabel(
@@ -142,8 +167,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       focusNode: _focusNodes[1],
                       controller: idNumberController,
                       type: TextInputType.number,
+                      readOnly: true,
                       label: LocaleKeys.txtFieldIdNumber.tr(),
                       onTap: () {},
+                      validatedText: LocaleKeys.txtFieldIdNumber.tr(),
                       obscureText: AppCubit.get(context).idNumberIsPassword,
                       suffixIcon: AppCubit.get(context).idNumberSufIcon,
                       suffixPressed: () {
@@ -162,6 +189,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       type: TextInputType.number,
                       label: LocaleKeys.txtFieldMobile.tr(),
                       onTap: () {},
+                      validatedText: LocaleKeys.txtFieldMobile.tr(),
                     ),
                     verticalSmallSpace,
                     textLabel(
@@ -175,6 +203,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       type: TextInputType.emailAddress,
                       label: LocaleKeys.txtFieldEmail.tr(),
                       onTap: () {},
+                      validatedText: LocaleKeys.txtFieldEmail.tr(),
                     ),
                     verticalSmallSpace,
                     textLabel(
@@ -186,6 +215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       type: TextInputType.datetime,
                       label: LocaleKeys.txtFieldDateOfBirth.tr(),
                       readOnly: true,
+                      validatedText: LocaleKeys.txtFieldDateOfBirth.tr(),
                       onTap: () {
                         showDatePicker(
                           initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -198,7 +228,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             birthdayController.text =
                                 '${value.year}-${value.month}-${value.day}';
                           }
-                          //     DateFormat.yMd().format(value!);
+                          DateFormat.yMd().format(value!);
                         }).catchError((error) {
                           if (kDebugMode) {
                             print('error in fetching date');
@@ -245,11 +275,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       },
                     ),
                     verticalSmallSpace,
-                    GeneralButton(
-                      title: LocaleKeys.BtnSaveChanges.tr(),
-                      onPress: () {
-                        Navigator.pop(context);
-                      },
+                    ConditionalBuilder(
+                      condition: state is! AppEditProfileLoadingState,
+                      builder: (context) => GeneralButton(
+                        title: LocaleKeys.BtnSaveChanges.tr(),
+                        onPress: () {
+                          if(emailController.text.isEmpty){
+
+                          }
+                          AppCubit.get(context).editProfile(
+                              birthday: birthdayController.text,
+                              email: emailController.text,
+                              gender: gender.name,
+                              name: userNameController.text,
+                              profile: profileImage == null
+                                  ? cubit.userResourceModel?.data?.profile
+                                  : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
+                        },
+                      ),
+                      fallback: (context) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
                     verticalSmallSpace,
                     GeneralUnfilledButton(
@@ -263,6 +309,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         );
                       },
+                    ),
+                    verticalSmallSpace,
+                    GeneralUnfilledButton(
+                      title: LocaleKeys.BtnChangeMobile.tr(),
+                      width: double.infinity,
+                      onPress: () {},
                     ),
                   ],
                 ),

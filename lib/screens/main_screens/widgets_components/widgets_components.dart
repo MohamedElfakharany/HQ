@@ -10,7 +10,6 @@ import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
-import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
@@ -104,11 +103,9 @@ class _LabCalenderViewState extends State<LabCalenderView> {
                         //   });
                         // }
                       },
-
                       onCalendarCreated: (controller) {
                         // Provider.of<ShiftsProvider>(context,listen: false).fetchCalendarDaysWithOffers(context,startDate: widget.startDate,endDate: widget.endDate,historyType: widget.historyType);
                       },
-
                       onPageChanged: (DateTime day) {
                         // to save current page in Calendar when page changed .
                       },
@@ -621,8 +618,6 @@ class TestItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TestsDataModel testsModelData =
-        AppCubit.get(context).testsModel!.data![index];
     return Container(
       height: 110.0,
       width: 110.0,
@@ -645,7 +640,7 @@ class TestItemCard extends StatelessWidget {
                 children: [
                   horizontalMicroSpace,
                   CachedNetworkImageNormal(
-                    imageUrl: testsModelData.image,
+                    imageUrl: AppCubit.get(context).testsModel?.data?[index].image ?? '',
                     width: 80,
                     height: 80,
                   ),
@@ -656,13 +651,13 @@ class TestItemCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          testsModelData.title,
+                          AppCubit.get(context).testsModel?.data?[index].title ?? '',
                           style: titleStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          testsModelData.description,
+                          AppCubit.get(context).testsModel?.data?[index].description ?? '',
                           style: subTitleSmallStyle2,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -670,7 +665,7 @@ class TestItemCard extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${testsModelData.price} ${LocaleKeys.salary.tr()}',
+                              '${AppCubit.get(context).testsModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
                               style: titleSmallStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -678,7 +673,7 @@ class TestItemCard extends StatelessWidget {
                             if (index % 2 != 0) horizontalMiniSpace,
                             if (index % 2 != 0)
                               Text(
-                                '${testsModelData.price} ${LocaleKeys.salary.tr()}',
+                                '${AppCubit.get(context).testsModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
                                 style: subTitleSmallStyle2.copyWith(
                                   decoration: TextDecoration.lineThrough,
                                 ),
@@ -700,8 +695,7 @@ class TestItemCard extends StatelessWidget {
                               FadeRoute(
                                 page: TestDetailsScreen(
                                     testsDataModel: AppCubit.get(context)
-                                        .testsModel!
-                                        .data![index]),
+                                        .testsModel!.data?[index]),
                               ),
                             );
                           },
@@ -730,7 +724,7 @@ class TestItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         horizontalMicroSpace,
-                        if (testsModelData.gender == 'male')
+                        if (AppCubit.get(context).testsModel?.data?[index].gender == 'male')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
@@ -742,7 +736,7 @@ class TestItemCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                        if (testsModelData.gender == 'female')
+                        if (AppCubit.get(context).testsModel?.data?[index].gender == 'female')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,

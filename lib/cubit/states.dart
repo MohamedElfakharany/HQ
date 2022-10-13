@@ -78,6 +78,19 @@ class AppCompleteProfileErrorState extends AppStates{
   AppCompleteProfileErrorState(this.error);
 }
 
+class AppChangeLocationLoadingState extends AppStates{}
+
+class AppChangeLocationSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppChangeLocationSuccessState(this.successModel);
+}
+
+class AppChangeLocationErrorState extends AppStates{
+  final String error;
+  AppChangeLocationErrorState(this.error);
+}
+
+
 class AppGetCountriesLoadingState extends AppStates{}
 
 class AppGetCountriesSuccessState extends AppStates{
@@ -118,8 +131,10 @@ class AppEditProfileSuccessState extends AppStates{
   AppEditProfileSuccessState(this.successModel);
 }
 
-class AppEditProfileErrorState extends AppStates{}
-
+class AppEditProfileErrorState extends AppStates{
+  final String error;
+  AppEditProfileErrorState(this.error);
+}
 
 class AppGetCitiesLoadingState extends AppStates{}
 
@@ -159,6 +174,22 @@ class AppResetPasswordSuccessState extends AppStates{
 class AppResetPasswordErrorState extends AppStates{
   final String error;
   AppResetPasswordErrorState(this.error);
+}
+
+class AppStartFetchOTPState extends AppStates{}
+
+class AppEndFetchOTPState extends AppStates{}
+
+class AppChangePasswordLoadingState extends AppStates{}
+
+class AppChangePasswordSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppChangePasswordSuccessState(this.successModel);
+}
+
+class AppChangePasswordErrorState extends AppStates{
+  final String error;
+  AppChangePasswordErrorState(this.error);
 }
 
 class AppGetBranchesLoadingState extends AppStates{}

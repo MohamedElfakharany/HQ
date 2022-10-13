@@ -1,5 +1,7 @@
+// ignore_for_file: body_might_complete_normally_nullable
+
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
@@ -24,7 +26,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final confirmPasswordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   final _focusNodes =
-  Iterable<int>.generate(3).map((_) => FocusNode()).toList();
+      Iterable<int>.generate(3).map((_) => FocusNode()).toList();
 
   // regular expression to check if string
   RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
@@ -69,12 +71,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppChangePasswordSuccessState) {
+          if (state.successModel.status) {
+            AppCubit.get(context).signOut(context);
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                content: state.successModel.message,
+              ),
+            );
+          }
+        } else if (state is AppChangePasswordErrorState) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text(
+                state.error.toString(),
+              ),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: whiteColor,
           appBar: GeneralAppBar(
-            title: LocaleKeys.BtnChangePassword.tr(),
+            title: LocaleKeys.resetTxtMain.tr(),
             centerTitle: false,
           ),
           body: Padding(
@@ -88,12 +112,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   defaultDoneWidget: doneKeyboard(),
                   actions: _focusNodes
                       .map((focusNode) =>
-                      KeyboardActionsItem(focusNode: focusNode))
+                          KeyboardActionsItem(focusNode: focusNode))
                       .toList(),
                 ),
                 child: ListView(
                   children: [
-                    textLabel(title: LocaleKeys.TxtFieldOldPassword.tr()),
                     verticalSmallSpace,
                     TextFormField(
                       focusNode: _focusNodes[0],
@@ -109,10 +132,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           color: blueColor,
                         ),
                         label: Text(LocaleKeys.TxtFieldOldPassword.tr()),
-                        hintStyle: const TextStyle(
-                            color: greyDarkColor, fontSize: 14),
+                        hintStyle:
+                            const TextStyle(color: greyDarkColor, fontSize: 14),
                         labelStyle: const TextStyle(
-                          // color: isClickable ? Colors.grey[400] : blueColor,
+                            // color: isClickable ? Colors.grey[400] : blueColor,
                             color: greyDarkColor,
                             fontSize: 14),
                         fillColor: Colors.white,
@@ -141,21 +164,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         }
                       },
                     ),
-                    verticalMediumSpace,
-                    LinearProgressIndicator(
-                      value: passwordStrength,
-                      backgroundColor: Colors.grey[300],
-                      minHeight: 5,
-                      color: passwordStrength <= 1 / 4
-                          ? Colors.red
-                          : passwordStrength == 2 / 4
-                          ? Colors.yellow
-                          : passwordStrength == 3 / 4
-                          ? Colors.blue
-                          : Colors.green,
-                    ),
-                    verticalMediumSpace,
-                    textLabel(title: LocaleKeys.TxtFieldNewPassword.tr()),
                     verticalSmallSpace,
                     TextFormField(
                       focusNode: _focusNodes[1],
@@ -171,10 +179,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           color: blueColor,
                         ),
                         label: Text(LocaleKeys.TxtFieldNewPassword.tr()),
-                        hintStyle: const TextStyle(
-                            color: greyDarkColor, fontSize: 14),
+                        hintStyle:
+                            const TextStyle(color: greyDarkColor, fontSize: 14),
                         labelStyle: const TextStyle(
-                          // color: isClickable ? Colors.grey[400] : blueColor,
+                            // color: isClickable ? Colors.grey[400] : blueColor,
                             color: greyDarkColor,
                             fontSize: 14),
                         fillColor: Colors.white,
@@ -209,13 +217,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             // create account event
                             return null;
                           } else {
-                            return " *  Capital & Small Letters  *  Numbers *  Symbols ";
+                            return LocaleKeys.passwordConditions.tr();
                           }
                         }
                       },
                     ),
-                    verticalMediumSpace,
-                    textLabel(title: LocaleKeys.TxtFieldConfirmPassword.tr()),
+                    verticalSmallSpace,
+                    LinearProgressIndicator(
+                      value: passwordStrength,
+                      backgroundColor: Colors.grey[300],
+                      minHeight: 5,
+                      color: passwordStrength <= 1 / 4
+                          ? Colors.red
+                          : passwordStrength == 2 / 4
+                              ? Colors.yellow
+                              : passwordStrength == 3 / 4
+                                  ? Colors.blue
+                                  : Colors.green,
+                    ),
                     verticalSmallSpace,
                     TextFormField(
                       focusNode: _focusNodes[2],
@@ -227,15 +246,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             AppCubit.get(context)
                                 .resetConfirmChangePasswordVisibility();
                           },
-                          icon:
-                          Icon(AppCubit.get(context).resetConfirmSufIcon),
+                          icon: Icon(AppCubit.get(context).resetConfirmSufIcon),
                           color: blueColor,
                         ),
                         label: Text(LocaleKeys.TxtFieldConfirmPassword.tr()),
-                        hintStyle: const TextStyle(
-                            color: greyDarkColor, fontSize: 14),
+                        hintStyle:
+                            const TextStyle(color: greyDarkColor, fontSize: 14),
                         labelStyle: const TextStyle(
-                          // color: isClickable ? Colors.grey[400] : blueColor,
+                            // color: isClickable ? Colors.grey[400] : blueColor,
                             color: greyDarkColor,
                             fontSize: 14),
                         fillColor: Colors.white,
@@ -255,11 +273,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           color: blueLightColor,
                           fontSize: 18,
                           fontFamily: fontFamily),
-                      obscureText:
-                      AppCubit.get(context).resetConfirmIsPassword,
+                      obscureText: AppCubit.get(context).resetConfirmIsPassword,
                       obscuringCharacter: '*',
                       validator: (value) {
-                        if (value!.isEmpty){
+                        if (value!.isEmpty) {
                           return LocaleKeys.TxtFieldConfirmPassword.tr();
                         } else if (value != newPasswordController.text) {
                           return LocaleKeys.txtPasswordsNotMatch.tr();
@@ -267,17 +284,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       },
                     ),
                     verticalSmallSpace,
-                    GeneralButton(
-                      title: LocaleKeys.BtnReset.tr(),
-                      onPress: () {
-                        if (formKey.currentState!.validate()) {
-                          Navigator.pop(context);
-                          if (kDebugMode) {
-                            print(passwordStrength);
-                            print(newPasswordController.text);
+                    ConditionalBuilder(
+                      condition: state is! AppChangePasswordLoadingState,
+                      builder: (context) => GeneralButton(
+                        title: LocaleKeys.BtnReset.tr(),
+                        onPress: () {
+                          if (formKey.currentState!.validate()) {
+                            AppCubit.get(context).changePassword(
+                              oldPassword: oldPasswordController.text,
+                              newPassword: newPasswordController.text,
+                            );
                           }
-                        }
-                      },
+                        },
+                      ),
+                      fallback: (context) =>
+                          const Center(child: CircularProgressIndicator()),
                     ),
                   ],
                 ),

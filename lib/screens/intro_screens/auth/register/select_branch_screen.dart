@@ -11,6 +11,7 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectBranchScreen extends StatelessWidget {
   const SelectBranchScreen(
@@ -56,31 +57,30 @@ class SelectBranchScreen extends StatelessWidget {
                         onTap: () async {
                           print(
                               'countryId : $countryId cityId : $cityId branchID : $index');
-                          await CacheHelper.saveData(
-                                  key: 'extraBranchId',
-                                  value: cubit.branchModel!.data![index].id)
-                              .then(
-                            (v) async => {
-                              await CacheHelper.saveData(
-                                      key: 'extraBranchTitle',
-                                      value: AppCubit.get(context)
-                                          .branchModel!
-                                          .data![index]
-                                          .title)
-                                  .then((v) => {
-                                        Navigator.push(
-                                          context,
-                                          FadeRoute(
-                                            page: SelectGenderScreen(
-                                              branchId: index,
-                                              countryId: countryId,
-                                              cityId: cityId,
-                                            ),
-                                          ),
-                                        ),
-                                      })
-                            },
-                          );
+                          AppCubit.get(context)
+                              .saveExtraLocation(
+                                  extraCountryId1: countryId,
+                                  extraCityId1: cityId,
+                                  extraBranchId1: AppCubit.get(context)
+                                      .branchModel!
+                                      .data![index]
+                                      .id,
+                                  extraBranchTitle1: AppCubit.get(context)
+                                      .branchModel!
+                                      .data![index]
+                                      .title)
+                              .then((v) {
+                            Navigator.push(
+                              context,
+                              FadeRoute(
+                                page: SelectGenderScreen(
+                                  branchId: index,
+                                  countryId: countryId,
+                                  cityId: cityId,
+                                ),
+                              ),
+                            );
+                          });
                         },
                         child: RegionCard(
                           title: AppCubit.get(context)

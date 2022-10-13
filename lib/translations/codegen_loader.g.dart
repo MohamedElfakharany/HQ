@@ -8,7 +8,7 @@ class CodegenLoader extends AssetLoader {
   const CodegenLoader();
 
   @override
-  Future<Map<String, dynamic>> load(String fullPath, Locale locale) {
+  Future<Map<String, dynamic>> load(String path, Locale locale) {
     return Future.value(mapLocales[locale.toString()]);
   }
 
@@ -200,6 +200,8 @@ class CodegenLoader extends AssetLoader {
     "BtnContact": "Contact",
     "txtHomeReserveAccepted": "Your reservation been accepted",
     "BtnOk": "Ok",
+    "BtnChangeMobile": "Change Mobile Number",
+    "txtBirthDayError": "The date of birth field does not correspond to the figure Y-M-D.",
     "BtnContactT": "Call",
     "txtRate": "How satisfied are you with the service ?",
     "txtTrustThanks": "Thanks for your trust in our Lab !",
@@ -424,6 +426,8 @@ class CodegenLoader extends AssetLoader {
     "BtnContact": "للتواصل",
     "txtHomeReserveAccepted": "تم قبول طلبك بنجاح ",
     "BtnOk": "حسناً",
+    "BtnChangeMobile": "تغيير رقم الهاتف",
+    "txtBirthDayError": "لا يتوافق حقل تآريخ الميلاد مع الشكل Y-M-D.",
     "BtnContactT": "إتصل الآن",
     "txtRate": "ما مدي رضائك عن الخدمة التي تلقيتها ؟",
     "txtTrustThanks": "! شكراً لثقتك بمعملنا",

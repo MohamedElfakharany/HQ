@@ -50,4 +50,8 @@ const editProfileURL = '$mainURL$profileURL/edit-profile';
 
 const getTermsPrivacyURL = '$mainURL$profileURL/terms-privacy';
 
+const changeLocationURL = '$mainURL$profileURL/change-location';
+
+const changePasswordURL = '$mainURL$profileURL/change-password';
+
       ///Reservations

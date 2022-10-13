@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     extraCityId = CacheHelper.getData(key: 'extraCityId');
     extraBranchId = CacheHelper.getData(key: 'extraBranchId');
     extraBranchTitle = CacheHelper.getData(key: 'extraBranchTitle');
-    extraBranchIndexId = CacheHelper.getData(key: 'extraBranchIndexId');
+
     if (kDebugMode) {
       printWrapped('from main the token is $token');
       printWrapped('from main the isFirst is $isFirst');
@@ -42,11 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
       printWrapped('from main the extraCityId is $extraCityId');
       printWrapped('from main the extraBranchId is $extraBranchId');
       printWrapped('from main the extraBranchTitle is $extraBranchTitle');
-      printWrapped('from main the extraBranchIndexId is $extraBranchIndexId');
     }
 
     if (token != null) {
-      if (verified == '1') {
+      if (verified == 1) {
         AppCubit.get(context).isVisitor = false;
         widget = const HomeLayoutScreen();
       } else {

@@ -14,11 +14,9 @@ String? extraCityTitle = '';
 
 int? extraBranchId = 1;
 
-int? extraBranchIndexId = 1;
-
 String? extraBranchTitle = '';
 
-String? verified;
+int? verified;
 
 String? deviceToken;
 

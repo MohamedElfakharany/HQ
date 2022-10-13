@@ -2,8 +2,6 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
@@ -15,40 +13,10 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
-  ForgetPasswordScreen({Key? key, required this.verificationId})
-      : super(key: key);
-
-  FirebaseAuth auth = FirebaseAuth.instance;
-  String verificationId = "";
+  ForgetPasswordScreen({Key? key}) : super(key: key);
 
   final mobileController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
-  Future<void> fetchOtp({required String number}) async {
-    await auth.verifyPhoneNumber(
-      phoneNumber: '+2$number',
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((v) => {
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          if (kDebugMode) {
-            print('The provided phone number is not valid.');
-          }
-        }
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        verificationId = verificationId;
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-      },
-    );
-
-    if (kDebugMode) {
-      print('verificationId Sign In : ${verificationId}');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,19 +24,25 @@ class ForgetPasswordScreen extends StatelessWidget {
       listener: (context, state) async {
         if (state is AppCreateTokenSuccessState) {
           if (state.createTokenModel.status) {
-            fetchOtp(number: mobileController.text.toString());
-            await Navigator.push(
+            Navigator.push(
               context,
               FadeRoute(
                 page: VerificationScreen(
-                  resetToken: state.createTokenModel.data!.resetToken,
                   isRegister: false,
-                  verificationId: verificationId,
                   mobileNumber: mobileController.text.toString(),
                 ),
               ),
             );
-          } else {}
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                content: Text(
+                  state.createTokenModel.message,
+                ),
+              ),
+            );
+          }
         } else {}
       },
       builder: (context, state) => Scaffold(
@@ -122,7 +96,8 @@ class ForgetPasswordScreen extends StatelessWidget {
                   title: LocaleKeys.BtnContinue.tr(),
                   onPress: () {
                     if (formKey.currentState!.validate()) {
-                      AppCubit.get(context).createToken(mobile: mobileController.text);
+                      AppCubit.get(context)
+                          .createToken(mobile: mobileController.text);
                     }
                   },
                 ),

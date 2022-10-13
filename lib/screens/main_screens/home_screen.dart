@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_details_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_items_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
@@ -36,33 +35,37 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     Timer(
       const Duration(milliseconds: 0),
-          () {
+      () async {
         AppCubit.get(context).getProfile();
         AppCubit.get(context).getTerms();
+        AppCubit.get(context).getCarouselData();
+        extraBranchTitle =
+            await CacheHelper.getData(key: 'extraBranchTitle').then((v) async {
+          extraCityId =
+              await CacheHelper.getData(key: 'extraCityId').then(() async {
+            extraBranchId =
+                await CacheHelper.getData(key: 'extraBranchId').then(() {
+            });
+          });
+        });
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    extraBranchTitle = CacheHelper.getData(key: 'extraBranchTitle');
-    extraBranchIndexId = CacheHelper.getData(key: 'extraBranchIndexId');
-    extraCityId = CacheHelper.getData(key: 'extraCityId');
+    var cubit = AppCubit.get(context);
     return BlocProvider(
       create: (BuildContext context) => AppCubit()
         ..getCountry()
-        ..getCity(countryId: extraCityId!)
-        ..getBranch(cityID: extraCityId!)
-        ..getCarouselData()
+        ..getCity(countryId: extraCountryId!)
         ..getRelations()
+        ..getBranch(cityID: extraCityId!)
         ..getCategories()
-        ..getOffers()
-        ..getProfile()
-        ..getTerms(),
+        ..getOffers(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          var cubit = AppCubit.get(context);
           return Scaffold(
             backgroundColor: greyExtraLightColor,
             body: ConditionalBuilder(
@@ -74,12 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   state is! AppGetCategoriesLoadingState &&
                   state is! AppGetOffersLoadingState &&
                   state is! AppGetTestsLoadingState &&
-                  state is! AppGetProfileLoadingState,
+                  state is! AppGetProfileLoadingState &&
+                  cubit.branchNames != null,
               builder: (context) => Container(
                 color: greyExtraLightColor,
                 padding: const EdgeInsets.only(
                     left: 20.0, right: 20.0, bottom: 20.0),
                 child: ListView(
+                  physics: const BouncingScrollPhysics(),
                   children: [
                     Row(
                       children: [
@@ -128,9 +133,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               // ),
                               DropdownButtonHideUnderline(
                             child: ConditionalBuilder(
-                              condition: state is! AppGetBranchesLoadingState &&
-                                  state is! AppGetCitiesLoadingState &&
-                                  state is! AppGetCountriesLoadingState &&
+                              condition: state is! AppGetBranchesLoadingState ||
+                                  state is! AppGetCitiesLoadingState ||
+                                  state is! AppGetCountriesLoadingState ||
                                   cubit.branchNames != null,
                               builder: (context) =>
                                   DropdownButtonFormField<String>(
@@ -147,14 +152,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                       TextStyle(color: Color(0xFF4F4F4F)),
                                   border: InputBorder.none,
                                 ),
-                                value: extraBranchTitle,
+                                value: AppCubit.get(context)
+                                        .userResourceModel
+                                        ?.data
+                                        ?.branch
+                                        ?.title ??
+                                    extraBranchTitle,
                                 isExpanded: true,
                                 iconSize: 30,
                                 icon: const Icon(
                                   Icons.keyboard_arrow_down_rounded,
                                   color: greyDarkColor,
                                 ),
-                                items: cubit.branchName
+                                items: AppCubit.get(context)
+                                    .branchName
                                     .map(buildLocationItem)
                                     .toList(),
                                 onChanged: (value) =>
@@ -271,11 +282,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            cubit.changeBottomScreen(1);
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                FadeRoute(page: const HomeLayoutScreen()),
-                                (route) => false);
+                            setState(() {
+                              cubit.changeBottomScreen(1);
+                            });
                           },
                           child: Text(
                             LocaleKeys.BtnSeeAll.tr(),
@@ -326,12 +335,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            AppCubit.get(context).fromHome = true;
+                            cubit.fromHome = true;
                             cubit.changeBottomScreen(1);
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                FadeRoute(page: const HomeLayoutScreen()),
-                                (route) => false);
                           },
                           child: Text(
                             LocaleKeys.BtnSeeAll.tr(),
@@ -341,7 +346,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     ConditionalBuilder(
-                      condition: cubit.offersModel?.data != null,
+                      condition: cubit.offersModel?.data != null ||
+                          state is! AppGetOffersLoadingState,
                       builder: (context) => SizedBox(
                         height: 235.0,
                         width: MediaQuery.of(context).size.width * 0.8,
@@ -370,7 +376,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           separatorBuilder: (context, index) =>
                               horizontalMiniSpace,
                           itemCount:
-                              AppCubit.get(context).offersModel!.data!.length,
+                              AppCubit.get(context).offersModel?.data?.length ??
+                                  0,
                         ),
                       ),
                       fallback: (context) =>

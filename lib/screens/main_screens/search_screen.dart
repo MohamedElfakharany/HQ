@@ -1,6 +1,8 @@
+import 'dart:async';
+
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
@@ -20,6 +22,17 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   var searchController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(milliseconds: 0),
+          () {
+        AppCubit.get(context).getTests(categoriesId: '0');
+        // AppCubit.get(context).getTerms();
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -71,10 +84,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 verticalSmallSpace,
                 Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) => TestItemCard(index: index),
-                    separatorBuilder: (context, index) => verticalMiniSpace,
-                    itemCount: 6,
+                  child: ConditionalBuilder(
+                    condition: state is! AppGetTestsLoadingState,
+                    builder: (context) => ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => TestItemCard(index: index),
+                      separatorBuilder: (context, index) => verticalMiniSpace,
+                      itemCount: AppCubit.get(context).testsModel?.data?.length ?? 0,
+                    ),
+                    fallback: (context) => const Center(child: CircularProgressIndicator(),),
                   ),
                 ),
               ],

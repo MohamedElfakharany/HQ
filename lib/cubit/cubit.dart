@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,7 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/models/test_models/tests_model.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppStates());
@@ -201,6 +203,78 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future changeLocation({
+    required int countryId,
+    required int cityId,
+    required int branchId,
+  }) async {
+    var formData = {
+      'countryId': countryId,
+      'cityId': cityId,
+      'branchId': branchId,
+    };
+    try {
+      emit(AppChangeLocationLoadingState());
+      Dio dio = Dio();
+      var response = await dio.post(
+        changeLocationURL,
+        data: formData,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      if (kDebugMode) {
+        print('extraToken: $extraToken');
+        print('headers: ${formData.entries}');
+        print('response: $response');
+        print('responseJsonB: $responseJsonB');
+        print('convertedResponse: $convertedResponse');
+        print('responseJson: $responseJson');
+      }
+      // userResourceModel = UserResourceModel.fromJson(responseJson);
+      CacheHelper.saveData(key: 'extraCountryId', value: countryId);
+      CacheHelper.saveData(key: 'extraCityId', value: cityId);
+      CacheHelper.saveData(key: 'extraBranchId', value: branchId);
+
+      emit(AppChangeLocationSuccessState(successModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppChangeLocationErrorState(error.toString()));
+    }
+  }
+
+  saveExtraLocation({
+    required int extraCountryId1,
+    required int extraCityId1,
+    required int extraBranchId1,
+    required String extraBranchTitle1,
+  }) async {
+    (await SharedPreferences.getInstance())
+        .setInt('extraCountryId', extraCountryId1);
+    (await SharedPreferences.getInstance()).setInt('extraCityId', extraCityId1);
+    (await SharedPreferences.getInstance())
+        .setInt('extraBranchId', extraBranchId1);
+    (await SharedPreferences.getInstance())
+        .setString('extraBranchTitle', extraBranchTitle1);
+    extraCountryId = extraCountryId1;
+    extraCityId = extraCityId1;
+    extraBranchId = extraBranchId1;
+    extraBranchTitle = extraBranchTitle1;
+  }
+
   Future getProfile() async {
     try {
       emit(AppGetProfileLoadingState());
@@ -221,9 +295,9 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-        if (kDebugMode) {
-          print('responseJson : $responseJson');
-        }
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
       userResourceModel = UserResourceModel.fromJson(responseJson);
       if (kDebugMode) {
         print('userResourceModel : ${userResourceModel?.data?.profile}');
@@ -242,18 +316,28 @@ class AppCubit extends Cubit<AppStates> {
     required String email,
     required String gender,
     required String birthday,
+    required String profile,
   }) async {
     emit(AppEditProfileLoadingState());
     var headers = {
       'Accept': 'application/json',
       'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
     };
-    var formData = {
-      'name': name,
-      'email': email,
-      'gender': gender,
-      'birthday': birthday,
-    };
+    var formData = FormData.fromMap(
+      {
+        'name': name,
+        'email': email,
+        'gender': gender,
+        'birthday': birthday,
+        'profile': profileImage == null
+            ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
+            : await MultipartFile.fromFile(
+                profileImage!.path,
+                filename: profile,
+              ),
+      },
+    );
     try {
       Dio dio = Dio();
       var response = await dio.post(
@@ -271,11 +355,12 @@ class AppCubit extends Cubit<AppStates> {
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
         print('responseJson : $responseJson');
+        print('formData : ${formData.fields}');
       }
       successModel = SuccessModel.fromJson(responseJson);
-      emit(AppResetPasswordSuccessState(resetPasswordModel!));
+      emit(AppEditProfileSuccessState(successModel!));
     } catch (error) {
-      emit(AppResetPasswordErrorState(error.toString()));
+      emit(AppEditProfileErrorState(error.toString()));
     }
   }
 
@@ -367,13 +452,84 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      if (kDebugMode) {
-        print('responseJson : $responseJson');
-      }
       resetPasswordModel = ResetPasswordModel.fromJson(responseJson);
+      if (kDebugMode) {
+        print('headers.entries : ${headers.entries}');
+        print('formData.entries : ${formData.entries}');
+        print('responseJson : $responseJson');
+        print('resetPasswordModel : ${resetPasswordModel!.data}');
+      }
       emit(AppResetPasswordSuccessState(resetPasswordModel!));
     } catch (error) {
       emit(AppResetPasswordErrorState(error.toString()));
+    }
+  }
+
+  String? verificationId = "";
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<void> fetchOtp({required String number}) async {
+    emit(AppStartFetchOTPState());
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+2$number',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential).then((v) => {});
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          if (kDebugMode) {
+            print('The provided phone number is not valid.');
+          }
+        }
+      },
+      codeSent: (String verificationIdC, int? resendToken) async {
+        verificationId = verificationIdC;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+    emit(AppEndFetchOTPState());
+
+    if (kDebugMode) {
+      print('verificationId Sign In : $verificationId');
+    }
+  }
+
+  Future changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    emit(AppChangePasswordLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = {
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        changePasswordURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppChangePasswordSuccessState(successModel!));
+    } catch (error) {
+      emit(AppChangePasswordErrorState(error.toString()));
     }
   }
 
@@ -513,8 +669,9 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      // branchModel = null;
+      branchModel = null;
       branchModel = BranchModel.fromJson(responseJson);
+      branchName = [];
       branchNames = branchModel?.data;
       for (var i = 0; i < branchNames!.length; i++) {
         branchName.add(branchNames?[i].title);
@@ -554,6 +711,7 @@ class AppCubit extends Cubit<AppStates> {
         print(responseJson);
         print(headers.entries);
       }
+      (await SharedPreferences.getInstance()).setInt('verified', 1);
       successModel = SuccessModel.fromJson(responseJson);
       if (kDebugMode) {
         print('successModel : ${successModel!.status}');
@@ -623,7 +781,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future getTests({
-    required var categoriesId,
+    String? categoriesId,
   }) async {
     try {
       emit(AppGetTestsLoadingState());
@@ -656,6 +814,29 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  dataSaving({
+    required String extraTokenSave,
+    required String extraBranchTitle1,
+    required int countryId,
+    required int cityId,
+    required int branchId,
+    required int isVerifiedSave,
+  }) async {
+    (await SharedPreferences.getInstance()).setString('token', extraTokenSave);
+    (await SharedPreferences.getInstance())
+        .setString('extraBranchTitle', extraBranchTitle1);
+    (await SharedPreferences.getInstance()).setInt('extraCountryId', countryId);
+    (await SharedPreferences.getInstance()).setInt('extraCityId', cityId);
+    (await SharedPreferences.getInstance()).setInt('extraBranchId', branchId);
+    (await SharedPreferences.getInstance()).setInt('verified', isVerifiedSave);
+    token = extraTokenSave;
+    verified = isVerifiedSave;
+    extraCountryId = countryId;
+    extraCityId = cityId;
+    extraBranchId = branchId;
+    extraBranchTitle = extraBranchTitle1;
+  }
+
   IconData loginSufIcon = Icons.visibility_off;
   bool loginIsPassword = true;
 
@@ -670,34 +851,7 @@ class AppCubit extends Cubit<AppStates> {
     local = isEnglish ? local = 'en' : local = 'ar';
     CacheHelper.saveData(key: 'local', value: local);
     sharedLanguage = local;
-    if (kDebugMode) {
-      print('sharedLanguage $sharedLanguage');
-      print('local $local');
-    }
     changeBottomScreen(0);
-    // getCountry().then(
-    //   (v) => {
-    //     getCity(countryId: extraCountryId!).then(
-    //       (v) => {
-    //         getBranch(cityID: extraCityId!).then(
-    //           (v) => {
-    //             getRelations().then(
-    //               (v) => {
-    //                 getCarouselData().then(
-    //                   (v) => {
-    //                     getCategories().then(
-    //                       (v) => {getOffers()},
-    //                     ),
-    //                   },
-    //                 ),
-    //               },
-    //             ),
-    //           },
-    //         ),
-    //       },
-    //     ),
-    //   },
-    // );
   }
 
   void loginChangePasswordVisibility() {
@@ -789,6 +943,9 @@ class AppCubit extends Cubit<AppStates> {
       XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         profileImage = File(pickedImage.path);
+        if (kDebugMode) {
+          print('profileImage : $profileImage');
+        }
         emit(AppProfileImagePickedSuccessState());
       } else {
         if (kDebugMode) {
@@ -799,8 +956,6 @@ class AppCubit extends Cubit<AppStates> {
       }
     } catch (e) {
       if (kDebugMode) {
-        // print('no');
-        // print(profileImage);
         print(e.toString());
       }
     }

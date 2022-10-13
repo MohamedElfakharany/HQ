@@ -18,13 +18,13 @@ void main() async {
 
   DioHelper.init();
 
-  token = CacheHelper.getData(key: 'token');
-  verified = CacheHelper.getData(key: 'verified');
-  if(sharedLanguage != null) {
-    sharedLanguage = CacheHelper.getData(key: "local");
-  }else{
-    sharedLanguage = 'en';
-  }
+  // token = CacheHelper.getData(key: 'token');
+  // verified = CacheHelper.getData(key: 'verified');
+  // if(sharedLanguage != null) {
+  //   sharedLanguage = CacheHelper.getData(key: "local");
+  // }else{
+  //   sharedLanguage = 'en';
+  // }
 
   BlocOverrides.runZoned(
     () {

@@ -1,7 +1,8 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, body_might_complete_normally_nullable
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
@@ -44,7 +45,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
   double passwordStrength = 0;
 
-
   bool validatePassword(String pass) {
     String password = pass.trim();
     if (password.isEmpty) {
@@ -79,21 +79,31 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
-
-        if (state is AppResetPasswordSuccessState){
-          if (state.resetPasswordModel.status){
-            Navigator.pushAndRemoveUntil(
-                context,
-                FadeRoute(
-                  page: const LoginScreen(),
-                ),
-                    (route) => false);
-          }else{
-            showDialog(context: context,builder: (context)=> Text(state.resetPasswordModel.message));
+        if (state is AppResetPasswordSuccessState) {
+          if (state.resetPasswordModel.status) {
+            AppCubit.get(context).verify().then((v) {
+              if (state is AppGetVerifySuccessState) {
+                if (state.resetPasswordModel.status) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      FadeRoute(
+                        page: const LoginScreen(),
+                      ),
+                      (route) => false);
+                }
+              }
+            });
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) => Text(state.resetPasswordModel.message));
           }
         }
       },
       builder: (context, state) {
+        if (kDebugMode) {
+          print('widget.resetToken : ${widget.resetToken}');
+        }
         return Scaffold(
           backgroundColor: whiteColor,
           appBar: GeneralAppBar(
@@ -309,11 +319,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       title: LocaleKeys.BtnReset.tr(),
                       onPress: () {
                         if (formKey.currentState!.validate()) {
-                          AppCubit.get(context).resetPassword(resetToken: widget.resetToken ,newPassword: passwordController.text);
+
+                          AppCubit.get(context).resetPassword(
+                              resetToken: widget.resetToken,
+                              newPassword: passwordController.text);
                         }
                       },
                     ),
-                    fallback: (context) => const Center(child: CircularProgressIndicator(),),
+                    fallback: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ],
               ),
