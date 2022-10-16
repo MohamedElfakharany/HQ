@@ -7,6 +7,7 @@ import 'package:hq/models/cores_models/carousel_model.dart';
 import 'package:hq/models/cores_models/city_model.dart';
 import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
+import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
@@ -41,6 +42,17 @@ class AppRegisterErrorState extends AppStates{
   final String error;
   AppRegisterErrorState(this.error);
 }
+class AppCreateMemberLoadingState extends AppStates{}
+
+class AppCreateMemberSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCreateMemberSuccessState(this.successModel);
+}
+
+class AppCreateMemberErrorState extends AppStates{
+  final String error;
+  AppCreateMemberErrorState(this.error);
+}
 
 class AppLoginLoadingState extends AppStates{}
 
@@ -65,6 +77,19 @@ class AppGetProfileErrorState extends AppStates{
   final String error;
   AppGetProfileErrorState(this.error);
 }
+
+class AppGetFamiliesLoadingState extends AppStates{}
+
+class AppGetFamiliesSuccessState extends AppStates{
+  final FamiliesModel familiesModel;
+  AppGetFamiliesSuccessState(this.familiesModel);
+}
+
+class AppGetFamiliesErrorState extends AppStates{
+  final String error;
+  AppGetFamiliesErrorState(this.error);
+}
+
 
 class AppCompleteProfileLoadingState extends AppStates{}
 
@@ -134,6 +159,30 @@ class AppEditProfileSuccessState extends AppStates{
 class AppEditProfileErrorState extends AppStates{
   final String error;
   AppEditProfileErrorState(this.error);
+}
+
+class AppEditMemberLoadingState extends AppStates{}
+
+class AppEditMemberSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppEditMemberSuccessState(this.successModel);
+}
+
+class AppEditMemberErrorState extends AppStates{
+  final String error;
+  AppEditMemberErrorState(this.error);
+}
+
+class AppDeleteMemberLoadingState extends AppStates{}
+
+class AppDeleteMemberSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppDeleteMemberSuccessState(this.successModel);
+}
+
+class AppDeleteMemberErrorState extends AppStates{
+  final String error;
+  AppDeleteMemberErrorState(this.error);
 }
 
 class AppGetCitiesLoadingState extends AppStates{}

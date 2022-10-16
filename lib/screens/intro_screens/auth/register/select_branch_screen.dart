@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
@@ -8,10 +9,8 @@ import 'package:hq/screens/intro_screens/widget_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectBranchScreen extends StatelessWidget {
   const SelectBranchScreen(
@@ -25,7 +24,6 @@ class SelectBranchScreen extends StatelessWidget {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = AppCubit.get(context);
         return Scaffold(
           appBar: GeneralAppBar(title: ''),
           body: Container(
@@ -55,8 +53,6 @@ class SelectBranchScreen extends StatelessWidget {
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => InkWell(
                         onTap: () async {
-                          print(
-                              'countryId : $countryId cityId : $cityId branchID : $index');
                           AppCubit.get(context)
                               .saveExtraLocation(
                                   extraCountryId1: countryId,
@@ -70,11 +66,29 @@ class SelectBranchScreen extends StatelessWidget {
                                       .data![index]
                                       .title)
                               .then((v) {
+                            if (kDebugMode) {
+                              print(
+                                  'countryId : $countryId cityId : $cityId branchID : ${AppCubit.get(context)
+                                      .branchModel!
+                                      .data![index]
+                                  .id}');
+                            }
+                            extraBranchId = AppCubit.get(context)
+                                .branchModel!
+                                .data![index]
+                                .id;
+                            extraBranchTitle = AppCubit.get(context)
+                                .branchModel!
+                                .data![index]
+                                .title;
                             Navigator.push(
                               context,
                               FadeRoute(
                                 page: SelectGenderScreen(
-                                  branchId: index,
+                                  branchId: AppCubit.get(context)
+                                      .branchModel!
+                                      .data![index]
+                                      .id,
                                   countryId: countryId,
                                   cityId: cityId,
                                 ),

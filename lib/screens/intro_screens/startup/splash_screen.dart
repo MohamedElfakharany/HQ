@@ -45,18 +45,22 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (token != null) {
+      if (verified != null){
       if (verified == 1) {
         AppCubit.get(context).isVisitor = false;
         widget = const HomeLayoutScreen();
       } else {
         widget = const LoginScreen();
       }
-    } else {
+      }else {
       if (isFirst != null){
         widget = OnBoardingScreen(isSignOut: false,);
       }else{
         widget = const SelectLangScreen();
       }
+      }
+    } else {
+      widget = const SelectLangScreen();
     }
 
     super.initState();

@@ -15,6 +15,7 @@ import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
@@ -50,12 +51,34 @@ class AppCubit extends Cubit<AppStates> {
   CategoriesModel? categoriesModel;
   OffersModel? offersModel;
   TermsModel? termsModel;
+  FamiliesModel? familiesModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
 
   List<RelationsDataModel>? relationsNames = [];
   List<String> relationsName = [];
+
+  int? branchIdList;
+
+  int? relationIdList;
+
+  void selectBranch({required String name}){
+    for (int i = 0; i < branchNames!.length; i++){
+      if (branchNames![i].title == name){
+        branchIdList = branchNames![i].id;
+        getBranch(cityID: branchIdList!);
+      }
+    }
+  }
+
+  void selectRelationId({required String relationName}){
+    for (int i = 0 ; i< relationsNames!.length ; i++){
+      if (relationsNames![i].title == relationName){
+        relationIdList = relationsNames![i].id;
+      }
+    }
+  }
 
   Future register({
     required String name,
@@ -311,6 +334,231 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  File? memberImage;
+
+  File? editMemberImage;
+
+  Future getFamilies() async {
+    try {
+      emit(AppGetFamiliesLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        familiesURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
+      familiesModel = FamiliesModel.fromJson(responseJson);
+      if (kDebugMode) {
+        print('familiesModel : ${familiesModel?.data?.first.profile}');
+      }
+      emit(AppGetFamiliesSuccessState(familiesModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetFamiliesErrorState(error.toString()));
+    }
+  }
+
+  Future<void> getMemberImage() async {
+    try {
+      XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        memberImage = File(pickedImage.path);
+        if (kDebugMode) {
+          print('memberImage : $memberImage');
+        }
+        emit(AppProfileImagePickedSuccessState());
+      } else {
+        if (kDebugMode) {
+          print('no image selected');
+          print(memberImage);
+        }
+        emit(AppProfileImagePickedErrorState());
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+  Future<void> getEditMemberImage() async {
+    try {
+      XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        editMemberImage = File(pickedImage.path);
+        if (kDebugMode) {
+          print('editMemberImage : $editMemberImage');
+        }
+        emit(AppProfileImagePickedSuccessState());
+      } else {
+        if (kDebugMode) {
+          print('no image selected');
+          print(editMemberImage);
+        }
+        emit(AppProfileImagePickedErrorState());
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+  Future createMember({
+    required int relationId,
+    required String name,
+    required String phone,
+    required String birthday,
+    required String gender,
+    required String profile,
+  }) async {
+    emit(AppCreateMemberLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap(
+      {
+        'relationId': relationId,
+        'name': name,
+        'phone': phone,
+        'birthday': birthday,
+        'gender': gender,
+        'profile': memberImage == null
+            ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
+            : await MultipartFile.fromFile(
+          memberImage!.path,
+          filename: profile,
+        ),
+      },
+    );
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        createMemberURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+        print('formData : ${formData.fields}');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCreateMemberSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCreateMemberErrorState(error.toString()));
+    }
+  }
+
+  Future editMember({
+    required String name,
+    required String phone,
+    required String profile,
+  }) async {
+    emit(AppEditMemberLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap(
+      {
+        'name': name,
+        'phone': phone,
+        'profile': editMemberImage == null
+            ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
+            : await MultipartFile.fromFile(
+          editMemberImage!.path,
+          filename: profile,
+        ),
+      },
+    );
+    try {
+      Dio dio = Dio();
+      var response = await dio.put(
+        editMemberURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('editMemberURL : $editMemberURL');
+        print('responseJson : $responseJson');
+        print('formData : ${formData.fields}');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppEditMemberSuccessState(successModel!));
+    } catch (error) {
+      emit(AppEditMemberErrorState(error.toString()));
+    }
+  }
+
+  Future deleteMember({
+    required int memberId,
+  }) async {
+    emit(AppDeleteMemberLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = {
+      'memberId': memberId,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.delete(
+        deleteMemberURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppDeleteMemberSuccessState(successModel!));
+    } catch (error) {
+      emit(AppDeleteMemberErrorState(error.toString()));
+    }
+  }
+
   Future editProfile({
     required String name,
     required String email,
@@ -333,9 +581,9 @@ class AppCubit extends Cubit<AppStates> {
         'profile': profileImage == null
             ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
             : await MultipartFile.fromFile(
-                profileImage!.path,
-                filename: profile,
-              ),
+          profileImage!.path,
+          filename: profile,
+        ),
       },
     );
     try {
@@ -365,6 +613,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future getTerms() async {
+
     try {
       emit(AppGetTermsLoadingState());
       Dio dio = Dio();
@@ -558,6 +807,7 @@ class AppCubit extends Cubit<AppStates> {
       for (var i = 0; i < relationsNames!.length; i++) {
         relationsName.add(relationsNames?[i].title);
       }
+        print(relationsName);
       emit(AppGetRelationsSuccessState(relationsModel!));
     } catch (error) {
       emit(AppGetRelationsErrorState(error.toString()));
@@ -678,7 +928,6 @@ class AppCubit extends Cubit<AppStates> {
       }
       if (kDebugMode) {
         print('branchNames!.length : ${branchNames!.length}');
-        print('branchNames![1].title : ${branchNames![1].title}');
       }
       emit(AppGetBranchesSuccessState(branchModel!));
     } catch (error) {

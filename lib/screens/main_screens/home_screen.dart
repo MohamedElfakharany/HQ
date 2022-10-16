@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
@@ -36,16 +38,18 @@ class _HomeScreenState extends State<HomeScreen> {
     Timer(
       const Duration(milliseconds: 0),
       () async {
-        AppCubit.get(context).getProfile();
-        AppCubit.get(context).getTerms();
         AppCubit.get(context).getCarouselData();
+        AppCubit.get(context).getProfile();
+        if (kDebugMode) {
+          print(AppCubit.get(context).userResourceModel?.data?.branch?.title);
+          log('${AppCubit.get(context).branchName}');
+        }
         extraBranchTitle =
             await CacheHelper.getData(key: 'extraBranchTitle').then((v) async {
           extraCityId =
               await CacheHelper.getData(key: 'extraCityId').then(() async {
             extraBranchId =
-                await CacheHelper.getData(key: 'extraBranchId').then(() {
-            });
+                await CacheHelper.getData(key: 'extraBranchId').then(() {});
           });
         });
       },
@@ -55,11 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var cubit = AppCubit.get(context);
+    locationValue =
+        AppCubit.get(context).userResourceModel?.data?.branch?.title;
     return BlocProvider(
       create: (BuildContext context) => AppCubit()
         ..getCountry()
+        ..getProfile()
+        ..getTerms()
         ..getCity(countryId: extraCountryId!)
-        ..getRelations()
         ..getBranch(cityID: extraCityId!)
         ..getCategories()
         ..getOffers(),
@@ -137,43 +144,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                   state is! AppGetCitiesLoadingState ||
                                   state is! AppGetCountriesLoadingState ||
                                   cubit.branchNames != null,
-                              builder: (context) =>
-                                  DropdownButtonFormField<String>(
-                                // ignore: body_might_complete_normally_nullable
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Location Required';
-                                  }
-                                },
-                                decoration: const InputDecoration(
-                                  fillColor: greyExtraLightColor,
-                                  filled: true,
-                                  errorStyle:
-                                      TextStyle(color: Color(0xFF4F4F4F)),
-                                  border: InputBorder.none,
-                                ),
-                                value: AppCubit.get(context)
-                                        .userResourceModel
-                                        ?.data
-                                        ?.branch
-                                        ?.title ??
-                                    extraBranchTitle,
-                                isExpanded: true,
-                                iconSize: 30,
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: greyDarkColor,
-                                ),
-                                items: AppCubit.get(context)
-                                    .branchName
-                                    .map(buildLocationItem)
-                                    .toList(),
-                                onChanged: (value) =>
-                                    setState(() => locationValue = value),
-                                onSaved: (v) {
-                                  FocusScope.of(context).unfocus();
-                                },
-                              ),
+                              builder: (context) {
+                                if (kDebugMode) {
+                                  print(
+                                      'ghany 2 ${AppCubit.get(context).branchName}');
+                                  print('ghany 2 ${locationValue}');
+                                }
+                                return DropdownButtonFormField<String>(
+                                  // ignore: body_might_complete_normally_nullable
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Location Required';
+                                    }
+                                  },
+                                  decoration: const InputDecoration(
+                                    fillColor: greyExtraLightColor,
+                                    filled: true,
+                                    errorStyle:
+                                        TextStyle(color: Color(0xFF4F4F4F)),
+                                    border: InputBorder.none,
+                                  ),
+                                  value: locationValue,
+                                  isExpanded: true,
+                                  iconSize: 30,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: greyDarkColor,
+                                  ),
+                                  items: AppCubit.get(context)
+                                      .branchName
+                                      .map(buildLocationItem)
+                                      .toList(),
+                                  onChanged: (value) {
+                                    setState(() => locationValue = value);
+                                    // AppCubit.get(context).selectBranch(name: locationValue!);
+                                  },
+                                  onSaved: (v) {
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                );
+                              },
                               fallback: (context) => const Center(
                                   child: LinearProgressIndicator()),
                             ),

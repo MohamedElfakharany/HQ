@@ -1,57 +1,75 @@
 const mainURL = 'https://hq.orcav.com/api';
 
-const authURL = '/auth';
+const authURL = '$mainURL/auth';
 
-const coreURL = '/core';
+const coreURL = '$mainURL/core';
 
-const testURL = '/test';
+const testURL = '$mainURL/test';
 
-const profileURL = '/profile';
+const profileURL = '$mainURL/profile';
 
       ///Auth
 
-const registerURL = '$mainURL$authURL/register';
+const registerURL = '$authURL/register';
 
-const loginURL = '$mainURL$authURL/login';
+const loginURL = '$authURL/login';
 
-const verificationURL = '$mainURL$authURL/verify';
+const verificationURL = '$authURL/verify';
 
-const completeProfileURL = '$mainURL$authURL/complete-profile';
+const completeProfileURL = '$authURL/complete-profile';
 
-const createTokenURL = '$mainURL$authURL/create-token';
+const createTokenURL = '$authURL/create-token';
 
-const resetPasswordURL = '$mainURL$authURL/reset-password';
+const resetPasswordURL = '$authURL/reset-password';
 
       ///Core
 
-const countryURL = '$mainURL$coreURL/countries';
+const countryURL = '$coreURL/countries';
 
-const cityURL = '$mainURL$coreURL/cities';
+const cityURL = '$coreURL/cities';
 
-const branchURL = '$mainURL$coreURL/branches';
+const branchURL = '$coreURL/branches';
 
-const relationsURL = '$mainURL$coreURL/relations';
+const relationsURL = '$coreURL/relations';
 
-const slidersURL = '$mainURL$coreURL/sliders';
+const slidersURL = '$coreURL/sliders';
 
       ///Tests
 
-const categoriesURL = '$mainURL$testURL/categories';
+const categoriesURL = '$testURL/categories';
 
-const testsURL = '$mainURL$testURL/tests';
+const testsURL = '$testURL/tests';
 
-const offersURL = '$mainURL$testURL/offers';
+const offersURL = '$testURL/offers';
 
       ///Profile
 
-const getProfileURL = '$mainURL$profileURL/get-profile';
+const getProfileURL = '$profileURL/get-profile';
 
-const editProfileURL = '$mainURL$profileURL/edit-profile';
+const editProfileURL = '$profileURL/edit-profile';
 
-const getTermsPrivacyURL = '$mainURL$profileURL/terms-privacy';
+const getTermsPrivacyURL = '$profileURL/terms-privacy';
 
-const changeLocationURL = '$mainURL$profileURL/change-location';
+const changeLocationURL = '$profileURL/change-location';
 
-const changePasswordURL = '$mainURL$profileURL/change-password';
+const changePasswordURL = '$profileURL/change-password';
+
+      ///Profile
+              ///medical-inquiries
+
+
+              ///families
+const familiesURL = '$profileURL/families';
+
+const createMemberURL = '$familiesURL/create';
+
+const editMemberURL = '$familiesURL/:familyId/edit';
+
+const deleteMemberURL = '$familiesURL/:familyId/delete';
+
+              ///addresses
+
+
+
 
       ///Reservations

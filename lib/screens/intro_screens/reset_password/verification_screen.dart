@@ -68,17 +68,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      if (kDebugMode) {
-        print(e.code.toLocale(separator: AppCubit.get(context).local!));
-      }
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             content: Text(
-              e.code
-                  .toLocale(separator: AppCubit.get(context).local!)
-                  .toString(),
+              e.code,
             ),
           );
         },

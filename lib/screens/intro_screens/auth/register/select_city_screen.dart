@@ -9,7 +9,7 @@ import 'package:hq/screens/intro_screens/widget_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/cache_helper.dart';
+import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class SelectCityScreen extends StatelessWidget {
@@ -65,20 +65,20 @@ class SelectCityScreen extends StatelessWidget {
                       builder: (context) => ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) => InkWell(
-                            onTap: () async {
-                              cityId = cubit.cityModel!.data![index].id;
-                              cubit.getBranch(cityID: cubit.cityModel!.data![index].id);
-                            },
-                            child: RegionCard(
-                              title: cubit
-                                  .cityModel!
-                                  .data![index]
-                                  .title,
-                            )),
+                          onTap: () async {
+                            cityId = cubit.cityModel!.data![index].id;
+                            print(cityId);
+                            extraCityId = cityId;
+                            cubit.getBranch(
+                                cityID: cubit.cityModel!.data![index].id);
+                          },
+                          child: RegionCard(
+                            title: cubit.cityModel!.data![index].title,
+                          ),
+                        ),
                         separatorBuilder: (context, index) =>
                             verticalSmallSpace,
-                        itemCount:
-                            cubit.cityModel!.data!.length,
+                        itemCount: cubit.cityModel!.data!.length,
                       ),
                       fallback: (context) => const Center(
                         child: CircularProgressIndicator(),

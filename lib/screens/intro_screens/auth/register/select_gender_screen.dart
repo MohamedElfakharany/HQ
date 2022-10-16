@@ -29,7 +29,7 @@ class SelectGenderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String selectedGender = LocaleKeys.Male.tr();
+    Gender selectedGender = Gender.Male;
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
         if (state is AppCompleteProfileSuccessState) {
@@ -114,10 +114,8 @@ class SelectGenderScreen extends StatelessWidget {
 
                     onChanged: (Gender? value) {
                       if (value != null) {
-                        selectedGender = value.name;
+                        selectedGender = value;
                         if (kDebugMode) {
-                          print(value.index);
-                          print(value.name);
                           print(selectedGender);
                         }
                       }
@@ -136,7 +134,7 @@ class SelectGenderScreen extends StatelessWidget {
                             countryId: countryId,
                             cityId: cityId,
                             branchId: branchId,
-                            gender: selectedGender,
+                            gender: selectedGender.name,
                           );
                         }),
                     fallback: (context) => const Center(
