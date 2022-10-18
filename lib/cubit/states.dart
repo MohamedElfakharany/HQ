@@ -8,6 +8,7 @@ import 'package:hq/models/cores_models/city_model.dart';
 import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
+import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
@@ -52,6 +53,18 @@ class AppCreateMemberSuccessState extends AppStates{
 class AppCreateMemberErrorState extends AppStates{
   final String error;
   AppCreateMemberErrorState(this.error);
+}
+
+class AppCreateInquiryLoadingState extends AppStates{}
+
+class AppCreateInquirySuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCreateInquirySuccessState(this.successModel);
+}
+
+class AppCreateInquiryErrorState extends AppStates{
+  final String error;
+  AppCreateInquiryErrorState(this.error);
 }
 
 class AppLoginLoadingState extends AppStates{}
@@ -147,7 +160,10 @@ class AppGetVerifySuccessState extends AppStates{
   AppGetVerifySuccessState(this.successModel);
 }
 
-class AppGetVerifyErrorState extends AppStates{}
+class AppGetVerifyErrorState extends AppStates{
+  final String error;
+  AppGetVerifyErrorState(this.error);
+}
 
 class AppEditProfileLoadingState extends AppStates{}
 
@@ -183,6 +199,18 @@ class AppDeleteMemberSuccessState extends AppStates{
 class AppDeleteMemberErrorState extends AppStates{
   final String error;
   AppDeleteMemberErrorState(this.error);
+}
+
+class AppChangeNumberLoadingState extends AppStates{}
+
+class AppChangeNumberSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppChangeNumberSuccessState(this.successModel);
+}
+
+class AppChangeNumberErrorState extends AppStates{
+  final String error;
+  AppChangeNumberErrorState(this.error);
 }
 
 class AppGetCitiesLoadingState extends AppStates{}
@@ -289,6 +317,18 @@ class AppGetOffersErrorState extends AppStates{
   AppGetOffersErrorState(this.error);
 }
 
+class AppGetMedicalInquiriesLoadingState extends AppStates{}
+
+class AppGetMedicalInquiriesSuccessState extends AppStates{
+  final MedicalInquiriesModel medicalInquiries;
+  AppGetMedicalInquiriesSuccessState(this.medicalInquiries);
+}
+
+class AppGetMedicalInquiriesErrorState extends AppStates{
+  final String error;
+  AppGetMedicalInquiriesErrorState(this.error);
+}
+
 class AppGetTestsLoadingState extends AppStates{}
 
 class AppGetTestsSuccessState extends AppStates{
@@ -304,6 +344,10 @@ class AppGetTestsErrorState extends AppStates{
 class AppProfileImagePickedSuccessState extends AppStates{}
 
 class AppProfileImagePickedErrorState extends AppStates{}
+
+class AppInquiryImagePickedSuccessState extends AppStates{}
+
+class AppInquiryImagePickedErrorState extends AppStates{}
 
 class AppGetTermsLoadingState extends AppStates{}
 

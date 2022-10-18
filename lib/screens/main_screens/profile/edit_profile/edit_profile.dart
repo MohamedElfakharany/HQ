@@ -8,6 +8,7 @@ import 'package:gender_picker/source/enums.dart';
 import 'package:gender_picker/source/gender_picker.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/screens/intro_screens/reset_password/forget_password_screen.dart';
 import 'package:hq/screens/main_screens/profile/edit_profile/change_password.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -47,7 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    content: Text(LocaleKeys.txtBirthDayError.tr()),
+                    content: Text(state.successModel.message),
                   );
                 });
           }
@@ -171,11 +172,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       label: LocaleKeys.txtFieldIdNumber.tr(),
                       onTap: () {},
                       validatedText: LocaleKeys.txtFieldIdNumber.tr(),
-                      obscureText: AppCubit.get(context).idNumberIsPassword,
-                      suffixIcon: AppCubit.get(context).idNumberSufIcon,
-                      suffixPressed: () {
-                        AppCubit.get(context).idNumberChangeVisibility();
-                      },
+                      // obscureText: AppCubit.get(context).idNumberIsPassword,
+                      // suffixIcon: AppCubit.get(context).idNumberSufIcon,
+                      // suffixPressed: () {
+                      //   AppCubit.get(context).idNumberChangeVisibility();
+                      // },
                     ),
                     verticalSmallSpace,
                     textLabel(
@@ -186,7 +187,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 90,
                       focusNode: _focusNodes[2],
                       controller: mobileNumberController,
-                      type: TextInputType.number,
+                      type: TextInputType.none,
+                      readOnly: true,
                       label: LocaleKeys.txtFieldMobile.tr(),
                       onTap: () {},
                       validatedText: LocaleKeys.txtFieldMobile.tr(),
@@ -280,16 +282,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       builder: (context) => GeneralButton(
                         title: LocaleKeys.BtnSaveChanges.tr(),
                         onPress: () {
-                          if(emailController.text.isEmpty){
-
-                          }
                           AppCubit.get(context).editProfile(
                               birthday: birthdayController.text,
                               email: emailController.text,
                               gender: gender.name,
                               name: userNameController.text,
                               profile: profileImage == null
-                                  ? cubit.userResourceModel?.data?.profile
+                                  ? ''
                                   : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
                         },
                       ),
@@ -314,7 +313,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     GeneralUnfilledButton(
                       title: LocaleKeys.BtnChangeMobile.tr(),
                       width: double.infinity,
-                      onPress: () {},
+                      onPress: () {
+                        Navigator.push(
+                            context,
+                            FadeRoute(
+                                page: ForgetPasswordScreen(
+                                    isChangeMobile: true)));
+                      },
                     ),
                   ],
                 ),

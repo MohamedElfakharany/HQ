@@ -13,8 +13,8 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
-  ForgetPasswordScreen({Key? key}) : super(key: key);
-
+  ForgetPasswordScreen({Key? key, this.isChangeMobile}) : super(key: key);
+  bool? isChangeMobile = false;
   final mobileController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
@@ -28,8 +28,10 @@ class ForgetPasswordScreen extends StatelessWidget {
               context,
               FadeRoute(
                 page: VerificationScreen(
+                  resetToken: state.createTokenModel.data!.resetToken,
                   isRegister: false,
                   mobileNumber: mobileController.text.toString(),
+                  isChangeMobile: false,
                 ),
               ),
             );
@@ -54,17 +56,18 @@ class ForgetPasswordScreen extends StatelessWidget {
           key: formKey,
           child: ListView(
             children: [
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    LocaleKeys.forgetTxtMain.tr(),
-                    style: titleStyle.copyWith(
-                        fontSize: 30.0, fontWeight: FontWeight.w600),
+              if (isChangeMobile != true)
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      LocaleKeys.forgetTxtMain.tr(),
+                      style: titleStyle.copyWith(
+                          fontSize: 30.0, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
-              ),
               verticalMiniSpace,
               Align(
                 alignment: AlignmentDirectional.centerStart,
@@ -96,8 +99,20 @@ class ForgetPasswordScreen extends StatelessWidget {
                   title: LocaleKeys.BtnContinue.tr(),
                   onPress: () {
                     if (formKey.currentState!.validate()) {
-                      AppCubit.get(context)
-                          .createToken(mobile: mobileController.text);
+                      if (isChangeMobile == false) {
+                        AppCubit.get(context)
+                            .createToken(mobile: mobileController.text);
+                      } else {
+                        Navigator.push(
+                          context,
+                          FadeRoute(
+                            page: VerificationScreen(
+                                mobileNumber: mobileController.text,
+                                isRegister: false,
+                                isChangeMobile: true),
+                          ),
+                        );
+                      }
                     }
                   },
                 ),

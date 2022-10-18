@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/auth_models/create_token_model.dart';
 import 'package:hq/models/auth_models/reset_password_model.dart';
@@ -16,6 +17,7 @@ import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
+import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
@@ -31,7 +33,9 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/models/test_models/tests_model.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as p;
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppStates());
@@ -52,6 +56,7 @@ class AppCubit extends Cubit<AppStates> {
   OffersModel? offersModel;
   TermsModel? termsModel;
   FamiliesModel? familiesModel;
+  MedicalInquiriesModel? medicalInquiriesModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -63,18 +68,18 @@ class AppCubit extends Cubit<AppStates> {
 
   int? relationIdList;
 
-  void selectBranch({required String name}){
-    for (int i = 0; i < branchNames!.length; i++){
-      if (branchNames![i].title == name){
+  void selectBranch({required String name}) {
+    for (int i = 0; i < branchNames!.length; i++) {
+      if (branchNames![i].title == name) {
         branchIdList = branchNames![i].id;
         getBranch(cityID: branchIdList!);
       }
     }
   }
 
-  void selectRelationId({required String relationName}){
-    for (int i = 0 ; i< relationsNames!.length ; i++){
-      if (relationsNames![i].title == relationName){
+  void selectRelationId({required String relationName}) {
+    for (int i = 0; i < relationsNames!.length; i++) {
+      if (relationsNames![i].title == relationName) {
         relationIdList = relationsNames![i].id;
       }
     }
@@ -382,6 +387,7 @@ class AppCubit extends Cubit<AppStates> {
         if (kDebugMode) {
           print('memberImage : $memberImage');
         }
+        memberImage = await compressImage(path: pickedImage.path, quality: 35);
         emit(AppProfileImagePickedSuccessState());
       } else {
         if (kDebugMode) {
@@ -405,6 +411,8 @@ class AppCubit extends Cubit<AppStates> {
         if (kDebugMode) {
           print('editMemberImage : $editMemberImage');
         }
+        editMemberImage =
+            await compressImage(path: pickedImage.path, quality: 35);
         emit(AppProfileImagePickedSuccessState());
       } else {
         if (kDebugMode) {
@@ -441,12 +449,11 @@ class AppCubit extends Cubit<AppStates> {
         'phone': phone,
         'birthday': birthday,
         'gender': gender,
-        'profile': memberImage == null
-            ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
-            : await MultipartFile.fromFile(
-          memberImage!.path,
-          filename: profile,
-        ),
+        if (memberImage != null)
+          'profile': await MultipartFile.fromFile(
+            memberImage!.path,
+            filename: profile,
+          ),
       },
     );
     try {
@@ -469,18 +476,19 @@ class AppCubit extends Cubit<AppStates> {
         print('formData : ${formData.fields}');
       }
       successModel = SuccessModel.fromJson(responseJson);
+      getFamilies();
       emit(AppCreateMemberSuccessState(successModel!));
     } catch (error) {
       emit(AppCreateMemberErrorState(error.toString()));
     }
   }
 
-  Future editMember({
-    required String name,
-    required String phone,
-    required String profile,
+
+  Future createInquiry({
+    required String message,
+    String? file,
   }) async {
-    emit(AppEditMemberLoadingState());
+    emit(AppCreateInquiryLoadingState());
     var headers = {
       'Accept': 'application/json',
       'Accept-Language': sharedLanguage,
@@ -488,20 +496,19 @@ class AppCubit extends Cubit<AppStates> {
     };
     var formData = FormData.fromMap(
       {
-        'name': name,
-        'phone': phone,
-        'profile': editMemberImage == null
-            ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
-            : await MultipartFile.fromFile(
-          editMemberImage!.path,
-          filename: profile,
-        ),
+        'message': message,
+        'title': '7mada',
+        if (inquiryImage != null)
+          'file': await MultipartFile.fromFile(
+            inquiryImage!.path,
+            filename: file,
+          ),
       },
     );
     try {
       Dio dio = Dio();
-      var response = await dio.put(
-        editMemberURL,
+      var response = await dio.post(
+        createMedicalInquiriesURL,
         options: Options(
           followRedirects: false,
           responseType: ResponseType.bytes,
@@ -514,11 +521,62 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
-        print('editMemberURL : $editMemberURL');
+        print('responseJson : $responseJson');
+        print('createMedicalInquiriesURL : $createMedicalInquiriesURL');
+        print('formData : ${formData.fields}');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      getFamilies();
+      emit(AppCreateInquirySuccessState(successModel!));
+    } catch (error) {
+      emit(AppCreateInquiryErrorState(error.toString()));
+    }
+  }
+
+  Future editMember({
+    required String name,
+    required String phone,
+    required String profile,
+    required var memberId,
+  }) async {
+    emit(AppEditMemberLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap(
+      {
+        'name': name,
+        'phone': phone,
+        if (editMemberImage != null)
+          'profile': await MultipartFile.fromFile(
+            editMemberImage!.path,
+            filename: profile,
+          ),
+      },
+    );
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        '$familiesURL/$memberId/edit',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
         print('responseJson : $responseJson');
         print('formData : ${formData.fields}');
       }
       successModel = SuccessModel.fromJson(responseJson);
+      getFamilies();
       emit(AppEditMemberSuccessState(successModel!));
     } catch (error) {
       emit(AppEditMemberErrorState(error.toString()));
@@ -526,7 +584,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future deleteMember({
-    required int memberId,
+    required var memberId,
   }) async {
     emit(AppDeleteMemberLoadingState());
     var headers = {
@@ -534,13 +592,44 @@ class AppCubit extends Cubit<AppStates> {
       'Accept-Language': sharedLanguage,
       'Authorization': 'Bearer $token',
     };
-    var formData = {
-      'memberId': memberId,
-    };
     try {
       Dio dio = Dio();
       var response = await dio.delete(
-        deleteMemberURL,
+        '$familiesURL/$memberId/delete',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getFamilies();
+      emit(AppDeleteMemberSuccessState(successModel!));
+    } catch (error) {
+      emit(AppDeleteMemberErrorState(error.toString()));
+    }
+  }
+
+  Future changeNumber({
+    required String phone,
+  }) async {
+    emit(AppChangeNumberLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = {
+      'phone': phone,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        changePhoneURL,
         options: Options(
           followRedirects: false,
           responseType: ResponseType.bytes,
@@ -553,9 +642,9 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       successModel = SuccessModel.fromJson(responseJson);
-      emit(AppDeleteMemberSuccessState(successModel!));
+      emit(AppChangeNumberSuccessState(successModel!));
     } catch (error) {
-      emit(AppDeleteMemberErrorState(error.toString()));
+      emit(AppChangeNumberErrorState(error.toString()));
     }
   }
 
@@ -578,12 +667,11 @@ class AppCubit extends Cubit<AppStates> {
         'email': email,
         'gender': gender,
         'birthday': birthday,
-        'profile': profileImage == null
-            ? Uri.file(userResourceModel?.data?.profile).pathSegments.last
-            : await MultipartFile.fromFile(
-          profileImage!.path,
-          filename: profile,
-        ),
+        if (profileImage != null)
+          'profile': await MultipartFile.fromFile(
+            profileImage!.path,
+            filename: profile,
+          ),
       },
     );
     try {
@@ -613,7 +701,6 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future getTerms() async {
-
     try {
       emit(AppGetTermsLoadingState());
       Dio dio = Dio();
@@ -807,7 +894,6 @@ class AppCubit extends Cubit<AppStates> {
       for (var i = 0; i < relationsNames!.length; i++) {
         relationsName.add(relationsNames?[i].title);
       }
-        print(relationsName);
       emit(AppGetRelationsSuccessState(relationsModel!));
     } catch (error) {
       emit(AppGetRelationsErrorState(error.toString()));
@@ -967,7 +1053,7 @@ class AppCubit extends Cubit<AppStates> {
       }
       emit(AppGetVerifySuccessState(successModel!));
     } catch (error) {
-      emit(AppGetVerifyErrorState());
+      emit(AppGetVerifyErrorState(error.toString()));
     }
   }
 
@@ -1029,8 +1115,41 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future getMedicalInquiries() async {
+    try {
+      emit(AppGetMedicalInquiriesLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        medicalInquiriesURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('before medicalInquiriesModel : $responseJson');
+      }
+      medicalInquiriesModel = MedicalInquiriesModel.fromJson(responseJson);
+      emit(AppGetMedicalInquiriesSuccessState(medicalInquiriesModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetMedicalInquiriesErrorState(error.toString()));
+    }
+  }
+
   Future getTests({
-    String? categoriesId,
+    int? categoriesId,
   }) async {
     try {
       emit(AppGetTestsLoadingState());
@@ -1184,8 +1303,8 @@ class AppCubit extends Cubit<AppStates> {
     emit(AppChangeCarouselState());
   }
 
-  File? profileImage;
   var picker = ImagePicker();
+  File? profileImage;
 
   Future<void> getProfileImage() async {
     try {
@@ -1195,6 +1314,8 @@ class AppCubit extends Cubit<AppStates> {
         if (kDebugMode) {
           print('profileImage : $profileImage');
         }
+        profileImage = await compressImage(path: pickedImage.path, quality: 35);
+
         emit(AppProfileImagePickedSuccessState());
       } else {
         if (kDebugMode) {
@@ -1210,20 +1331,57 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  void signOut(context) async {
-    CacheHelper.removeData(key: 'verified').then((value) {
-      CacheHelper.removeData(key: 'token').then((value) {
-        extraToken = null;
-        token = null;
+  File? inquiryImage;
 
-        if (value) {
-          navigateAndFinish(
-            context,
-            OnBoardingScreen(isSignOut: true),
-          );
+  Future<void> getInquiryImage() async {
+    try {
+      XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        inquiryImage = File(pickedImage.path);
+        if (kDebugMode) {
+          print('inquiryImage : $inquiryImage');
         }
-        emit(AppLogoutSuccessState());
-      });
+        inquiryImage = await compressImage(path: pickedImage.path, quality: 35);
+
+        emit(AppInquiryImagePickedSuccessState());
+      } else {
+        if (kDebugMode) {
+          print('no image selected');
+          print(inquiryImage);
+        }
+        emit(AppInquiryImagePickedErrorState());
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+
+  void signOut(context) async {
+    CacheHelper.removeData(key: 'token').then((value) {
+      extraToken = null;
+      token = null;
+      currentIndex = 0;
+      if (value) {
+        navigateAndFinish(
+          context,
+          OnBoardingScreen(isSignOut: true),
+        );
+      }
+      emit(AppLogoutSuccessState());
     });
   }
+}
+
+Future<File> compressImage({required String path, required int quality}) async {
+  final newPath =
+      p.join((await getTemporaryDirectory()).path, p.extension(path));
+  final compressedImage = await FlutterImageCompress.compressAndGetFile(
+    path,
+    newPath,
+    quality: quality,
+  );
+  return compressedImage!;
 }

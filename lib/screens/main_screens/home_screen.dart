@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -40,18 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
       () async {
         AppCubit.get(context).getCarouselData();
         AppCubit.get(context).getProfile();
-        if (kDebugMode) {
-          print(AppCubit.get(context).userResourceModel?.data?.branch?.title);
-          log('${AppCubit.get(context).branchName}');
-        }
-        extraBranchTitle =
-            await CacheHelper.getData(key: 'extraBranchTitle').then((v) async {
-          extraCityId =
-              await CacheHelper.getData(key: 'extraCityId').then(() async {
-            extraBranchId =
-                await CacheHelper.getData(key: 'extraBranchId').then(() {});
-          });
-        });
+        extraBranchTitle = await CacheHelper.getData(key: 'extraBranchTitle');
+        extraCityId = await CacheHelper.getData(key: 'extraCityId');
+        extraBranchId = await CacheHelper.getData(key: 'extraBranchId');
       },
     );
   }
@@ -59,20 +49,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var cubit = AppCubit.get(context);
-    locationValue =
-        AppCubit.get(context).userResourceModel?.data?.branch?.title;
     return BlocProvider(
       create: (BuildContext context) => AppCubit()
         ..getCountry()
-        ..getProfile()
         ..getTerms()
         ..getCity(countryId: extraCountryId!)
         ..getBranch(cityID: extraCityId!)
         ..getCategories()
-        ..getOffers(),
+        ..getOffers()
+        ..getProfile(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
+          locationValue = extraBranchTitle;
+          // AppCubit.get(context).userResourceModel?.data?.branch?.title;
           return Scaffold(
             backgroundColor: greyExtraLightColor,
             body: ConditionalBuilder(
@@ -148,7 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if (kDebugMode) {
                                   print(
                                       'ghany 2 ${AppCubit.get(context).branchName}');
-                                  print('ghany 2 ${locationValue}');
+                                  print('ghany 2 $locationValue');
+                                  print('ghany 2 $extraBranchTitle');
                                 }
                                 return DropdownButtonFormField<String>(
                                   // ignore: body_might_complete_normally_nullable
@@ -316,10 +307,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               FadeRoute(
                                 page: TestItemsScreen(
-                                    categoryId: AppCubit.get(context)
-                                        .categoriesModel!
-                                        .data![index]
-                                        .id),
+                                  categoryId: AppCubit.get(context)
+                                      .categoriesModel!
+                                      .data![index]
+                                      .id,
+                                ),
                               ),
                             );
                           },

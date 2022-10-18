@@ -37,7 +37,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Timer(
       const Duration(milliseconds: 0),
           () async {
+            AppCubit.get(context).getMedicalInquiries();
+        if (AppCubit.get(context).isVisitor == false){
         AppCubit.get(context).getProfile();
+        }
       },
     );
   }
@@ -49,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Scaffold(
           backgroundColor: whiteColor,
           body: ConditionalBuilder(
-            condition: state is! AppGetProfileLoadingState,
+            condition: state is! AppGetProfileLoadingState && state is! AppGetMedicalInquiriesLoadingState,
             builder: (context)=> Column(
               children: [
                 Container(

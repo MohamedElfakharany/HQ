@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +36,6 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  // IconData FATBtnNext = ;
   bool isLast = false;
   var boardController = PageController();
   List<BoardingModel> boarding = [
@@ -62,23 +63,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: whiteColor,
-          // appBar: AppBar(
-          //   leading: Padding(
-          //     padding: const EdgeInsetsDirectional.only(start: 20),
-          //     child: IconButton(
-          //       onPressed: () {
-          //           Navigator.pop(context);
-          //       },
-          //       alignment: AlignmentDirectional.topStart,
-          //       icon: const Icon(
-          //         Icons.arrow_back,
-          //         color: greyDarkColor,
-          //       ),
-          //     ),
-          //   ),
-          //   backgroundColor: whiteColor,
-          //   elevation: 0.0,
-          // ),
           body: Padding(
             padding:
                 const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
@@ -178,7 +162,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               Navigator.push(
                                 context,
                                 FadeRoute(
-                                  page: SignUpScreen(),
+                                  page: const SignUpScreen(),
                                 ),
                               );
                             },

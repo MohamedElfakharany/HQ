@@ -32,9 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _focusNodes =
       Iterable<int>.generate(2).map((_) => FocusNode()).toList();
 
-  saveExtraToken({required String extraToken1}) async {
+  saveExtraToken({required String extraToken1,required int verified1}) async {
     (await SharedPreferences.getInstance()).setString('token', extraToken1);
+    (await SharedPreferences.getInstance()).setInt('verified', verified1);
     token = extraToken1;
+    verified = verified1;
     if (kDebugMode) {
       print('token: $token');
     }
@@ -49,20 +51,20 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) async {
         if (state is AppLoginSuccessState) {
           if (state.userResourceModel.status) {
-            if (state.userResourceModel.data!.isVerified == '0') {
-              saveExtraToken(extraToken1: state.userResourceModel.extra?.token);
+            if (state.userResourceModel.data!.isVerified == 0) {
+              saveExtraToken(extraToken1: state.userResourceModel.extra?.token, verified1: state.userResourceModel.data?.isVerified);
               await Navigator.push(
                 context,
                 FadeRoute(
                   page: VerificationScreen(
+                    isChangeMobile: false,
                     mobileNumber: mobileController.text.toString(),
                     isRegister: true,
                   ),
                 ),
               );
-            } else {
-                saveExtraToken(
-                    extraToken1: state.userResourceModel.extra?.token);
+            } else if (state.userResourceModel.data!.isVerified == 1) {
+              saveExtraToken(extraToken1: state.userResourceModel.extra?.token, verified1: state.userResourceModel.data?.isVerified);
               if (state.userResourceModel.data!.isCompleted == 0) {
                 AppCubit.get(context).getCountry();
                 Navigator.push(
@@ -72,10 +74,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 );
               } else {
-                print('state.userResourceModel.extra?.token : ${state.userResourceModel.extra?.token}');
                 AppCubit.get(context).dataSaving(
                   extraTokenSave: state.userResourceModel.extra?.token,
-                  isVerifiedSave: state.userResourceModel.data?.isVerified ?? 0,
+                  isVerifiedSave: state.userResourceModel.data?.isVerified,
                   countryId: state.userResourceModel.data!.country!.id,
                   cityId: state.userResourceModel.data!.city!.id,
                   branchId: state.userResourceModel.data!.branch!.id,

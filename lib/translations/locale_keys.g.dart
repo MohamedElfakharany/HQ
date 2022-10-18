@@ -26,6 +26,7 @@ abstract class  LocaleKeys {
   static const txtFieldGender = 'txtFieldGender';
   static const txtLabReservation = 'txtLabReservation';
   static const BtnLater = 'BtnLater';
+  static const BtnAddFile = 'BtnAddFile';
   static const txtNewAddress = 'txtNewAddress';
   static const txtNewMember = 'txtNewMember';
   static const txtRelationship = 'txtRelationship';

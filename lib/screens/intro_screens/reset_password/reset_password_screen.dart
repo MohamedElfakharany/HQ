@@ -21,7 +21,7 @@ class ResetPasswordScreen extends StatefulWidget {
     required this.resetToken,
   }) : super(key: key);
 
-  String? resetToken = '';
+  String? resetToken;
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -96,7 +96,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           } else {
             showDialog(
                 context: context,
-                builder: (context) => Text(state.resetPasswordModel.message));
+                builder: (context) => AlertDialog(content: Text(state.resetPasswordModel.message)));
           }
         }
       },

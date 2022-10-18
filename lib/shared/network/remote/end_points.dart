@@ -8,7 +8,7 @@ const testURL = '$mainURL/test';
 
 const profileURL = '$mainURL/profile';
 
-      ///Auth
+///Auth
 
 const registerURL = '$authURL/register';
 
@@ -22,7 +22,7 @@ const createTokenURL = '$authURL/create-token';
 
 const resetPasswordURL = '$authURL/reset-password';
 
-      ///Core
+///Core
 
 const countryURL = '$coreURL/countries';
 
@@ -34,7 +34,7 @@ const relationsURL = '$coreURL/relations';
 
 const slidersURL = '$coreURL/sliders';
 
-      ///Tests
+///Tests
 
 const categoriesURL = '$testURL/categories';
 
@@ -42,7 +42,7 @@ const testsURL = '$testURL/tests';
 
 const offersURL = '$testURL/offers';
 
-      ///Profile
+///Profile
 
 const getProfileURL = '$profileURL/get-profile';
 
@@ -54,22 +54,21 @@ const changeLocationURL = '$profileURL/change-location';
 
 const changePasswordURL = '$profileURL/change-password';
 
-      ///Profile
-              ///medical-inquiries
+const changePhoneURL = '$profileURL/change-phone';
 
+///Profile
+///
+///medical-inquiries
 
-              ///families
+const medicalInquiriesURL = '$profileURL/medical-inquiries';
+
+const createMedicalInquiriesURL = '$medicalInquiriesURL/create';
+
+///families
 const familiesURL = '$profileURL/families';
 
 const createMemberURL = '$familiesURL/create';
 
-const editMemberURL = '$familiesURL/:familyId/edit';
+///addresses
 
-const deleteMemberURL = '$familiesURL/:familyId/delete';
-
-              ///addresses
-
-
-
-
-      ///Reservations
+///Reservations

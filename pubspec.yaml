@@ -34,6 +34,9 @@ dependencies:
   never_behind_keyboard: ^1.0.1
   flutter_image_compress: ^1.1.0
   image_picker: ^0.8.5
+  country_picker: ^2.0.15
+  path: ^1.8.2
+  path_provider: ^2.0.10
 
   #firebase
   firebase_auth: ^3.11.1

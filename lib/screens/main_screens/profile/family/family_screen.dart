@@ -26,8 +26,8 @@ class _FamilyScreenState extends State<FamilyScreen> {
     super.initState();
     Timer(
       const Duration(microseconds: 0),
-      (){
-        AppCubit.get(context).getFamilies();
+      () async {
+        await AppCubit.get(context).getFamilies();
       },
     );
   }

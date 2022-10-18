@@ -36,7 +36,7 @@ class SelectGenderScreen extends StatelessWidget {
           if (state.userResourceModel.status) {
             AppCubit.get(context).dataSaving(
               extraTokenSave: state.userResourceModel.extra?.token,
-              isVerifiedSave: state.userResourceModel.data?.isVerified ?? 0,
+              isVerifiedSave: state.userResourceModel.data?.isVerified,
               countryId: state.userResourceModel.data!.country!.id,
               cityId: state.userResourceModel.data!.city!.id,
               branchId: state.userResourceModel.data!.branch!.id,
@@ -53,7 +53,7 @@ class SelectGenderScreen extends StatelessWidget {
           if (state is AppCompleteProfileSuccessState) {
             AppCubit.get(context).dataSaving(
               extraTokenSave: state.userResourceModel.extra?.token,
-              isVerifiedSave: state.userResourceModel.data?.isVerified ?? 0,
+              isVerifiedSave: state.userResourceModel.data?.isVerified,
               countryId: state.userResourceModel.data!.country!.id,
               cityId: state.userResourceModel.data!.city!.id,
               branchId: state.userResourceModel.data!.branch!.id,
@@ -125,7 +125,7 @@ class SelectGenderScreen extends StatelessWidget {
                   ConditionalBuilder(
                     condition: state is! AppCompleteProfileLoadingState,
                     builder: (context) => GeneralButton(
-                        title: 'start',
+                        title: LocaleKeys.BtnSubmit.tr(),
                         onPress: () {
                           extraCountryId = countryId;
                           extraCityId = cityId;

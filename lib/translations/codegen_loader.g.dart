@@ -103,6 +103,7 @@ class CodegenLoader extends AssetLoader {
     "TxtPopUpReservationTypeSecond": "You can view the latest Tests added to you in the list to be able to complete the Reservation process",
     "BtnAtHome": "At Home",
     "BtnAtLab": "At Laboratory",
+    "BtnAddFile": "Add File",
     "TxtHomeVisit": "Home",
     "HomeVisitTxtMain":
         "Enter patient data and we will contact you to confirm reservation",
@@ -338,6 +339,7 @@ class CodegenLoader extends AssetLoader {
     "TxtPopUpReservationTypeSecond": "يمكنك عرض أحدث الإختبارات المضافة إليك في القائمة لتتمكن من إكمال عملية الحجز",
     "BtnAtHome": "في المنزل",
     "BtnAtLab": "في المعمل",
+    "BtnAddFile": "إضافة صورة",
     "txtTotal": "الإجمالي",
     "TxtHomeVisit": "الرئيسية",
     "HomeVisitTxtMain": "أدخل بيانات المريض وسوف نتصل بك لتأكيد الحجز",

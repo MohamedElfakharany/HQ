@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable
-
 import 'dart:async';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,8 +21,12 @@ class VerificationScreen extends StatefulWidget {
     Key? key,
     required this.mobileNumber,
     this.isRegister,
+    this.isChangeMobile,
+    this.resetToken,
   }) : super(key: key);
   bool? isRegister;
+  bool? isChangeMobile;
+  String? resetToken;
   String mobileNumber = "";
 
   @override
@@ -35,36 +38,42 @@ class _VerificationScreenState extends State<VerificationScreen> {
   var formKey = GlobalKey<FormState>();
 
   bool isFirst = true;
-  String? resetToken;
 
   Future<void> verify() async {
     PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
       verificationId: AppCubit.get(context).verificationId.toString(),
       smsCode: codeController.text,
     );
-    print('AppCubit.get(context).verificationId.toString() : $AppCubit.get(context).verificationId.toString()');
+    print(
+        'AppCubit.get(context).verificationId.toString() : ${AppCubit.get(context).verificationId.toString()}');
     signInWithPhoneAuthCredential(phoneAuthCredential);
   }
 
   void signInWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
     try {
-      final authCredential =
-          await AppCubit.get(context).auth.signInWithCredential(phoneAuthCredential);
+      final authCredential = await AppCubit.get(context)
+          .auth
+          .signInWithCredential(phoneAuthCredential);
       if (authCredential.user != null) {
-        if (widget.isRegister == true) {
+        if (widget.isRegister == true && widget.isChangeMobile == false) {
           await AppCubit.get(context).verify().then((v) {
-            AppCubit.get(context).getCountry().then((v){
-            Navigator.push(context,FadeRoute(page: const SelectCountryScreen()));
+            AppCubit.get(context).getCountry().then((v) {
+              Navigator.push(
+                  context, FadeRoute(page: const SelectCountryScreen()));
             });
           });
-        } else {
+        } else if (widget.isRegister == false &&
+            widget.isChangeMobile == false) {
           Navigator.push(
             context,
             FadeRoute(
-              page: ResetPasswordScreen(resetToken: resetToken),
+              page: ResetPasswordScreen(resetToken: widget.resetToken),
             ),
           );
+        } else if (widget.isRegister == false &&
+            widget.isChangeMobile == true) {
+          AppCubit.get(context).changeNumber(phone: widget.mobileNumber);
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -84,8 +93,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
-  saveVerified({required String verified1}) async {
-    (await SharedPreferences.getInstance()).setString('verified', verified1);
+  saveVerified({required int verified1}) async {
+    (await SharedPreferences.getInstance()).setInt('verified', verified1);
   }
 
   @override
@@ -101,13 +110,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Widget build(BuildContext context) {
     if (kDebugMode) {
       print(widget.mobileNumber.toString());
-      print('AppCubit.get(context).verificationId : $AppCubit.get(context).verificationId');
+      print(
+          'AppCubit.get(context).verificationId : ${AppCubit.get(context).verificationId}');
     }
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) async {
         if (state is AppGetVerifySuccessState) {
           if (state.successModel.status) {
-            saveVerified(verified1: '1');
+            saveVerified(verified1: 1);
             AppCubit.get(context).getCountry().then(
                   (value) => {
                     Navigator.push(
@@ -118,7 +128,52 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                   },
                 );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text(state.successModel.message),
+                );
+              },
+            );
           }
+        } else if (state is AppGetVerifyErrorState) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(state.error),
+              );
+            },
+          );
+        }
+        if (state is AppChangeNumberSuccessState) {
+          if (state.successModel.status) {
+            AppCubit.get(context).signOut(context);
+          } else {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text(state.successModel.message),
+                );
+              },
+            );
+          }
+        } else if (state is AppChangeNumberErrorState) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(state.error),
+              );
+            },
+          );
         }
       },
       builder: (context, state) {
@@ -181,7 +236,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   verticalMediumSpace,
                   ConditionalBuilder(
                     condition: state is! AppGetVerifyLoadingState ||
-                        state is! AppCreateTokenLoadingState || AppCubit.get(context).verificationId != null,
+                        state is! AppCreateTokenLoadingState ||
+                        AppCubit.get(context).verificationId != null,
                     builder: (context) => GeneralButton(
                       title: LocaleKeys.BtnVerify.tr(),
                       onPress: () {
@@ -214,7 +270,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               .createToken(
                                   mobile: widget.mobileNumber.toString())
                               .then((v) {
-                            AppCubit.get(context).fetchOtp(number: widget.mobileNumber);
+                            AppCubit.get(context)
+                                .fetchOtp(number: widget.mobileNumber);
                           });
                         },
                         child: Text(

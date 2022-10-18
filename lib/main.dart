@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:hq/cubit/cubit.dart';
 import 'package:hq/screens/intro_screens/startup/splash_screen.dart';
 import 'package:hq/shared/bloc_observer.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
-import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/dio_helper.dart';
 import 'package:hq/translations/codegen_loader.g.dart';
 
@@ -25,7 +25,6 @@ void main() async {
   // }else{
   //   sharedLanguage = 'en';
   // }
-
   BlocOverrides.runZoned(
     () {
       runApp(
@@ -68,7 +67,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         locale: context.locale,
         supportedLocales: context.supportedLocales,
-        localizationsDelegates: context.localizationDelegates,
+        localizationsDelegates: context.localizationDelegates +
+            [
+              CountryLocalizations.delegate,
+            ],
         home: startWidget,
       ),
     );

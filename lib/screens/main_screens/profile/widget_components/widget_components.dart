@@ -1,7 +1,13 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hq/cubit/cubit.dart';
+import 'package:hq/cubit/states.dart';
 import 'package:hq/models/profile_models/families_model.dart';
+import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/screens/main_screens/profile/family/edit_member.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -137,3 +143,91 @@ class FamiliesMemberCard extends StatelessWidget {
     );
   }
 }
+
+class MedicalInquiriesCard extends StatelessWidget {
+  const MedicalInquiriesCard({Key? key, required this.medicalInquiriesDataModel}) : super(key: key);
+
+  final MedicalInquiriesDataModel medicalInquiriesDataModel;
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state){},
+      builder: (context, state){
+        return Container(
+          width: double.infinity,
+          height: 100.0,
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(
+              radius,
+            ),
+            border: Border.all(
+              width: 1,
+              color: greyLightColor,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    color: blueLightColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(
+                      radius,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.notifications_rounded,
+                    size: 35.0,
+                    color: blueColor,
+                  ),
+                ),
+                horizontalSmallSpace,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        medicalInquiriesDataModel.message,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '${medicalInquiriesDataModel.date?.time ?? ''} ${medicalInquiriesDataModel.date?.date ?? ''}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: subTitleSmallStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                horizontalSmallSpace,
+                  Container(
+                    width: 60.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: greenColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(
+                        radius,
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'New',
+                        style: titleSmallStyleGreen,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+

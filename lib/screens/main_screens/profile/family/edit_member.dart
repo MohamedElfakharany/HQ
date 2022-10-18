@@ -15,9 +15,11 @@ import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
 class EditMemberScreen extends StatefulWidget {
-  const EditMemberScreen({Key? key, required this.familiesDataModel}) : super(key: key);
+  const EditMemberScreen({Key? key, required this.familiesDataModel})
+      : super(key: key);
 
   final FamiliesDataModel familiesDataModel;
+
   @override
   State<EditMemberScreen> createState() => _EditMemberScreenState();
 }
@@ -27,7 +29,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
   var mobileNumberController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   final _focusNodes =
-  Iterable<int>.generate(2).map((_) => FocusNode()).toList();
+      Iterable<int>.generate(2).map((_) => FocusNode()).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
               },
             );
           }
-        }else if (state is AppEditMemberErrorState){
+        } else if (state is AppEditMemberErrorState) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -69,7 +71,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
               },
             );
           }
-        }else if (state is AppDeleteMemberErrorState){
+        } else if (state is AppDeleteMemberErrorState) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -93,7 +95,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
           ),
           body: Padding(
             padding:
-            const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
+                const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
             child: Form(
               key: formKey,
               child: KeyboardActions(
@@ -103,7 +105,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                   defaultDoneWidget: doneKeyboard(),
                   actions: _focusNodes
                       .map((focusNode) =>
-                      KeyboardActionsItem(focusNode: focusNode))
+                          KeyboardActionsItem(focusNode: focusNode))
                       .toList(),
                 ),
                 child: ListView(
@@ -116,31 +118,30 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                             borderRadius: BorderRadius.circular(100.0),
                             child: editMemberImage == null
                                 ? CachedNetworkImage(
-                              imageUrl:
-                              widget.familiesDataModel.profile,
-                              placeholder: (context, url) =>
-                              const SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: Center(
-                                    child: CircularProgressIndicator()),
-                              ),
-                              errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                              width: 100,
-                              height: 100,
-                            )
+                                    imageUrl: widget.familiesDataModel.profile,
+                                    placeholder: (context, url) =>
+                                        const SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    width: 100,
+                                    height: 100,
+                                  )
                                 : ClipRRect(
-                                borderRadius: BorderRadius.circular(83),
-                                child: Image.file(
-                                  editMemberImage,
-                                  height: 140,
-                                  width: 140,
-                                  fit: BoxFit.cover,
-                                )),
+                                    borderRadius: BorderRadius.circular(83),
+                                    child: Image.file(
+                                      editMemberImage,
+                                      height: 140,
+                                      width: 140,
+                                      fit: BoxFit.cover,
+                                    )),
                           ),
                           InkWell(
-                            onTap: (){
+                            onTap: () {
                               AppCubit.get(context).getEditMemberImage();
                             },
                             child: const CircleAvatar(
@@ -157,19 +158,23 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                       ),
                     ),
                     verticalMediumSpace,
-                    textLabel(title: LocaleKeys.txtFieldName.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldName.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       height: 90,
                       focusNode: _focusNodes[0],
                       controller: userNameController,
                       type: TextInputType.text,
-                      label:  LocaleKeys.txtFieldName.tr(),
-                      validatedText:  LocaleKeys.txtFieldName.tr(),
+                      label: LocaleKeys.txtFieldName.tr(),
+                      validatedText: LocaleKeys.txtFieldName.tr(),
                       onTap: () {},
                     ),
                     verticalSmallSpace,
-                    textLabel(title:  LocaleKeys.txtFieldMobile.tr(),),
+                    textLabel(
+                      title: LocaleKeys.txtFieldMobile.tr(),
+                    ),
                     verticalSmallSpace,
                     DefaultFormField(
                       height: 90,
@@ -186,13 +191,19 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                       builder: (context) => GeneralButton(
                         title: LocaleKeys.BtnSaveChanges.tr(),
                         onPress: () {
-                          print('editMemberURL : $editMemberURL');
-                          if (formKey.currentState!.validate()){
-                          AppCubit.get(context).editMember(name: userNameController.text, phone: mobileNumberController.text, profile: widget.familiesDataModel.profile);
+                          if (formKey.currentState!.validate()) {
+                            AppCubit.get(context).editMember(
+                                memberId: widget.familiesDataModel.id,
+                                name: userNameController.text,
+                                phone: mobileNumberController.text,
+                                profile: editMemberImage == null
+                                    ? ''
+                                    : 'https://hq.orcav.com/assets/${Uri.file(editMemberImage.path).pathSegments.last}');
                           }
                         },
                       ),
-                      fallback: (context) => const Center(child: CircularProgressIndicator()),
+                      fallback: (context) =>
+                          const Center(child: CircularProgressIndicator()),
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
@@ -226,17 +237,22 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                                   ),
                                   verticalMediumSpace,
                                   ConditionalBuilder(
-                                    condition: state is! AppDeleteMemberLoadingState,
+                                    condition:
+                                        state is! AppDeleteMemberLoadingState,
                                     builder: (context) => GeneralButton(
                                       radius: radius,
                                       btnBackgroundColor: redColor,
-                                      title: LocaleKeys.txtUnderstandContinue.tr(),
+                                      title:
+                                          LocaleKeys.txtUnderstandContinue.tr(),
                                       onPress: () {
-                                        AppCubit.get(context).deleteMember(memberId: widget.familiesDataModel.id);
+                                        AppCubit.get(context).deleteMember(
+                                            memberId:
+                                                widget.familiesDataModel.id);
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    fallback: (context) => const Center(child: CircularProgressIndicator()),
+                                    fallback: (context) => const Center(
+                                        child: CircularProgressIndicator()),
                                   ),
                                   verticalSmallSpace,
                                   GeneralButton(
@@ -254,7 +270,8 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                           );
                         },
                       ),
-                      fallback: (context) => const Center(child: CircularProgressIndicator()),
+                      fallback: (context) =>
+                          const Center(child: CircularProgressIndicator()),
                     ),
                   ],
                 ),

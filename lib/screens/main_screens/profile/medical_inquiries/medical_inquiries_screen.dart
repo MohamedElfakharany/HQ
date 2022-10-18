@@ -1,5 +1,15 @@
+import 'dart:async';
+
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hq/cubit/cubit.dart';
+import 'package:hq/cubit/states.dart';
+import 'package:hq/screens/main_screens/profile/medical_inquiries/inquiry_screen.dart';
+import 'package:hq/screens/main_screens/profile/medical_inquiries/new_inquiry.dart';
+import 'package:hq/screens/main_screens/profile/widget_components/widget_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -15,103 +25,79 @@ class MedicalInquiriesScreen extends StatefulWidget {
 
 class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
   @override
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(milliseconds: 0),
+      () async {
+        AppCubit.get(context).getMedicalInquiries();
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: greyExtraLightColor,
-      appBar: GeneralAppBar(
-        title: LocaleKeys.txtMedicalInquiries.tr(),
-        appBarColor: greyExtraLightColor,
-        centerTitle: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(right: 20.0, bottom: 20.0, left: 20.0),
-        child: Column(
-          children: [
-            GeneralButton(title: LocaleKeys.txtNewInquiries.tr(), onPress: (){},),
-            verticalMediumSpace,
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) => Container(
-                  width: double.infinity,
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(
-                      radius,
-                    ),
-                    border: Border.all(
-                      width: 1,
-                      color: greyLightColor,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 40.0,
-                          height: 40.0,
-                          decoration: BoxDecoration(
-                            color: blueLightColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(
-                              radius,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.notifications_rounded,
-                            size: 35.0,
-                            color: blueColor,
-                          ),
-                        ),
-                        horizontalSmallSpace,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text(
-                                'Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                '2h 17min ago',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: subTitleSmallStyle,
-                              ),
-                            ],
-                          ),
-                        ),
-                        horizontalSmallSpace,
-                        if (index == 0 || index ==1 )
-                          Container(
-                            width: 60.0,
-                            height: 30.0,
-                            decoration: BoxDecoration(
-                              color: greenColor.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(
-                                radius,
-                              ),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'New',
-                                style: titleSmallStyleGreen,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: greyExtraLightColor,
+          appBar: GeneralAppBar(
+            title: LocaleKeys.txtMedicalInquiries.tr(),
+            appBarColor: greyExtraLightColor,
+            centerTitle: false,
+          ),
+          body: Padding(
+            padding:
+                const EdgeInsets.only(right: 20.0, bottom: 20.0, left: 20.0),
+            child: Column(
+              children: [
+                GeneralButton(
+                  title: LocaleKeys.txtNewInquiries.tr(),
+                  onPress: () {
+                    Navigator.push(context, FadeRoute(page: const NewInquiryScreen()));
+                  },
                 ),
-                separatorBuilder: (context, index) => verticalSmallSpace,
-                itemCount: 10,
-              ),
+                verticalMediumSpace,
+                ConditionalBuilder(
+                  condition: state is! AppGetMedicalInquiriesLoadingState,
+                  builder: (context) => Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            FadeRoute(
+                              page: InquiryScreen(
+                                medicalInquiriesDataModel: AppCubit.get(context)
+                                    .medicalInquiriesModel!
+                                    .data![index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: MedicalInquiriesCard(
+                          medicalInquiriesDataModel: AppCubit.get(context)
+                              .medicalInquiriesModel!
+                              .data![index],
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => verticalSmallSpace,
+                      itemCount: AppCubit.get(context)
+                              .medicalInquiriesModel
+                              ?.data
+                              ?.length ??
+                          0,
+                    ),
+                  ),
+                  fallback: (context) =>
+                      const Center(child: CircularProgressIndicator()),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

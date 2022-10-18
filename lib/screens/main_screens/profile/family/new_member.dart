@@ -168,7 +168,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                       DefaultFormField(
                         controller: birthdayController,
                         focusNode: _focusNodes[1],
-                        type: TextInputType.datetime,
+                        type: TextInputType.none,
                         label: LocaleKeys.txtFieldDateOfBirth.tr(),
                         validatedText: LocaleKeys.txtFieldDateOfBirth.tr(),
                         readOnly: true,
@@ -297,8 +297,9 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                                 gender: gender.name,
                                 birthday: birthdayController.text,
                                 phone: mobileNumberController.text,
-                                profile:
-                                    'https://hq.orcav.com/assets/${Uri.file(memberImage!.path).pathSegments.last}',
+                                profile: memberImage == null
+                                    ? ''
+                                    : 'https://hq.orcav.com/assets/${Uri.file(memberImage.path).pathSegments.last}',
                                 relationId:
                                     AppCubit.get(context).relationIdList!,
                               );

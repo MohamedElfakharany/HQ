@@ -28,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
     Timer(
       const Duration(milliseconds: 0),
           () {
-        AppCubit.get(context).getTests(categoriesId: '0');
+        AppCubit.get(context).getTests(categoriesId: 0);
         // AppCubit.get(context).getTerms();
       },
     );
