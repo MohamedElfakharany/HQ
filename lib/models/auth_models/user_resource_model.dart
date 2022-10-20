@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-UserResourceModel userResourceModelFromJson(dynamic str) => UserResourceModel.fromJson(json.decode(str));
+UserResourceModel userResourceModelFromJson(dynamic str) =>
+    UserResourceModel.fromJson(json.decode(str));
 
 class UserResourceModel {
   UserResourceModel({
@@ -15,12 +16,13 @@ class UserResourceModel {
   UserResourceDataModel? data;
   UserResourceExtraModel? extra;
 
-  factory UserResourceModel.fromJson(Map<dynamic, dynamic> json) => UserResourceModel(
-    status: json["status"],
-    message: json["message"],
-    data: UserResourceDataModel.fromJson(json["data"]),
-    extra: UserResourceExtraModel.fromJson(json["extra"]),
-  );
+  factory UserResourceModel.fromJson(Map<dynamic, dynamic> json) =>
+      UserResourceModel(
+        status: json["status"],
+        message: json["message"],
+        data: UserResourceDataModel.fromJson(json["data"]),
+        extra: UserResourceExtraModel.fromJson(json["extra"]),
+      );
 }
 
 class UserResourceDataModel {
@@ -41,12 +43,14 @@ class UserResourceDataModel {
     this.active,
     this.isCompleted,
     this.nationalId,
+    this.phoneCode,
   });
 
   dynamic id;
   dynamic profile;
   dynamic code;
   dynamic name;
+  dynamic phoneCode;
   dynamic phone;
   dynamic isVerified;
   dynamic email;
@@ -60,24 +64,26 @@ class UserResourceDataModel {
   dynamic isCompleted;
   dynamic nationalId;
 
-  factory UserResourceDataModel.fromJson(Map<dynamic, dynamic> json) => UserResourceDataModel(
-    id: json["id"],
-    profile: json["profile"],
-    code: json["code"],
-    name: json["name"],
-    phone: json["phone"],
-    isVerified: json["isVerified"],
-    email: json["email"],
-    country: UserResourceDataRegionModel.fromJson(json["country"]),
-    city: UserResourceDataRegionModel.fromJson(json["city"]),
-    branch: UserResourceDataRegionModel.fromJson(json["branch"]),
-    birthday: json["birthday"],
-    gender: json["gender"],
-    deviceToken: json["deviceToken"],
-    active: json["active"],
-    isCompleted: json["isCompleted"],
-    nationalId: json["nationalId"],
-  );
+  factory UserResourceDataModel.fromJson(Map<dynamic, dynamic> json) =>
+      UserResourceDataModel(
+        id: json["id"],
+        profile: json["profile"],
+        code: json["code"],
+        name: json["name"],
+        phoneCode: json["phoneCode"],
+        phone: json["phone"],
+        isVerified: json["isVerified"],
+        email: json["email"],
+        country: UserResourceDataRegionModel.fromJson(json["country"]),
+        city: UserResourceDataRegionModel.fromJson(json["city"]),
+        branch: UserResourceDataRegionModel.fromJson(json["branch"]),
+        birthday: json["birthday"],
+        gender: json["gender"],
+        deviceToken: json["deviceToken"],
+        active: json["active"],
+        isCompleted: json["isCompleted"],
+        nationalId: json["nationalId"],
+      );
 }
 
 class UserResourceDataRegionModel {
@@ -89,10 +95,11 @@ class UserResourceDataRegionModel {
   dynamic id;
   dynamic title;
 
-  factory UserResourceDataRegionModel.fromJson(Map<dynamic, dynamic> json) => UserResourceDataRegionModel(
-    id: json["id"],
-    title: json["title"],
-  );
+  factory UserResourceDataRegionModel.fromJson(Map<dynamic, dynamic> json) =>
+      UserResourceDataRegionModel(
+        id: json["id"],
+        title: json["title"],
+      );
 }
 
 class UserResourceExtraModel {
@@ -102,11 +109,12 @@ class UserResourceExtraModel {
 
   dynamic token;
 
-  factory UserResourceExtraModel.fromJson(Map<dynamic, dynamic> json) => UserResourceExtraModel(
-    token: json["token"],
-  );
+  factory UserResourceExtraModel.fromJson(Map<dynamic, dynamic> json) =>
+      UserResourceExtraModel(
+        token: json["token"],
+      );
 
   Map<dynamic, dynamic> toJson() => {
-    "token": token,
-  };
+        "token": token,
+      };
 }

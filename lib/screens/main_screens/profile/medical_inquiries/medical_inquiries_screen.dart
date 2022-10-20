@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/profile/medical_inquiries/inquiry_screen.dart';
@@ -13,7 +13,6 @@ import 'package:hq/screens/main_screens/profile/widget_components/widget_compone
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class MedicalInquiriesScreen extends StatefulWidget {
@@ -55,40 +54,105 @@ class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
                 GeneralButton(
                   title: LocaleKeys.txtNewInquiries.tr(),
                   onPress: () {
-                    Navigator.push(context, FadeRoute(page: const NewInquiryScreen()));
+                    Navigator.push(
+                        context, FadeRoute(page: const NewInquiryScreen()));
                   },
                 ),
                 verticalMediumSpace,
                 ConditionalBuilder(
                   condition: state is! AppGetMedicalInquiriesLoadingState,
-                  builder: (context) => Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            FadeRoute(
-                              page: InquiryScreen(
-                                medicalInquiriesDataModel: AppCubit.get(context)
-                                    .medicalInquiriesModel!
-                                    .data![index],
-                              ),
-                            ),
-                          );
-                        },
-                        child: MedicalInquiriesCard(
-                          medicalInquiriesDataModel: AppCubit.get(context)
+                  builder: (context) => ConditionalBuilder(
+                    condition:
+                        AppCubit.get(context).medicalInquiriesModel?.data !=
+                            null,
+                    builder: (context) => Expanded(
+                      child: ListView.separated(
+                        itemBuilder: (context, index) => SwipeActionCell(
+                          key: ValueKey(AppCubit.get(context)
                               .medicalInquiriesModel!
-                              .data![index],
+                              .data![index]),
+                          trailingActions: [
+                            SwipeAction(
+                              nestedAction: SwipeNestedAction(
+                                /// customize your nested action content
+                                content: ConditionalBuilder(
+                                  condition:
+                                      state is! AppDeleteInquiryLoadingState,
+                                  builder: (context) => Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Colors.red,
+                                    ),
+                                    width: 130,
+                                    height: 60,
+                                    child: OverflowBox(
+                                      maxWidth: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                          Text(LocaleKeys.BtnDelete.tr(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  fallback: (context) => const Center(
+                                      child: CircularProgressIndicator()),
+                                ),
+                              ),
+                              /// you should set the default  bg color to transparent
+                              color: Colors.transparent,
+                              /// set content instead of title of icon
+                              content: _getIconButton(Colors.red, Icons.delete),
+                              onTap: (handler) async {
+                                AppCubit.get(context).deleteInquiry(
+                                  inquiryId: AppCubit.get(context)
+                                      .medicalInquiriesModel!
+                                      .data![index]
+                                      .id,
+                                );
+                              },
+                            ),
+                          ],
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                FadeRoute(
+                                  page: InquiryScreen(
+                                    medicalInquiriesDataModel:
+                                        AppCubit.get(context)
+                                            .medicalInquiriesModel!
+                                            .data![index],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: MedicalInquiriesCard(
+                              medicalInquiriesDataModel: AppCubit.get(context)
+                                  .medicalInquiriesModel!
+                                  .data![index],
+                            ),
+                          ),
                         ),
+                        separatorBuilder: (context, index) =>
+                            verticalSmallSpace,
+                        itemCount: AppCubit.get(context)
+                                .medicalInquiriesModel
+                                ?.data
+                                ?.length ??
+                            0,
                       ),
-                      separatorBuilder: (context, index) => verticalSmallSpace,
-                      itemCount: AppCubit.get(context)
-                              .medicalInquiriesModel
-                              ?.data
-                              ?.length ??
-                          0,
                     ),
+                    fallback: (context) =>
+                        ScreenHolder(msg: LocaleKeys.txtMedicalInquiries.tr()),
                   ),
                   fallback: (context) =>
                       const Center(child: CircularProgressIndicator()),
@@ -98,6 +162,23 @@ class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _getIconButton(color, icon) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+
+        /// set you real bg color in your content
+        color: color,
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+      ),
     );
   }
 }

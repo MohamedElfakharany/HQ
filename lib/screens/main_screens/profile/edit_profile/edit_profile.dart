@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_nullable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -26,7 +28,8 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   var userNameController = TextEditingController();
   var idNumberController = TextEditingController();
-  var mobileNumberController = TextEditingController();
+  var mobileController = TextEditingController();
+  var nationalCodeController = TextEditingController();
   var emailController = TextEditingController();
   var birthdayController = TextEditingController();
   var formKey = GlobalKey<FormState>();
@@ -66,8 +69,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         userNameController.text = cubit.userResourceModel?.data?.name ?? '';
         idNumberController.text =
             cubit.userResourceModel?.data?.nationalId.toString() ?? '';
-        mobileNumberController.text =
-            cubit.userResourceModel?.data?.phone ?? '';
+        mobileController.text = cubit.userResourceModel?.data?.phone ?? '';
+        nationalCodeController.text =
+            cubit.userResourceModel?.data?.phoneCode ?? '';
         emailController.text = cubit.userResourceModel?.data?.email ?? '';
         birthdayController.text = cubit.userResourceModel?.data?.birthday ?? '';
         return Scaffold(
@@ -183,29 +187,71 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       title: LocaleKeys.txtFieldMobile.tr(),
                     ),
                     verticalSmallSpace,
-                    DefaultFormField(
-                      height: 90,
-                      focusNode: _focusNodes[2],
-                      controller: mobileNumberController,
-                      type: TextInputType.none,
-                      readOnly: true,
-                      label: LocaleKeys.txtFieldMobile.tr(),
-                      onTap: () {},
-                      validatedText: LocaleKeys.txtFieldMobile.tr(),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: GeneralNationalityCode(
+                            controller: nationalCodeController,
+                            canSelect: false,
+                          ),
+                        ),
+                        horizontalMiniSpace,
+                        Expanded(
+                          flex: 3,
+                          child: DefaultFormField(
+                            height: 90,
+                            focusNode: _focusNodes[2],
+                            readOnly: true,
+                            controller: mobileController,
+                            type: TextInputType.number,
+                            label: LocaleKeys.txtFieldMobile.tr(),
+                            onTap: () {},
+                            validatedText: LocaleKeys.txtFieldDateOfBirth.tr(),
+                          ),
+                        ),
+                      ],
                     ),
                     verticalSmallSpace,
                     textLabel(
                       title: LocaleKeys.txtFieldEmail.tr(),
                     ),
                     verticalSmallSpace,
-                    DefaultFormField(
-                      height: 90,
-                      focusNode: _focusNodes[3],
+                    TextFormField(
                       controller: emailController,
-                      type: TextInputType.emailAddress,
-                      label: LocaleKeys.txtFieldEmail.tr(),
-                      onTap: () {},
-                      validatedText: LocaleKeys.txtFieldEmail.tr(),
+                      keyboardType: TextInputType.emailAddress,
+                      focusNode: _focusNodes[3],
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            !value.contains('@') ||
+                            !value.contains('.')) {
+                          return 'Invalid Email';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: LocaleKeys.txtFieldEmail.tr(),
+                        hintText: LocaleKeys.txtFieldEmail.tr(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: greyExtraLightColor.withOpacity(0.4),
+                          ),
+                        ),
+                        hintStyle:
+                            const TextStyle(color: greyDarkColor, fontSize: 14),
+                        labelStyle: const TextStyle(
+                          // color: isClickable ? Colors.grey[400] : blueColor,
+                          color: greyDarkColor,
+                          fontSize: 14,
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+                        errorStyle: const TextStyle(color: redColor),
+                        // floatingLabelBehavior: FloatingLabelBehavior.never,
+                        contentPadding: const EdgeInsetsDirectional.only(
+                            start: 15.0, end: 15.0, bottom: 15.0, top: 15.0),
+                      ),
                     ),
                     verticalSmallSpace,
                     textLabel(
@@ -217,7 +263,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       type: TextInputType.datetime,
                       label: LocaleKeys.txtFieldDateOfBirth.tr(),
                       readOnly: true,
-                      validatedText: LocaleKeys.txtFieldDateOfBirth.tr(),
                       onTap: () {
                         showDatePicker(
                           initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -227,10 +272,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           lastDate: DateTime?.now(),
                         ).then((value) {
                           if (value != null) {
+                            if (value.day <= 9) {
+                              day = '0${value.day}';
+                            } else {
+                              day = value.day;
+                            }
+
+                            if (value.month <= 9) {
+                              month = '0${value.month}';
+                            } else {
+                              month = value.month;
+                            }
+
                             birthdayController.text =
-                                '${value.year}-${value.month}-${value.day}';
+                                '${value.year}-$month-$day';
+                            if (kDebugMode) {
+                              print(birthdayController.text);
+                            }
                           }
-                          DateFormat.yMd().format(value!);
+                          //     DateFormat.yMd().format(value!);
                         }).catchError((error) {
                           if (kDebugMode) {
                             print('error in fetching date');
@@ -282,14 +342,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       builder: (context) => GeneralButton(
                         title: LocaleKeys.BtnSaveChanges.tr(),
                         onPress: () {
-                          AppCubit.get(context).editProfile(
-                              birthday: birthdayController.text,
-                              email: emailController.text,
-                              gender: gender.name,
-                              name: userNameController.text,
-                              profile: profileImage == null
-                                  ? ''
-                                  : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
+                          if (emailController.text.isEmpty) {
+                            AppCubit.get(context).editProfile(
+                                birthday: birthdayController.text,
+                                email: emailController.text,
+                                gender: gender.name,
+                                name: userNameController.text,
+                                profile: profileImage == null
+                                    ? ''
+                                    : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
+                          }
+                          if (emailController.text.isNotEmpty) {
+                            if (formKey.currentState!.validate()) {
+                              AppCubit.get(context).editProfile(
+                                  birthday: birthdayController.text,
+                                  email: emailController.text,
+                                  gender: gender.name,
+                                  name: userNameController.text,
+                                  profile: profileImage == null
+                                      ? ''
+                                      : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
+                            }
+                          }
                         },
                       ),
                       fallback: (context) => const Center(

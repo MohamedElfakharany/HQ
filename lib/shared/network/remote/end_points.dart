@@ -1,74 +1,77 @@
-const mainURL = 'https://hq.orcav.com/api';
+      const mainURL = 'https://hq.orcav.com/api';
 
-const authURL = '$mainURL/auth';
+      const authURL = '$mainURL/auth';
 
-const coreURL = '$mainURL/core';
+      const coreURL = '$mainURL/core';
 
-const testURL = '$mainURL/test';
+      const testURL = '$mainURL/test';
 
-const profileURL = '$mainURL/profile';
+      const profileURL = '$mainURL/profile';
+
+      const labURL = '$mainURL/lab';
 
 ///Auth
 
-const registerURL = '$authURL/register';
+      const registerURL = '$authURL/register';
 
-const loginURL = '$authURL/login';
+      const loginURL = '$authURL/login';
 
-const verificationURL = '$authURL/verify';
+      const verificationURL = '$authURL/verify';
 
-const completeProfileURL = '$authURL/complete-profile';
+      const completeProfileURL = '$authURL/complete-profile';
 
-const createTokenURL = '$authURL/create-token';
+      const createTokenURL = '$authURL/create-token';
 
-const resetPasswordURL = '$authURL/reset-password';
+      const resetPasswordURL = '$authURL/reset-password';
 
-///Core
+      ///Core
 
-const countryURL = '$coreURL/countries';
+      const countryURL = '$coreURL/countries';
 
-const cityURL = '$coreURL/cities';
+      const cityURL = '$coreURL/cities';
 
-const branchURL = '$coreURL/branches';
+      const branchURL = '$coreURL/branches';
 
-const relationsURL = '$coreURL/relations';
+      const relationsURL = '$coreURL/relations';
 
-const slidersURL = '$coreURL/sliders';
+      const slidersURL = '$coreURL/sliders';
 
 ///Tests
 
-const categoriesURL = '$testURL/categories';
+      const categoriesURL = '$testURL/categories';
 
-const testsURL = '$testURL/tests';
+      const testsURL = '$testURL/tests';
 
-const offersURL = '$testURL/offers';
-
-///Profile
-
-const getProfileURL = '$profileURL/get-profile';
-
-const editProfileURL = '$profileURL/edit-profile';
-
-const getTermsPrivacyURL = '$profileURL/terms-privacy';
-
-const changeLocationURL = '$profileURL/change-location';
-
-const changePasswordURL = '$profileURL/change-password';
-
-const changePhoneURL = '$profileURL/change-phone';
+      const offersURL = '$testURL/offers';
 
 ///Profile
-///
+
+      const getProfileURL = '$profileURL/get-profile';
+
+      const editProfileURL = '$profileURL/edit-profile';
+
+      const getTermsPrivacyURL = '$profileURL/terms-privacy';
+
+      const changeLocationURL = '$profileURL/change-location';
+
+      const changePasswordURL = '$profileURL/change-password';
+
+      const changePhoneURL = '$profileURL/change-phone';
+
 ///medical-inquiries
 
-const medicalInquiriesURL = '$profileURL/medical-inquiries';
+      const medicalInquiriesURL = '$profileURL/medical-inquiries';
 
-const createMedicalInquiriesURL = '$medicalInquiriesURL/create';
+      const createMedicalInquiriesURL = '$medicalInquiriesURL/create';
 
 ///families
-const familiesURL = '$profileURL/families';
 
-const createMemberURL = '$familiesURL/create';
+      const familiesURL = '$profileURL/families';
+
+      const createMemberURL = '$familiesURL/create';
 
 ///addresses
 
-///Reservations
+/// Lab Reservations
+
+      const labAppointmentURL = '$labURL/appointments';

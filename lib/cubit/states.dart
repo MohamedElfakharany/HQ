@@ -7,6 +7,7 @@ import 'package:hq/models/cores_models/carousel_model.dart';
 import 'package:hq/models/cores_models/city_model.dart';
 import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
+import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
@@ -201,6 +202,18 @@ class AppDeleteMemberErrorState extends AppStates{
   AppDeleteMemberErrorState(this.error);
 }
 
+class AppDeleteInquiryLoadingState extends AppStates{}
+
+class AppDeleteInquirySuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppDeleteInquirySuccessState(this.successModel);
+}
+
+class AppDeleteInquiryErrorState extends AppStates{
+  final String error;
+  AppDeleteInquiryErrorState(this.error);
+}
+
 class AppChangeNumberLoadingState extends AppStates{}
 
 class AppChangeNumberSuccessState extends AppStates{
@@ -279,6 +292,18 @@ class AppGetBranchesSuccessState extends AppStates{
 class AppGetBranchesErrorState extends AppStates{
   final String error;
   AppGetBranchesErrorState(this.error);
+}
+
+class AppGetLabAppointmentsLoadingState extends AppStates{}
+
+class AppGetLabAppointmentsSuccessState extends AppStates{
+  final LabAppointmentsModel labAppointmentsModel;
+  AppGetLabAppointmentsSuccessState(this.labAppointmentsModel);
+}
+
+class AppGetLabAppointmentsErrorState extends AppStates{
+  final String error;
+  AppGetLabAppointmentsErrorState(this.error);
 }
 
 class AppGetCarouselLoadingState extends AppStates{}

@@ -26,7 +26,8 @@ class EditMemberScreen extends StatefulWidget {
 
 class _EditMemberScreenState extends State<EditMemberScreen> {
   var userNameController = TextEditingController();
-  var mobileNumberController = TextEditingController();
+  var mobileController = TextEditingController();
+  var nationalCodeController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   final _focusNodes =
       Iterable<int>.generate(2).map((_) => FocusNode()).toList();
@@ -37,6 +38,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
       listener: (context, state) {
         if (state is AppEditMemberSuccessState) {
           if (state.successModel.status) {
+            AppCubit.get(context).editMemberImage = null;
             Navigator.pop(context);
           } else {
             showDialog(
@@ -85,7 +87,8 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
       builder: (context, state) {
         var editMemberImage = AppCubit.get(context).editMemberImage;
         userNameController.text = widget.familiesDataModel.name;
-        mobileNumberController.text = widget.familiesDataModel.phone;
+        mobileController.text = widget.familiesDataModel.phone;
+        nationalCodeController.text = widget.familiesDataModel.phoneCode;
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -176,14 +179,28 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                       title: LocaleKeys.txtFieldMobile.tr(),
                     ),
                     verticalSmallSpace,
-                    DefaultFormField(
-                      height: 90,
-                      focusNode: _focusNodes[1],
-                      controller: mobileNumberController,
-                      type: TextInputType.number,
-                      label: LocaleKeys.txtFieldMobile.tr(),
-                      validatedText: LocaleKeys.txtFieldMobile.tr(),
-                      onTap: () {},
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: GeneralNationalityCode(
+                            controller: nationalCodeController,
+                            canSelect: true,
+                          ),
+                        ),
+                        horizontalMiniSpace,
+                        Expanded(
+                          flex: 3,
+                          child: DefaultFormField(
+                            height: 90,
+                            focusNode: _focusNodes[1],
+                            controller: mobileController,
+                            type: TextInputType.phone,
+                            validatedText: LocaleKeys.txtFieldMobile.tr(),
+                            label: LocaleKeys.txtFieldMobile.tr(),
+                          ),
+                        ),
+                      ],
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
@@ -195,10 +212,10 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                             AppCubit.get(context).editMember(
                                 memberId: widget.familiesDataModel.id,
                                 name: userNameController.text,
-                                phone: mobileNumberController.text,
+                                phone: mobileController.text,
                                 profile: editMemberImage == null
                                     ? ''
-                                    : 'https://hq.orcav.com/assets/${Uri.file(editMemberImage.path).pathSegments.last}');
+                                    : 'https://hq.orcav.com/assets/${Uri.file(editMemberImage.path).pathSegments.last}', phoneCode: nationalCodeController.text);
                           }
                         },
                       ),

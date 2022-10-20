@@ -20,6 +20,7 @@ class VerificationScreen extends StatefulWidget {
   VerificationScreen({
     Key? key,
     required this.mobileNumber,
+    required this.phoneCode,
     this.isRegister,
     this.isChangeMobile,
     this.resetToken,
@@ -27,6 +28,7 @@ class VerificationScreen extends StatefulWidget {
   bool? isRegister;
   bool? isChangeMobile;
   String? resetToken;
+  String phoneCode = "";
   String mobileNumber = "";
 
   @override
@@ -73,7 +75,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           );
         } else if (widget.isRegister == false &&
             widget.isChangeMobile == true) {
-          AppCubit.get(context).changeNumber(phone: widget.mobileNumber);
+          AppCubit.get(context).changeNumber(phone: widget.mobileNumber, phoneCode: widget.phoneCode);
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -102,7 +104,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     super.initState();
     if (isFirst) {
       isFirst = false;
-      AppCubit.get(context).fetchOtp(number: widget.mobileNumber);
+      AppCubit.get(context).fetchOtp(number: widget.mobileNumber, phoneCode: widget.phoneCode);
     }
   }
 
@@ -236,7 +238,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   verticalMediumSpace,
                   ConditionalBuilder(
                     condition: state is! AppGetVerifyLoadingState ||
-                        state is! AppCreateTokenLoadingState ||
+                        state is! AppCreateTokenLoadingState &&
                         AppCubit.get(context).verificationId != null,
                     builder: (context) => GeneralButton(
                       title: LocaleKeys.BtnVerify.tr(),
@@ -244,7 +246,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         if (formKey.currentState!.validate()) {
                           AppCubit.get(context)
                               .createToken(
-                                  mobile: widget.mobileNumber.toString())
+                                  mobile: widget.mobileNumber.toString(), phoneCode: widget.phoneCode)
                               .then((v) {
                             verify();
                           });
@@ -268,10 +270,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           codeController.text = '';
                           AppCubit.get(context)
                               .createToken(
-                                  mobile: widget.mobileNumber.toString())
+                                  mobile: widget.mobileNumber.toString(), phoneCode: widget.phoneCode)
                               .then((v) {
                             AppCubit.get(context)
-                                .fetchOtp(number: widget.mobileNumber);
+                                .fetchOtp(number: widget.mobileNumber, phoneCode: widget.phoneCode);
                           });
                         },
                         child: Text(

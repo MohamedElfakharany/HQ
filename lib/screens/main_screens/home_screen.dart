@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       () async {
         AppCubit.get(context).getCarouselData();
         AppCubit.get(context).getProfile();
+        AppCubit.get(context).getTerms();
         extraBranchTitle = await CacheHelper.getData(key: 'extraBranchTitle');
         extraCityId = await CacheHelper.getData(key: 'extraCityId');
         extraBranchId = await CacheHelper.getData(key: 'extraBranchId');
@@ -169,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onChanged: (value) {
                                     setState(() => locationValue = value);
                                     // AppCubit.get(context).selectBranch(name: locationValue!);
+                                    // AppCubit.get(context).userResourceModel?.data?.branch?.id
                                   },
                                   onSaved: (v) {
                                     FocusScope.of(context).unfocus();
@@ -203,9 +205,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         fit: BoxFit.cover),
                                   ),
-                                  child: Padding(
+                                  child: Container(
                                     padding: const EdgeInsetsDirectional.only(
-                                        start: 15.0),
+                                        start: 15.0,end: 15.0),
+                                    decoration: BoxDecoration(
+                                      color: greyExtraLightColor.withOpacity(0.7),
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -214,29 +219,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           e.title,
                                           style: titleSmallStyleRed.copyWith(
-                                              fontSize: 20),
+                                              fontSize: 25),
                                         ),
+                                        verticalMiniSpace,
                                         SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
+                                          width: double.infinity,
                                           child: Text(
                                             e.text,
-                                            maxLines: 3,
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style: titleSmallStyle2,
+                                            style: titleSmallStyleRed.copyWith(fontSize: 20.0,color: blueColor),
                                           ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '',
-                                              style: titleSmallStyle.copyWith(
-                                                color: blueColor,
-                                              ),
-                                            ),
-                                          ],
                                         ),
                                       ],
                                     ),

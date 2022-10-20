@@ -18,7 +18,7 @@ class OffersModel {
   });
 }
 
-List<OffersModel> offersModelData = [
+List<OffersModel> offersModelDataxx = [
 
   OffersModel(
     image:
@@ -101,46 +101,46 @@ List<OffersModel> offersModelData = [
 
 ////////////////////////////////////////////////////////////////////////
 
-class TestsModel {
+class TestsModelxx {
   final String image;
   final String body;
 
-  TestsModel({
+  TestsModelxx({
     required this.image,
     required this.body,
   });
 }
 
-List<TestsModel> testsModelData = [
-  TestsModel(
+List<TestsModelxx> testsModelData = [
+  TestsModelxx(
     image: 'assets/images/sugarCheck.png',
     body: 'Sugar Checks',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/urineTest.png',
     body: 'Urine Test',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/liverTest.png',
     body: 'Liver Test',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/allergyTest.png',
     body: 'Allergy Test',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/immuneDiseases.png',
     body: 'Immune Diseases',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/geneticsAnalysis.png',
     body: 'genetics analysis',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/bloodFats.png',
     body: 'Blood Fats',
   ),
-  TestsModel(
+  TestsModelxx(
     image: 'assets/images/hormones.png',
     body: 'Hormones',
   ),

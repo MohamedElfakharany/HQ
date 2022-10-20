@@ -79,16 +79,28 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   ),
                   verticalMediumSpace,
                   Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context, index) => FamiliesMemberCard(familiesDataModel: AppCubit.get(context).familiesModel!.data![index]),
-                      separatorBuilder: (context, index) => verticalMediumSpace,
-                      itemCount: AppCubit.get(context).familiesModel?.data?.length ?? 0,
+                    child: ConditionalBuilder(
+                      condition: AppCubit.get(context).familiesModel != null,
+                      builder: (context) => ListView.separated(
+                        itemBuilder: (context, index) => FamiliesMemberCard(
+                            familiesDataModel: AppCubit.get(context)
+                                .familiesModel!
+                                .data![index]),
+                        separatorBuilder: (context, index) =>
+                            verticalMediumSpace,
+                        itemCount:
+                            AppCubit.get(context).familiesModel?.data?.length ??
+                                0,
+                      ),
+                      fallback: (context) =>
+                          ScreenHolder(msg: LocaleKeys.txtFamily.tr()),
                     ),
                   ),
                 ],
               ),
             ),
-            fallback: (context) => const Center(child: CircularProgressIndicator()),
+            fallback: (context) =>
+                const Center(child: CircularProgressIndicator()),
           ),
         );
       },

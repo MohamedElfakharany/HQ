@@ -11,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:gender_picker/source/gender_picker.dart';
 import 'package:hq/cubit/cubit.dart';
-import 'package:hq/screens/main_screens/profile/family/family_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -31,7 +30,8 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
   var userNameController = TextEditingController();
   var mobileNumberController = TextEditingController();
   var birthdayController = TextEditingController();
-
+  var nationalCodeController = TextEditingController();
+  String? nationalCodeValue;
   String? relationValue;
 
   var formKey = GlobalKey<FormState>();
@@ -181,8 +181,23 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                             lastDate: DateTime?.now(),
                           ).then((value) {
                             if (value != null) {
+                              if (value.day <= 9) {
+                                day = '0${value.day}';
+                              } else {
+                                day = value.day;
+                              }
+
+                              if (value.month <= 9) {
+                                month = '0${value.month}';
+                              } else {
+                                month = value.month;
+                              }
+
                               birthdayController.text =
-                                  '${value.year}-${value.month}-${value.day}';
+                                  '${value.year}-$month-$day';
+                              if (kDebugMode) {
+                                print(birthdayController.text);
+                              }
                             }
                             //     DateFormat.yMd().format(value!);
                           }).catchError((error) {
@@ -193,6 +208,41 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                           });
                         },
                         suffixIcon: Icons.calendar_month,
+                        suffixPressed: (){
+                          showDatePicker(
+                            initialEntryMode: DatePickerEntryMode.calendarOnly,
+                            context: context,
+                            initialDate: DateTime?.now(),
+                            firstDate: DateTime.parse('1950-01-01'),
+                            lastDate: DateTime?.now(),
+                          ).then((value) {
+                            if (value != null) {
+                              if (value.day <= 9) {
+                                day = '0${value.day}';
+                              } else {
+                                day = value.day;
+                              }
+
+                              if (value.month <= 9) {
+                                month = '0${value.month}';
+                              } else {
+                                month = value.month;
+                              }
+
+                              birthdayController.text =
+                              '${value.year}-$month-$day';
+                              if (kDebugMode) {
+                                print(birthdayController.text);
+                              }
+                            }
+                            //     DateFormat.yMd().format(value!);
+                          }).catchError((error) {
+                            if (kDebugMode) {
+                              print('error in fetching date');
+                              print(error.toString());
+                            }
+                          });
+                        },
                       ),
                       verticalSmallSpace,
                       textLabel(title: LocaleKeys.txtRelationship.tr()),
@@ -244,14 +294,28 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                       verticalSmallSpace,
                       textLabel(title: LocaleKeys.txtFieldMobile.tr()),
                       verticalSmallSpace,
-                      DefaultFormField(
-                        height: 90,
-                        focusNode: _focusNodes[3],
-                        controller: mobileNumberController,
-                        type: TextInputType.number,
-                        label: LocaleKeys.txtFieldMobile.tr(),
-                        onTap: () {},
-                        validatedText: LocaleKeys.txtFieldDateOfBirth.tr(),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: GeneralNationalityCode(
+                                controller: nationalCodeController),
+                          ),
+                          horizontalMiniSpace,
+                          Expanded(
+                            flex: 3,
+                            child: DefaultFormField(
+                              height: 90,
+                              focusNode: _focusNodes[3],
+                              controller: mobileNumberController,
+                              type: TextInputType.number,
+                              label: LocaleKeys.txtFieldMobile.tr(),
+                              onTap: () {},
+                              validatedText:
+                                  LocaleKeys.txtFieldDateOfBirth.tr(),
+                            ),
+                          ),
+                        ],
                       ),
                       verticalMediumSpace,
                       textLabel(title: LocaleKeys.txtFieldGender.tr()),
@@ -302,6 +366,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                                     : 'https://hq.orcav.com/assets/${Uri.file(memberImage.path).pathSegments.last}',
                                 relationId:
                                     AppCubit.get(context).relationIdList!,
+                                phoneCode: '+${nationalCodeController.text}',
                               );
                             }
                           },

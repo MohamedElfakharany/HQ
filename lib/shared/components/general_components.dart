@@ -2,6 +2,7 @@
 
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -367,7 +368,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 Navigator.push(
                   context,
                   FadeRoute(
-                    page: const CardScreen(),
+                    page: CardScreen(),
                   ),
                 );
               },
@@ -534,6 +535,11 @@ class DefaultFormField extends StatelessWidget {
               return LocaleKeys.txtPasswordValidate.tr();
             }
           }
+          if (validatedText == LocaleKeys.txtFieldIdNumber.tr()){
+            if (value.length != 9) {
+              return LocaleKeys.txtNationalIdValidate.tr();
+            }
+          }
           if (validatedText == LocaleKeys.txtFieldCodeReset.tr()) {
             if (value.length != 6) {
               return LocaleKeys.txtCheckCodeTrue.tr();
@@ -599,6 +605,61 @@ class DefaultFormField extends StatelessWidget {
         style: const TextStyle(
             color: blueLightColor, fontSize: 18, fontFamily: fontFamily),
       ),
+    );
+  }
+}
+
+class GeneralNationalityCode extends StatelessWidget {
+  GeneralNationalityCode({this.canSelect, Key? key, required this.controller})
+      : super(key: key);
+  final TextEditingController controller;
+  bool? canSelect = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.none,
+      readOnly: true,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return '${LocaleKeys.txtFill.tr()} ${LocaleKeys.txtFieldNationality.tr()}';
+        }
+      },
+      onTap: () {
+        if (canSelect == true) {
+          showCountryPicker(
+            context: context,
+            onSelect: (Country country) {
+              controller.text = country.phoneCode;
+            },
+          );
+        }
+      },
+      decoration: InputDecoration(
+        labelText: LocaleKeys.txtFieldNationality.tr(),
+        hintText: LocaleKeys.txtFieldNationality.tr(),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 1,
+            color: greyExtraLightColor.withOpacity(0.4),
+          ),
+        ),
+        hintStyle: const TextStyle(color: greyDarkColor, fontSize: 14),
+        labelStyle: const TextStyle(
+          // color: isClickable ? Colors.grey[400] : blueColor,
+          color: greyDarkColor,
+          fontSize: 14,
+        ),
+        fillColor: Colors.white,
+        filled: true,
+        errorStyle: const TextStyle(color: redColor),
+        // floatingLabelBehavior: FloatingLabelBehavior.never,
+        contentPadding: const EdgeInsetsDirectional.only(
+            start: 5.0, end: 0.0, bottom: 0.0, top: 0.0),
+      ),
+      style: const TextStyle(
+          color: blueLightColor, fontSize: 18, fontFamily: fontFamily),
     );
   }
 }
@@ -796,13 +857,13 @@ void printWrapped(String text) {
 class ScreenHolder extends StatelessWidget {
   final String msg;
 
-  const ScreenHolder(this.msg, {Key? key}) : super(key: key);
+  const ScreenHolder({required this.msg, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'There is no $msg Yet',
+        '${LocaleKeys.txtThereIsNo.tr()} $msg ${LocaleKeys.txtYet.tr()}',
         textAlign: TextAlign.center,
         style: Theme.of(context)
             .textTheme

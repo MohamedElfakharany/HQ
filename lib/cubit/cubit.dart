@@ -16,6 +16,7 @@ import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
@@ -57,12 +58,16 @@ class AppCubit extends Cubit<AppStates> {
   TermsModel? termsModel;
   FamiliesModel? familiesModel;
   MedicalInquiriesModel? medicalInquiriesModel;
+  LabAppointmentsModel? labAppointmentsModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
 
   List<RelationsDataModel>? relationsNames = [];
   List<String> relationsName = [];
+
+  List<FamiliesDataModel>? familiesNames = [];
+  List<String> familiesName = [];
 
   int? branchIdList;
 
@@ -88,12 +93,14 @@ class AppCubit extends Cubit<AppStates> {
   Future register({
     required String name,
     required String mobile,
+    required String phoneCode,
     required String nationalID,
     required String password,
   }) async {
     var formData = json.encode({
       'name': name,
       'phone': mobile,
+      'phoneCode': phoneCode,
       'password': password,
       'nationalId': nationalID,
     });
@@ -133,10 +140,12 @@ class AppCubit extends Cubit<AppStates> {
 
   Future login({
     required String mobile,
+    required String phoneCode,
     required String password,
   }) async {
     var formData = {
       'phone': mobile,
+      'phoneCode': phoneCode,
       'password': password,
     };
     try {
@@ -367,6 +376,10 @@ class AppCubit extends Cubit<AppStates> {
         print('responseJson : $responseJson');
       }
       familiesModel = FamiliesModel.fromJson(responseJson);
+      familiesNames = familiesModel?.data;
+      for (var i = 0; i < familiesNames!.length; i++) {
+        familiesName.add('${familiesNames?[i].name} ( ${familiesNames?[i].relation} )');
+      }
       if (kDebugMode) {
         print('familiesModel : ${familiesModel?.data?.first.profile}');
       }
@@ -435,6 +448,7 @@ class AppCubit extends Cubit<AppStates> {
     required String birthday,
     required String gender,
     required String profile,
+    required String phoneCode,
   }) async {
     emit(AppCreateMemberLoadingState());
     var headers = {
@@ -447,6 +461,7 @@ class AppCubit extends Cubit<AppStates> {
         'relationId': relationId,
         'name': name,
         'phone': phone,
+        'phoneCode': phoneCode,
         'birthday': birthday,
         'gender': gender,
         if (memberImage != null)
@@ -483,7 +498,6 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-
   Future createInquiry({
     required String message,
     String? file,
@@ -497,7 +511,6 @@ class AppCubit extends Cubit<AppStates> {
     var formData = FormData.fromMap(
       {
         'message': message,
-        'title': '7mada',
         if (inquiryImage != null)
           'file': await MultipartFile.fromFile(
             inquiryImage!.path,
@@ -526,16 +539,47 @@ class AppCubit extends Cubit<AppStates> {
         print('formData : ${formData.fields}');
       }
       successModel = SuccessModel.fromJson(responseJson);
-      getFamilies();
       emit(AppCreateInquirySuccessState(successModel!));
     } catch (error) {
       emit(AppCreateInquiryErrorState(error.toString()));
     }
   }
 
+  Future deleteInquiry({
+    required var inquiryId,
+  }) async {
+    emit(AppDeleteInquiryLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.delete(
+        '$medicalInquiriesURL/$inquiryId/delete',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getMedicalInquiries();
+      emit(AppDeleteInquirySuccessState(successModel!));
+    } catch (error) {
+      emit(AppDeleteInquiryErrorState(error.toString()));
+    }
+  }
+
   Future editMember({
     required String name,
     required String phone,
+    required String phoneCode,
     required String profile,
     required var memberId,
   }) async {
@@ -549,6 +593,7 @@ class AppCubit extends Cubit<AppStates> {
       {
         'name': name,
         'phone': phone,
+        'phoneCode': phoneCode,
         if (editMemberImage != null)
           'profile': await MultipartFile.fromFile(
             editMemberImage!.path,
@@ -616,6 +661,7 @@ class AppCubit extends Cubit<AppStates> {
 
   Future changeNumber({
     required String phone,
+    required String phoneCode,
   }) async {
     emit(AppChangeNumberLoadingState());
     var headers = {
@@ -625,6 +671,7 @@ class AppCubit extends Cubit<AppStates> {
     };
     var formData = {
       'phone': phone,
+      'phoneCode': phoneCode,
     };
     try {
       Dio dio = Dio();
@@ -729,6 +776,7 @@ class AppCubit extends Cubit<AppStates> {
 
   Future createToken({
     required String mobile,
+    required String phoneCode,
   }) async {
     emit(AppCreateTokenLoadingState());
     var headers = {
@@ -737,6 +785,7 @@ class AppCubit extends Cubit<AppStates> {
     };
     var formData = {
       'phone': mobile,
+      'phoneCode': phoneCode,
     };
     try {
       Dio dio = Dio();
@@ -804,10 +853,10 @@ class AppCubit extends Cubit<AppStates> {
   String? verificationId = "";
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Future<void> fetchOtp({required String number}) async {
+  Future<void> fetchOtp({required String number, required String phoneCode}) async {
     emit(AppStartFetchOTPState());
     await auth.verifyPhoneNumber(
-      phoneNumber: '+2$number',
+      phoneNumber: '+$phoneCode$number',
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((v) => {});
       },
@@ -1018,6 +1067,37 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppGetBranchesSuccessState(branchModel!));
     } catch (error) {
       emit(AppGetBranchesErrorState(error.toString()));
+    }
+  }
+
+  Future getLabAppointments({
+    required String date,
+  }) async {
+    emit(AppGetLabAppointmentsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$labAppointmentURL?date=$date',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      labAppointmentsModel = null;
+      labAppointmentsModel = LabAppointmentsModel.fromJson(responseJson);
+      emit(AppGetLabAppointmentsSuccessState(labAppointmentsModel!));
+    } catch (error) {
+      emit(AppGetLabAppointmentsErrorState(error.toString()));
     }
   }
 

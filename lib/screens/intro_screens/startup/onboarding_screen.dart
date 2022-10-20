@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/intro_screens/auth/login_screen.dart';
-import 'package:hq/screens/intro_screens/auth/register/select_country_screen.dart';
 import 'package:hq/screens/intro_screens/auth/register/sign_up_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -191,16 +190,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    AppCubit.get(context).isVisitor = true;
-                    AppCubit.get(context).getCountry();
-                    Navigator.push(context, FadeRoute(page: const SelectCountryScreen(),),);
-                  },
-                  child: Text(
-                    LocaleKeys.BtnContinueAsGuest.tr(),
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     AppCubit.get(context).isVisitor = true;
+                //     AppCubit.get(context).getCountry();
+                //     Navigator.push(context, FadeRoute(page: const SelectCountryScreen(),),);
+                //   },
+                //   child: Text(
+                //     LocaleKeys.BtnContinueAsGuest.tr(),
+                //   ),
+                // ),
               ],
             ),
           ),

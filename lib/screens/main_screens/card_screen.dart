@@ -1,8 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/main_screens/reservations/home_reservation_screen.dart';
-import 'package:hq/screens/main_screens/reservations/lab_reservation.dart';
+import 'package:hq/screens/main_screens/reservations/details_screens/lab_appointments/lab_appointments_screen.dart';
 import 'package:hq/shared/components/cached_network_image.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -11,7 +15,10 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class CardScreen extends StatefulWidget {
-  const CardScreen({Key? key}) : super(key: key);
+  CardScreen({Key? key, this.offersDataModel, this.testsDataModel})
+      : super(key: key);
+  TestsDataModel? testsDataModel;
+  OffersDataModel? offersDataModel;
 
   @override
   State<CardScreen> createState() => _CardScreenState();
@@ -98,16 +105,17 @@ class _CardScreenState extends State<CardScreen> {
                                         width: 60,
                                         decoration: BoxDecoration(
                                           color: redColor,
-                                          borderRadius: BorderRadius.circular(radius),
+                                          borderRadius:
+                                              BorderRadius.circular(radius),
                                         ),
                                         child: Center(
                                             child: Text(
-                                              LocaleKeys.BtnDelete.tr(),
-                                              style: titleStyle.copyWith(
-                                                  fontSize: 15.0,
-                                                  color: whiteColor,
-                                                  fontWeight: FontWeight.normal),
-                                            )),
+                                          LocaleKeys.BtnDelete.tr(),
+                                          style: titleStyle.copyWith(
+                                              fontSize: 15.0,
+                                              color: whiteColor,
+                                              fontWeight: FontWeight.normal),
+                                        )),
                                       ),
                                     ),
                                   ],
@@ -152,12 +160,16 @@ class _CardScreenState extends State<CardScreen> {
                           ),
                           horizontalMiniSpace,
                           Container(
-                            width: 55,height: 55,
+                            width: 55,
+                            height: 55,
                             decoration: BoxDecoration(
-                              color: darkColor,
-                              borderRadius: BorderRadius.circular(radius)
+                                color: darkColor,
+                                borderRadius: BorderRadius.circular(radius)),
+                            child: const Icon(
+                              Icons.send_outlined,
+                              color: whiteColor,
+                              size: 30,
                             ),
-                            child: const Icon(Icons.send_outlined,color: whiteColor,size: 30,),
                           ),
                         ],
                       ),
@@ -313,7 +325,8 @@ class _CardScreenState extends State<CardScreen> {
                         topRight: Radius.circular(radius),
                       ),
                     ),
-                    padding: const EdgeInsetsDirectional.only(start: 20.0,end: 20.0),
+                    padding: const EdgeInsetsDirectional.only(
+                        start: 20.0, end: 20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -332,18 +345,26 @@ class _CardScreenState extends State<CardScreen> {
                         ),
                         verticalSmallSpace,
                         InkWell(
-                          onTap: (){
+                          onTap: () {
                             if (kDebugMode) {
                               print('lab');
                             }
-                            Navigator.push(context, FadeRoute(page: const LabReservationScreen(),),);
+                            Navigator.push(
+                              context,
+                              FadeRoute(
+                                page: LabAppointmentsScreen(
+                                  offersDataModel: widget.offersDataModel,
+                                  testsDataModel: widget.testsDataModel,
+                                ),
+                              ),
+                            );
                           },
                           child: Container(
                             height: 50,
                             width: MediaQuery.of(context).size.width * 0.9,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(radius),
-                              border: Border.all(width: 1,color: blueColor),
+                              border: Border.all(width: 1, color: blueColor),
                               color: greyExtraLightColor,
                             ),
                             child: Row(
@@ -351,10 +372,15 @@ class _CardScreenState extends State<CardScreen> {
                                 horizontalSmallSpace,
                                 Text(
                                   LocaleKeys.BtnAtLab.tr(),
-                                  style: titleStyle.copyWith(fontWeight: FontWeight.normal,color: blueColor,fontSize: 20,),
+                                  style: titleStyle.copyWith(
+                                    fontWeight: FontWeight.normal,
+                                    color: blueColor,
+                                    fontSize: 20,
+                                  ),
                                 ),
                                 const Spacer(),
-                                Image.asset('assets/images/atLabIcon.png',height: 40,width: 30,color: blueColor),
+                                Image.asset('assets/images/atLabIcon.png',
+                                    height: 40, width: 30, color: blueColor),
                                 horizontalSmallSpace,
                               ],
                             ),
@@ -362,11 +388,16 @@ class _CardScreenState extends State<CardScreen> {
                         ),
                         verticalSmallSpace,
                         InkWell(
-                          onTap: (){
+                          onTap: () {
                             if (kDebugMode) {
                               print('home');
                             }
-                            Navigator.push(context, FadeRoute(page: const HomeReservationScreen(),),);
+                            Navigator.push(
+                              context,
+                              FadeRoute(
+                                page: const HomeReservationScreen(),
+                              ),
+                            );
                           },
                           child: Container(
                             height: 50,
@@ -374,17 +405,25 @@ class _CardScreenState extends State<CardScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(radius),
                               color: greyExtraLightColor,
-                              border: Border.all(width: 1,color: blueColor),
+                              border: Border.all(width: 1, color: blueColor),
                             ),
                             child: Row(
                               children: [
                                 horizontalSmallSpace,
                                 Text(
                                   LocaleKeys.BtnAtHome.tr(),
-                                  style: titleStyle.copyWith(fontWeight: FontWeight.normal,color: blueColor,fontSize: 20,),
+                                  style: titleStyle.copyWith(
+                                    fontWeight: FontWeight.normal,
+                                    color: blueColor,
+                                    fontSize: 20,
+                                  ),
                                 ),
                                 const Spacer(),
-                                const Icon(Icons.home_outlined,color: blueColor,size: 40,),
+                                const Icon(
+                                  Icons.home_outlined,
+                                  color: blueColor,
+                                  size: 40,
+                                ),
                                 horizontalSmallSpace,
                               ],
                             ),
@@ -404,12 +443,12 @@ class _CardScreenState extends State<CardScreen> {
                             ),
                             child: Center(
                                 child: Text(
-                                  LocaleKeys.BtnCancel.tr(),
-                                  style: titleStyle.copyWith(
-                                      fontSize: 25.0,
-                                      color: whiteColor,
-                                      fontWeight: FontWeight.normal),
-                                )),
+                              LocaleKeys.BtnCancel.tr(),
+                              style: titleStyle.copyWith(
+                                  fontSize: 25.0,
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.normal),
+                            )),
                           ),
                         ),
                       ],

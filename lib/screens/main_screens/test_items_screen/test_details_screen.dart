@@ -11,7 +11,7 @@ import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/screens/main_screens/reservations/home_reservation_screen.dart';
-import 'package:hq/screens/main_screens/reservations/lab_reservation.dart';
+import 'package:hq/screens/main_screens/reservations/details_screens/lab_appointments/lab_appointments_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/read_more_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
 import 'package:hq/shared/components/general_components.dart';
@@ -145,82 +145,60 @@ class TestDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              testsDataModel?.description ?? offersDataModel?.description,
-              style: subTitleSmallStyle.copyWith(
-                fontSize: 15,
+            Expanded(
+              child: Text(
+                testsDataModel?.description ?? offersDataModel?.description,
+                style: subTitleSmallStyle.copyWith(
+                  fontSize: 15,
+                ),
               ),
             ),
             verticalMediumSpace,
-            Container(
-              height: 110.0,
-              width: 110.0,
-              decoration: BoxDecoration(
-                color: greyExtraLightColor,
-                borderRadius: BorderRadius.circular(radius),
-                border: Border.all(
-                  width: 1,
-                  color: greyDarkColor,
+            InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  FadeRoute(
+                      page: ReadMoreScreen(testsDataModel: testsDataModel,offersDataModel: offersDataModel,)),
+                );
+              },
+              child: Container(
+                height: 110.0,
+                width: 110.0,
+                decoration: BoxDecoration(
+                  color: greyExtraLightColor,
+                  borderRadius: BorderRadius.circular(radius),
+                  border: Border.all(
+                    width: 1,
+                    color: greyDarkColor,
+                  ),
                 ),
-              ),
-              alignment: AlignmentDirectional.center,
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(
-                        start: 10.0, top: 10.0),
-                    child: Image.asset(
+                alignment: AlignmentDirectional.center,
+                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
                       'assets/images/logo.png',
-                      width: 40,
-                      height: 40,
+                      width: 80,
+                      height: 80,
                     ),
-                  ),
-                  horizontalMiniSpace,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        verticalMiniSpace,
-                        Text(
-                          LocaleKeys.txtAnalysisPreparations.tr(),
-                          style: titleSmallStyle,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          testsDataModel?.preparation ?? offersDataModel?.preparation,
-                          style: const TextStyle(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              FadeRoute(
-                                page: ReadMoreScreen(testsDataModel: testsDataModel,offersDataModel: offersDataModel,)),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              Text(
-                                LocaleKeys.BtnMore.tr(),
-                                style: titleSmallStyle.copyWith(
-                                    color: blueColor,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              const Icon(
-                                Icons.arrow_forward,
-                                color: blueColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    const Spacer(),
+                    Center(
+                      child: Text(
+                        LocaleKeys.txtAnalysisPreparations.tr(),
+                        style: titleStyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
+                    const Spacer(),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: blueColor,
+                    ),
+                  ],
+                ),
               ),
             ),
             verticalMediumSpace,
@@ -268,7 +246,7 @@ class TestDetailsScreen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     FadeRoute(
-                                      page: const LabReservationScreen(),
+                                      page: LabAppointmentsScreen(offersDataModel: offersDataModel,testsDataModel: testsDataModel),
                                     ),
                                   );
                                 },
@@ -403,7 +381,8 @@ class TestDetailsScreen extends StatelessWidget {
                 ),
                 MaterialButton(
                   onPressed: () {
-                    showCustomBottomSheet(
+                    if (AppCubit.get(context).isVisitor == false){
+                      showCustomBottomSheet(
                       context,
                       bottomSheetContent: Container(
                         height: MediaQuery.of(context).size.height * 0.55,
@@ -557,7 +536,7 @@ class TestDetailsScreen extends StatelessWidget {
                                             Navigator.push(
                                               context,
                                               FadeRoute(
-                                                page: const CardScreen(),
+                                                page: CardScreen(testsDataModel: testsDataModel,offersDataModel: offersDataModel),
                                               ),
                                             );
                                           } else {
@@ -610,6 +589,12 @@ class TestDetailsScreen extends StatelessWidget {
                       ),
                       bottomSheetHeight: 0.55,
                     );
+                    }else {
+                      showPopUp(
+                        context,
+                        const VisitorHoldingPopUp(),
+                      );
+                    }
                   },
                   child: Container(
                     height: 50,

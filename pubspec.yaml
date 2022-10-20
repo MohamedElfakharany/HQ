@@ -37,6 +37,8 @@ dependencies:
   country_picker: ^2.0.15
   path: ^1.8.2
   path_provider: ^2.0.10
+  flutter_swipe_action_cell: ^3.0.4
+  flutter_widget_from_html: ^0.8.5
 
   #firebase
   firebase_auth: ^3.11.1

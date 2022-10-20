@@ -10,6 +10,7 @@ import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/test_models/categories_model.dart';
 import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/card_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
@@ -128,9 +129,9 @@ class _LabCalenderViewState extends State<LabCalenderView> {
                           month = selectedDay.month;
                         }
 
-                        // AppCubit.get(context).getLabAppointmentsData(
-                        //     date:
-                        //     '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
+                        AppCubit.get(context).getLabAppointments(
+                            date:
+                                '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
                       },
                       availableCalendarFormats: const {
                         CalendarFormat.month: 'Month',
@@ -613,7 +614,14 @@ class CategoriesCard extends StatelessWidget {
 }
 
 class TestItemCard extends StatelessWidget {
-  const TestItemCard({Key? key, required this.index}) : super(key: key);
+  TestItemCard(
+      {Key? key,
+      required this.index,
+      this.offersDataModel,
+      this.testsDataModel})
+      : super(key: key);
+  TestsDataModel? testsDataModel;
+  OffersDataModel? offersDataModel;
   final int index;
 
   @override
@@ -640,7 +648,9 @@ class TestItemCard extends StatelessWidget {
                 children: [
                   horizontalMicroSpace,
                   CachedNetworkImageNormal(
-                    imageUrl: AppCubit.get(context).testsModel?.data?[index].image ?? '',
+                    imageUrl:
+                        AppCubit.get(context).testsModel?.data?[index].image ??
+                            '',
                     width: 80,
                     height: 80,
                   ),
@@ -651,13 +661,21 @@ class TestItemCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppCubit.get(context).testsModel?.data?[index].title ?? '',
+                          AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .title ??
+                              '',
                           style: titleStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          AppCubit.get(context).testsModel?.data?[index].description ?? '',
+                          AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .description ??
+                              '',
                           style: subTitleSmallStyle2,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -695,7 +713,8 @@ class TestItemCard extends StatelessWidget {
                               FadeRoute(
                                 page: TestDetailsScreen(
                                     testsDataModel: AppCubit.get(context)
-                                        .testsModel!.data?[index]),
+                                        .testsModel!
+                                        .data?[index]),
                               ),
                             );
                           },
@@ -724,7 +743,11 @@ class TestItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         horizontalMicroSpace,
-                        if (AppCubit.get(context).testsModel?.data?[index].gender == 'male')
+                        if (AppCubit.get(context)
+                                .testsModel
+                                ?.data?[index]
+                                .gender ==
+                            'male')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
@@ -736,7 +759,11 @@ class TestItemCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                        if (AppCubit.get(context).testsModel?.data?[index].gender == 'female')
+                        if (AppCubit.get(context)
+                                .testsModel
+                                ?.data?[index]
+                                .gender ==
+                            'female')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
@@ -919,7 +946,7 @@ class TestItemCard extends StatelessWidget {
                                                 Navigator.push(
                                                   context,
                                                   FadeRoute(
-                                                    page: const CardScreen(),
+                                                    page: CardScreen(offersDataModel: offersDataModel,testsDataModel: testsDataModel),
                                                   ),
                                                 );
                                               },
@@ -980,24 +1007,24 @@ class TestItemCard extends StatelessWidget {
               )
             ],
           ),
-          if (index % 2 != 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(
-                  color: redColor,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: const Center(
-                  child: Text(
-                    '%',
-                    style: TextStyle(color: whiteColor, fontSize: 16),
-                  ),
-                ),
-              ),
-            ),
+          // if (index % 2 != 0)
+          //   Padding(
+          //     padding: const EdgeInsets.only(top: 5.0),
+          //     child: Container(
+          //       height: 30,
+          //       width: 30,
+          //       decoration: BoxDecoration(
+          //         color: redColor,
+          //         borderRadius: BorderRadius.circular(30),
+          //       ),
+          //       child: const Center(
+          //         child: Text(
+          //           '%',
+          //           style: TextStyle(color: whiteColor, fontSize: 16),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     );

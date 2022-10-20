@@ -1,4 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +29,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
+  var nationalCodeController = TextEditingController();
+
   var formKey = GlobalKey<FormState>();
   final _focusNodes =
       Iterable<int>.generate(2).map((_) => FocusNode()).toList();
 
-  saveExtraToken({required String extraToken1,required int verified1}) async {
+  saveExtraToken({required String extraToken1, required int verified1}) async {
     (await SharedPreferences.getInstance()).setString('token', extraToken1);
     (await SharedPreferences.getInstance()).setInt('verified', verified1);
     token = extraToken1;
@@ -52,11 +55,14 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is AppLoginSuccessState) {
           if (state.userResourceModel.status) {
             if (state.userResourceModel.data!.isVerified == 0) {
-              saveExtraToken(extraToken1: state.userResourceModel.extra?.token, verified1: state.userResourceModel.data?.isVerified);
+              saveExtraToken(
+                  extraToken1: state.userResourceModel.extra?.token,
+                  verified1: state.userResourceModel.data?.isVerified);
               await Navigator.push(
                 context,
                 FadeRoute(
                   page: VerificationScreen(
+                    phoneCode: nationalCodeController.text,
                     isChangeMobile: false,
                     mobileNumber: mobileController.text.toString(),
                     isRegister: true,
@@ -64,7 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               );
             } else if (state.userResourceModel.data!.isVerified == 1) {
-              saveExtraToken(extraToken1: state.userResourceModel.extra?.token, verified1: state.userResourceModel.data?.isVerified);
+              saveExtraToken(
+                  extraToken1: state.userResourceModel.extra?.token,
+                  verified1: state.userResourceModel.data?.isVerified);
               if (state.userResourceModel.data!.isCompleted == 0) {
                 AppCubit.get(context).getCountry();
                 Navigator.push(
@@ -164,14 +172,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   verticalMiniSpace,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: DefaultFormField(
-                      height: 90,
-                      focusNode: _focusNodes[0],
-                      controller: mobileController,
-                      type: TextInputType.phone,
-                      validatedText: LocaleKeys.txtFieldMobile.tr(),
-                      label: LocaleKeys.txtFieldMobile.tr(),
-                      onTap: () {},
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: GeneralNationalityCode(
+                            controller: nationalCodeController,
+                          ),
+                        ),
+                        horizontalMiniSpace,
+                        Expanded(
+                          flex: 3,
+                          child: DefaultFormField(
+                            height: 90,
+                            focusNode: _focusNodes[0],
+                            controller: mobileController,
+                            type: TextInputType.phone,
+                            validatedText: LocaleKeys.txtFieldMobile.tr(),
+                            label: LocaleKeys.txtFieldMobile.tr(),
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   verticalMiniSpace,
@@ -222,7 +244,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           cubit.isVisitor = false;
                           cubit.login(
                               mobile: mobileController.text,
-                              password: passwordController.text);
+                              password: passwordController.text,
+                              phoneCode: nationalCodeController.text);
                         }
                       },
                     ),

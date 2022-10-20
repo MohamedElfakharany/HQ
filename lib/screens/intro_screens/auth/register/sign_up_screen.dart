@@ -29,6 +29,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final mobileController = TextEditingController();
 
+  final nationalCodeController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   final confirmPasswordController = TextEditingController();
@@ -120,6 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               FadeRoute(
                 page: VerificationScreen(
                   isRegister: true,
+                  phoneCode: nationalCodeController.text,
                   mobileNumber: mobileController.text.toString(),
                 ),
               ),
@@ -191,32 +194,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   verticalMiniSpace,
                   if (isPasswordTyping == false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: DefaultFormField(
-                      height: 90,
-                      focusNode: _focusNodes[0],
-                      controller: userNameController,
-                      type: TextInputType.text,
-                      validatedText: LocaleKeys.txtFieldName.tr(),
-                      label: LocaleKeys.txtFieldName.tr(),
-                      onTap: () {},
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: DefaultFormField(
+                        height: 90,
+                        focusNode: _focusNodes[0],
+                        controller: userNameController,
+                        type: TextInputType.text,
+                        validatedText: LocaleKeys.txtFieldName.tr(),
+                        label: LocaleKeys.txtFieldName.tr(),
+                        onTap: () {},
+                      ),
                     ),
-                  ),if (isPasswordTyping == false)
-                  verticalMiniSpace,if (isPasswordTyping == false)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: DefaultFormField(
-                      height: 90,
-                      focusNode: _focusNodes[1],
-                      controller: mobileController,
-                      type: TextInputType.phone,
-                      validatedText: LocaleKeys.txtFieldMobile.tr(),
-                      label: LocaleKeys.txtFieldMobile.tr(),
-                      onTap: () {},
+                  if (isPasswordTyping == false) verticalMiniSpace,
+                  if (isPasswordTyping == false)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: GeneralNationalityCode(
+                              controller: nationalCodeController,
+                            ),
+                          ),
+                          horizontalMiniSpace,
+                          Expanded(
+                            flex: 3,
+                            child: DefaultFormField(
+                              height: 90,
+                              focusNode: _focusNodes[1],
+                              controller: mobileController,
+                              type: TextInputType.phone,
+                              validatedText: LocaleKeys.txtFieldMobile.tr(),
+                              label: LocaleKeys.txtFieldMobile.tr(),
+                              onTap: () {},
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),if (isPasswordTyping == false)
-                  verticalMiniSpace,
+                  if (isPasswordTyping == false) verticalMiniSpace,
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 10),
@@ -227,8 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             color: whiteColor,
                             spreadRadius: 3,
                             blurRadius: 10,
-                            offset:
-                                Offset(0, 10), // changes position of shadow
+                            offset: Offset(0, 10), // changes position of shadow
                           ),
                         ],
                       ),
@@ -237,13 +254,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           vertical: 0, horizontal: 4),
                       child: TextFormField(
                         focusNode: _focusNodes[2],
-                        onEditingComplete: (){
+                        onEditingComplete: () {
                           isPasswordTyping = false;
                         },
-                        onTapOutside: (value){
+                        onTapOutside: (value) {
                           isPasswordTyping = false;
                         },
-                        onFieldSubmitted: (value){
+                        onFieldSubmitted: (value) {
                           isPasswordTyping = false;
                         },
                         controller: passwordController,
@@ -269,10 +286,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           errorStyle: const TextStyle(color: redColor),
                           // floatingLabelBehavior: FloatingLabelBehavior.never,
                           contentPadding: const EdgeInsetsDirectional.only(
-                              start: 20.0,
-                              end: 10.0,
-                              bottom: 15.0,
-                              top: 15.0),
+                              start: 20.0, end: 10.0, bottom: 15.0, top: 15.0),
                           border: const OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 1,
@@ -334,8 +348,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             color: whiteColor,
                             spreadRadius: 3,
                             blurRadius: 10,
-                            offset:
-                                Offset(0, 10), // changes position of shadow
+                            offset: Offset(0, 10), // changes position of shadow
                           ),
                         ],
                       ),
@@ -352,12 +365,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               AppCubit.get(context)
                                   .resetConfirmChangePasswordVisibility();
                             },
-                            icon: Icon(
-                                AppCubit.get(context).resetConfirmSufIcon),
+                            icon:
+                                Icon(AppCubit.get(context).resetConfirmSufIcon),
                             color: blueColor,
                           ),
-                          label:
-                              Text(LocaleKeys.TxtFieldConfirmPassword.tr()),
+                          label: Text(LocaleKeys.TxtFieldConfirmPassword.tr()),
                           hintStyle: const TextStyle(
                               color: greyDarkColor, fontSize: 14),
                           labelStyle: const TextStyle(
@@ -369,10 +381,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           errorStyle: const TextStyle(color: redColor),
                           // floatingLabelBehavior: FloatingLabelBehavior.never,
                           contentPadding: const EdgeInsetsDirectional.only(
-                              start: 20.0,
-                              end: 10.0,
-                              bottom: 15.0,
-                              top: 15.0),
+                              start: 20.0, end: 10.0, bottom: 15.0, top: 15.0),
                           border: const OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 1,
@@ -464,8 +473,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             SizedBox(
                                               height: 350.0,
                                               child: SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.vertical,
+                                                scrollDirection: Axis.vertical,
                                                 physics:
                                                     const BouncingScrollPhysics(),
                                                 child: Text(
@@ -541,8 +549,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             SizedBox(
                                               height: 350.0,
                                               child: SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.vertical,
+                                                scrollDirection: Axis.vertical,
                                                 physics:
                                                     const BouncingScrollPhysics(),
                                                 child: Text(
@@ -589,6 +596,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             nationalID: nationalIdController.text,
                             password: passwordController.text,
                             mobile: mobileController.text,
+                            phoneCode: nationalCodeController.text,
                           );
                         }
                         cubit.isVisitor = false;

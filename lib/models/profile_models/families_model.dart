@@ -36,6 +36,7 @@ class FamiliesDataModel {
     this.relation,
     this.name,
     this.phone,
+    this.phoneCode,
     this.birthday,
     this.gender,
     this.profile,
@@ -44,6 +45,7 @@ class FamiliesDataModel {
   dynamic id;
   RelationFamiliesModel? relation;
   dynamic name;
+  dynamic phoneCode;
   dynamic phone;
   dynamic birthday;
   dynamic gender;
@@ -54,6 +56,7 @@ class FamiliesDataModel {
     relation: RelationFamiliesModel.fromJson(json["relation"]),
     name: json["name"],
     phone: json["phone"],
+    phoneCode: json["phoneCode"],
     birthday: json["birthday"],
     gender: json["gender"],
     profile: json["profile"],

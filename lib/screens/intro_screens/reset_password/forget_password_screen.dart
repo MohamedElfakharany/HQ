@@ -16,6 +16,7 @@ class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({Key? key, this.isChangeMobile}) : super(key: key);
   bool? isChangeMobile = false;
   final mobileController = TextEditingController();
+  final nationalCodeController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -28,6 +29,7 @@ class ForgetPasswordScreen extends StatelessWidget {
               context,
               FadeRoute(
                 page: VerificationScreen(
+                  phoneCode: nationalCodeController.text,
                   resetToken: state.createTokenModel.data!.resetToken,
                   isRegister: false,
                   mobileNumber: mobileController.text.toString(),
@@ -83,13 +85,27 @@ class ForgetPasswordScreen extends StatelessWidget {
               verticalMiniSpace,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: DefaultFormField(
-                  height: 90,
-                  controller: mobileController,
-                  type: TextInputType.phone,
-                  validatedText: LocaleKeys.txtFieldMobile.tr(),
-                  label: LocaleKeys.txtFieldMobile.tr(),
-                  onTap: () {},
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GeneralNationalityCode(
+                        controller: nationalCodeController,
+                      ),
+                    ),
+                    horizontalMiniSpace,
+                    Expanded(
+                      flex: 3,
+                      child: DefaultFormField(
+                        height: 90,
+                        controller: mobileController,
+                        type: TextInputType.phone,
+                        validatedText: LocaleKeys.txtFieldMobile.tr(),
+                        label: LocaleKeys.txtFieldMobile.tr(),
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
                 ),
               ),
               verticalMediumSpace,
@@ -101,13 +117,14 @@ class ForgetPasswordScreen extends StatelessWidget {
                     if (formKey.currentState!.validate()) {
                       if (isChangeMobile == false) {
                         AppCubit.get(context)
-                            .createToken(mobile: mobileController.text);
+                            .createToken(mobile: mobileController.text, phoneCode: nationalCodeController.text);
                       } else {
                         Navigator.push(
                           context,
                           FadeRoute(
                             page: VerificationScreen(
                                 mobileNumber: mobileController.text,
+                                phoneCode: nationalCodeController.text,
                                 isRegister: false,
                                 isChangeMobile: true),
                           ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/test_models/tests_model.dart';
 import 'package:hq/screens/main_screens/reservations/reserved_success_screen.dart';
 import 'package:hq/shared/components/cached_network_image.dart';
 import 'package:hq/shared/components/general_components.dart';
@@ -11,15 +13,23 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class ReservationOverviewScreen extends StatefulWidget {
-  const ReservationOverviewScreen({Key? key}) : super(key: key);
+class LabReservationOverviewScreen extends StatefulWidget {
+  LabReservationOverviewScreen(
+      {Key? key, this.offersDataModel, this.testsDataModel, required this.date, required this.time})
+      : super(key: key);
+  final String date;
+  final String time;
+  TestsDataModel? testsDataModel;
+  OffersDataModel? offersDataModel;
 
   @override
-  State<ReservationOverviewScreen> createState() =>
-      _ReservationOverviewScreenState();
+  State<LabReservationOverviewScreen> createState() =>
+      _LabReservationOverviewScreenState();
 }
 
-class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
+class _LabReservationOverviewScreenState
+    extends State<LabReservationOverviewScreen> {
+  var couponController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -36,13 +46,8 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
             padding:
                 const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
             child: ListView(
-              // crossAxisAlignment: CrossAxisAlignment.start,
+              physics: const BouncingScrollPhysics(),
               children: [
-                Text(
-                  'Review your test',
-                  style: titleStyle.copyWith(fontWeight: FontWeight.w500),
-                ),
-                verticalSmallSpace,
                 Container(
                   height: 110.0,
                   width: 110.0,
@@ -74,20 +79,20 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
-                                  'Glaciated Hemoglobin HBA1C',
+                                Text(
+                                  widget.offersDataModel?.title ?? widget.testsDataModel?.title,
                                   style: titleSmallStyle,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                const Text(
-                                  'Sugar Test category',
+                                Text(
+                                  widget.testsDataModel?.category?.name ?? '',
                                   style: subTitleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  '80 ${LocaleKeys.salary.tr()}',
+                                  '${widget.offersDataModel?.price ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                   style: titleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -107,7 +112,7 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                 ),
                 verticalMiniSpace,
                 Container(
-                  height: 250.0,
+                  height: 166.0,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: whiteColor,
@@ -140,9 +145,9 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                                       color: greyLightColor),
                                 ),
                                 if (AppCubit.get(context).isVisitor == false)
-                                  const Text(
+                                  Text(
+                                    AppCubit.get(context).userResourceModel?.data?.name,
                                     textAlign: TextAlign.start,
-                                    'Mohamed',
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -152,36 +157,7 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            horizontalSmallSpace,
-                            const Icon(
-                              Icons.location_on_rounded,
-                              color: blueColor,
-                            ),
-                            myVerticalDivider(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  LocaleKeys.txtReservationDetails.tr(),
-                                  style: titleStyle.copyWith(
-                                      color: greyLightColor),
-                                ),
-                                const Text(
-                                  textAlign: TextAlign.start,
-                                  'In Lab - KSA, Riyadh , King St 7034',
-                                  style: subTitleSmallStyle,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      myHorizontalDivider(),
                       Expanded(
                         child: Row(
                           children: [
@@ -202,9 +178,9 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                                   style: titleStyle.copyWith(
                                       color: greyLightColor),
                                 ),
-                                const Text(
+                                Text(
                                   textAlign: TextAlign.start,
-                                  '24 Feb 2022 - 5:30 PM',
+                                  '${widget.date} - ${widget.time}',
                                   style: titleSmallStyle,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -215,6 +191,52 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                verticalMiniSpace,
+                Container(
+                  height: 110.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          LocaleKeys.txtHaveCoupon.tr(),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: DefaultFormField(
+                                  controller: couponController,
+                                  type: TextInputType.number,
+                                  label: LocaleKeys.txtFieldCoupon.tr(),
+                                ),
+                              ),
+                              horizontalMiniSpace,
+                              Container(
+                                width: 55,
+                                height: 55,
+                                decoration: BoxDecoration(
+                                    color: darkColor,
+                                    borderRadius: BorderRadius.circular(radius)),
+                                child: const Icon(
+                                  Icons.send_outlined,
+                                  color: whiteColor,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 verticalMiniSpace,
@@ -252,27 +274,6 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  LocaleKeys.txtItems.tr(),
-                                  style: titleSmallStyle.copyWith(
-                                      color: greyDarkColor,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                                const Spacer(),
-                                const Text(
-                                  textAlign: TextAlign.start,
-                                  '03',
-                                  style: titleSmallStyle,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            verticalMicroSpace,
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
                                   LocaleKeys.txtPrice.tr(),
                                   style: titleSmallStyle.copyWith(
                                       color: greyDarkColor,
@@ -281,7 +282,7 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                                 const Spacer(),
                                 Text(
                                   textAlign: TextAlign.start,
-                                  '330 ${LocaleKeys.salary.tr()}',
+                                  '${widget.offersDataModel?.price ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                   style: titleSmallStyle,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -354,10 +355,10 @@ class _ReservationOverviewScreenState extends State<ReservationOverviewScreen> {
                 verticalSmallSpace,
                 MaterialButton(
                   onPressed: () {
-                      navigateAndFinish(
-                        context,
-                        const ReservedSuccessScreen(),
-                      );
+                    navigateAndFinish(
+                      context,
+                      const ReservedSuccessScreen(),
+                    );
                   },
                   child: Container(
                     height: 50,
