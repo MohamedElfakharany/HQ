@@ -2,26 +2,27 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/test_models/offers_model.dart';
 import 'package:hq/models/test_models/tests_model.dart';
-import 'package:hq/screens/main_screens/reservations/details_screens/lab_appointments/lab_reservation_overview_screen.dart';
+import 'package:hq/screens/main_screens/reservations/details_screens/home_appointments/home_reservation_overview_screen.dart';
+
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class LabReservationDetailsScreen extends StatefulWidget {
-  LabReservationDetailsScreen({Key? key,
-    this.offersDataModel,
-    this.testsDataModel,
-    required this.date,
-    required this.time})
+class HomeReservationDetailsScreen extends StatefulWidget {
+  HomeReservationDetailsScreen(
+      {Key? key,
+      this.offersDataModel,
+      this.testsDataModel,
+      required this.date,
+      required this.time})
       : super(key: key);
   final String date;
   final String time;
@@ -29,12 +30,12 @@ class LabReservationDetailsScreen extends StatefulWidget {
   OffersDataModel? offersDataModel;
 
   @override
-  State<LabReservationDetailsScreen> createState() =>
-      _LabReservationDetailsScreenState();
+  State<HomeReservationDetailsScreen> createState() =>
+      _HomeReservationDetailsScreenState();
 }
 
-class _LabReservationDetailsScreenState
-    extends State<LabReservationDetailsScreen> {
+class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScreen> {
+
   String? locationValue;
   String? memberValue ;
 
@@ -51,13 +52,6 @@ class _LabReservationDetailsScreenState
       listener: (context, state) {},
       builder: (context, state) {
         locationValue = extraBranchTitle;
-        if (kDebugMode) {
-          print('ghany 2 ${AppCubit.get(context).branchName}');
-          print('ghany 2 $locationValue');
-          print('ghany 2 $extraBranchTitle');
-          print('ghany 2 ${widget.date}');
-          // print(AppCubit.get(context).labAppointmentsModel!.extra!.date);
-        }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -89,11 +83,9 @@ class _LabReservationDetailsScreenState
                           ),
                           alignment: AlignmentDirectional.center,
                           padding:
-                          const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 4),
+                          const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -120,8 +112,7 @@ class _LabReservationDetailsScreenState
                           ),
                           alignment: AlignmentDirectional.center,
                           padding:
-                          const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 4),
+                          const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
                               validator: (value) {
@@ -153,22 +144,13 @@ class _LabReservationDetailsScreenState
                               ),
                               items: AppCubit
                                   .get(context)
-                                  .familiesName
-                                  .map(buildMenuItem)
-                                  .toList(),
+                                  .familiesName.map(buildMenuItem).toList(),
                               onChanged: (value) =>
                                   setState(() {
-                                    memberValue = value!;
+                                    memberValue = value;
                                     AppCubit.get(context)
                                         .selectBranchForReservation(
                                         name: memberValue ?? '');
-                                    print(memberValue);
-                                    print(AppCubit
-                                        .get(context)
-                                        .relationIdList);
-                                    print(AppCubit
-                                        .get(context)
-                                            .familiesName);
                                   }),
                               onSaved: (v) {
                                 FocusScope.of(context).unfocus();
@@ -200,19 +182,69 @@ class _LabReservationDetailsScreenState
                                 children: [
                                   horizontalSmallSpace,
                                   Text(
-                                    LocaleKeys.BtnAtLab.tr(),
-                                    style: titleSmallStyle.copyWith(
-                                        color: blueColor),
+                                    LocaleKeys.BtnAtHome.tr(),
+                                    style: titleSmallStyle.copyWith(color: blueColor),
                                   ),
                                   const Spacer(),
-                                  Image.asset('assets/images/atLabIcon.png',
-                                      height: 30,
-                                      width: 20,
-                                      color: greyDarkColor),
+                                  Image.asset('assets/images/atHomeIcon.png',
+                                      height: 30, width: 20, color: greyDarkColor),
                                   horizontalSmallSpace,
                                 ],
                               ),
                             ),
+                            // myHorizontalDivider(),
+                            // Expanded(
+                            //   child: DropdownButtonHideUnderline(
+                            //     child: DropdownButtonFormField<String>(
+                            //       validator: (value) {
+                            //         if (value == null) {
+                            //           return 'Location Required';
+                            //         }
+                            //       },
+                            //       decoration: InputDecoration(
+                            //         prefixIcon: const Icon(
+                            //           Icons.location_on_rounded,
+                            //           color: greyLightColor,
+                            //           size: 30,
+                            //         ),
+                            //         contentPadding: const EdgeInsetsDirectional.only(
+                            //             start: 20.0, end: 0.0, bottom: 15.0),
+                            //         fillColor: Colors.white,
+                            //         filled: true,
+                            //         errorStyle:
+                            //         const TextStyle(color: Color(0xFF4F4F4F)),
+                            //         border: InputBorder.none,
+                            //         suffixIcon: IconButton(
+                            //           onPressed: () {
+                            //             Navigator.push(
+                            //               context,
+                            //               FadeRoute(
+                            //                 page: MapScreen(),
+                            //               ),
+                            //             );
+                            //           },
+                            //           icon: const Icon(
+                            //             Icons.add_location_alt_outlined,
+                            //             color: blueColor,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       value: locationItems.first,
+                            //       isExpanded: true,
+                            //       iconSize: 30,
+                            //       icon: const Icon(
+                            //         Icons.keyboard_arrow_down_rounded,
+                            //         color: blueColor,
+                            //       ),
+                            //       items:
+                            //       locationItems.map(buildLocationItem).toList(),
+                            //       onChanged: (value) =>
+                            //           setState(() => locationValue = value),
+                            //       onSaved: (v) {
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
                             myHorizontalDivider(),
                             Expanded(
                               child: DropdownButtonHideUnderline(
@@ -229,14 +261,10 @@ class _LabReservationDetailsScreenState
                                       size: 30,
                                     ),
                                     contentPadding: EdgeInsetsDirectional.only(
-                                        start: 20.0,
-                                        end: 0.0,
-                                        bottom: 0.0,
-                                        top: 10.0),
+                                        start: 20.0, end: 0.0, bottom: 5.0),
                                     fillColor: Colors.white,
                                     filled: true,
-                                    errorStyle: TextStyle(
-                                        color: Color(0xFF4F4F4F)),
+                                    errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
                                     border: InputBorder.none,
                                     suffixIcon: Text(''),
                                   ),
@@ -249,16 +277,11 @@ class _LabReservationDetailsScreenState
                                   ),
                                   items: AppCubit
                                       .get(context)
-                                      .branchName
-                                      .map(buildLocationItem)
-                                      .toList(),
+                                      .branchName.map(buildLocationItem).toList(),
                                   onChanged: (value) =>
                                       setState(() {
                                         locationValue = value;
                                         AppCubit.get(context).selectBranchForReservation(name: locationValue!);
-                                        print(AppCubit
-                                            .get(context)
-                                                .branchIdForReservationList);
                                       }),
                                   onSaved: (v) {
                                     FocusScope.of(context).unfocus();
@@ -275,7 +298,7 @@ class _LabReservationDetailsScreenState
                           Navigator.push(
                             context,
                             FadeRoute(
-                              page: LabReservationOverviewScreen(
+                              page: HomeReservationOverviewScreen(
                                 branchName: locationValue ?? AppCubit.get(context).userResourceModel?.data?.branch?.title,
                                 testsDataModel: widget.testsDataModel,
                                 offersDataModel: widget.offersDataModel,
@@ -318,8 +341,7 @@ class _LabReservationDetailsScreenState
     );
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) =>
-      DropdownMenuItem(
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
         value: item,
         child: Row(
           children: [
@@ -328,8 +350,7 @@ class _LabReservationDetailsScreenState
         ),
       );
 
-  DropdownMenuItem<String> buildLocationItem(String item) =>
-      DropdownMenuItem(
+  DropdownMenuItem<String> buildLocationItem(String item) => DropdownMenuItem(
         value: item,
         child: Text(item),
       );

@@ -32,6 +32,7 @@ class _ReservationDetailsUpcomingScreenState
     if (kDebugMode) {
       print('object');
     }
+
     Timer(
       const Duration(milliseconds: 1000),
           () {

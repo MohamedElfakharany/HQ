@@ -12,18 +12,21 @@ class MedicalInquiriesModel {
     this.message,
     this.data,
     this.extra,
+    this.errors,
   });
 
   dynamic status;
   dynamic message;
   List<MedicalInquiriesDataModel>? data;
   Extra? extra;
+  Errors? errors;
 
   factory MedicalInquiriesModel.fromJson(Map<dynamic, dynamic> json) => MedicalInquiriesModel(
     status: json["status"],
     message: json["message"],
     data: List<MedicalInquiriesDataModel>.from(json["data"].map((x) => MedicalInquiriesDataModel.fromJson(x))),
     extra: Extra.fromJson(json["extra"]),
+    errors: Errors.fromJson(json["errors"]),
   );
 }
 
@@ -33,23 +36,47 @@ class MedicalInquiriesDataModel {
     this.message,
     this.file,
     this.date,
+    this.answer,
   });
 
   dynamic id;
   dynamic message;
   dynamic file;
-  MedicalInquiriesDateDataModel? date;
+  MedicalInquiriesDataDateModel? date;
+  MedicalInquiriesDataAnswerModel? answer;
 
   factory MedicalInquiriesDataModel.fromJson(Map<dynamic, dynamic> json) => MedicalInquiriesDataModel(
     id: json["id"],
     message: json["message"],
     file: json["file"],
-    date: MedicalInquiriesDateDataModel.fromJson(json["date"]),
+    date: MedicalInquiriesDataDateModel.fromJson(json["date"]),
+    answer: MedicalInquiriesDataAnswerModel.fromJson(json["answer"]),
   );
 }
 
-class MedicalInquiriesDateDataModel {
-  MedicalInquiriesDateDataModel({
+class MedicalInquiriesDataAnswerModel {
+  MedicalInquiriesDataAnswerModel({
+    this.user,
+    this.message,
+    this.file,
+    this.date,
+  });
+
+  User? user;
+  dynamic message;
+  dynamic file;
+  MedicalInquiriesDataDateModel? date;
+
+  factory MedicalInquiriesDataAnswerModel.fromJson(Map<dynamic, dynamic> json) => MedicalInquiriesDataAnswerModel(
+    user: User.fromJson(json["user"]),
+    message: json["message"],
+    file: json["file"],
+    date: MedicalInquiriesDataDateModel.fromJson(json["date"]),
+  );
+}
+
+class MedicalInquiriesDataDateModel {
+  MedicalInquiriesDataDateModel({
     this.date,
     this.time,
   });
@@ -57,9 +84,36 @@ class MedicalInquiriesDateDataModel {
   dynamic date;
   dynamic time;
 
-  factory MedicalInquiriesDateDataModel.fromJson(Map<dynamic, dynamic> json) => MedicalInquiriesDateDataModel(
+  factory MedicalInquiriesDataDateModel.fromJson(Map<dynamic, dynamic> json) => MedicalInquiriesDataDateModel(
     date: json["date"],
     time: json["time"],
+  );
+
+  Map<dynamic, dynamic> toJson() => {
+    "date": date,
+    "time": time,
+  };
+}
+
+class User {
+  User({
+    this.id,
+    this.name,
+  });
+
+  dynamic id;
+  dynamic name;
+
+  factory User.fromJson(Map<dynamic, dynamic> json) => User(
+    id: json["id"],
+    name: json["name"],
+  );
+}
+
+class Errors {
+  Errors();
+
+  factory Errors.fromJson(Map<dynamic, dynamic> json) => Errors(
   );
 }
 

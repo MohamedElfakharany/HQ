@@ -170,6 +170,8 @@ abstract class  LocaleKeys {
   static const txtMobileLessNine = 'txtMobileLessNine';
   static const txtPasswordValidate = 'txtPasswordValidate';
   static const txtNationalIdValidate = 'txtNationalIdValidate';
+  static const txtCouponValidation = 'txtCouponValidation';
+  static const txtPeriod = 'txtPeriod';
   static const txtChangeMobile = 'txtChangeMobile';
   static const txtChangeEmail = 'txtChangeEmail';
   static const txtChangeEmailSecond = 'txtChangeEmailSecond';

@@ -4,8 +4,10 @@ import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 
 final kToday = DateTime.now();
+
 var day;
 var month;
+
 final kFirstDay = DateTime(kToday.year, kToday.month, kToday.day);
 final kLastDay = DateTime(kToday.year, kToday.month + 5, kToday.day);
 

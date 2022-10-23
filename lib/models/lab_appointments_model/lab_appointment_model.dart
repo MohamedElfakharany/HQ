@@ -30,14 +30,17 @@ class LabAppointmentsModel {
 class LabAppointmentsDataModel {
   LabAppointmentsDataModel({
     this.time,
+    this.time24,
     this.isUsed,
   });
 
+  dynamic time24;
   dynamic time;
   dynamic isUsed;
 
   factory LabAppointmentsDataModel.fromJson(Map<dynamic, dynamic> json) => LabAppointmentsDataModel(
     time: json["time"],
+    time24: json["time24"],
     isUsed: json["isUsed"],
   );
 }

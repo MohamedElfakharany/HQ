@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, must_be_immutable
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -331,9 +331,9 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
                           month = selectedDay.month;
                         }
 
-                        // AppCubit.get(context).getLabAppointmentsData(
-                        //     date:
-                        //     '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
+                        AppCubit.get(context).getHomeAppointments(
+                            date:
+                            '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
                       },
                       availableCalendarFormats: const {
                         CalendarFormat.month: 'Month',
@@ -688,14 +688,6 @@ class TestItemCard extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            if (index % 2 != 0) horizontalMiniSpace,
-                            if (index % 2 != 0)
-                              Text(
-                                '${AppCubit.get(context).testsModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
-                                style: subTitleSmallStyle2.copyWith(
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
                           ],
                         ),
                       ],
@@ -840,13 +832,11 @@ class TestItemCard extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 0, horizontal: 4),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding:
-                                            const EdgeInsetsDirectional.only(
-                                                start: 10.0, top: 10.0),
+                                        padding: const EdgeInsetsDirectional.only(
+                                            start: 10.0, top: 10.0),
                                         child: Image.asset(
                                           'assets/images/logo.png',
                                           width: 80,
@@ -857,44 +847,45 @@ class TestItemCard extends StatelessWidget {
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             verticalMiniSpace,
                                             Text(
-                                              'Fasting sugar FBS',
+                                              AppCubit.get(context).testsModel?.data?[index].title ??
+                                                  offersDataModel?.title,
                                               style: titleStyle.copyWith(
-                                                  fontWeight:
-                                                      FontWeight.normal),
+                                                  fontWeight: FontWeight.normal),
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            const Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5.0),
-                                              child: Text(
-                                                'Sugar Checks',
-                                                style: TextStyle(),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
+                                            // const Padding(
+                                            //   padding: EdgeInsets.symmetric(
+                                            //       vertical: 5.0),
+                                            //   child: Text(
+                                            //     'Sugar Checks',
+                                            //     style: TextStyle(),
+                                            //     maxLines: 2,
+                                            //     overflow: TextOverflow.ellipsis,
+                                            //   ),
+                                            // ),
                                             Row(
                                               children: [
                                                 Text(
-                                                  '80 ${LocaleKeys.salary.tr()}',
+                                                  '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
                                                   style: titleStyle.copyWith(
                                                       fontSize: 15),
                                                 ),
                                                 horizontalMiniSpace,
-                                                Text(
-                                                  '100 ${LocaleKeys.salary.tr()}',
-                                                  style: subTitleSmallStyle
-                                                      .copyWith(
-                                                    decoration: TextDecoration
-                                                        .lineThrough,
+                                                if (AppCubit.get(context).offersModel?.data?[index].price !=  null)
+                                                  Text(
+                                                    '${AppCubit.get(context).offersModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
+                                                    style:
+                                                    subTitleSmallStyle.copyWith(
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                    ),
                                                   ),
-                                                ),
                                               ],
                                             ),
                                           ],
@@ -906,8 +897,7 @@ class TestItemCard extends StatelessWidget {
                                 verticalMicroSpace,
                                 Container(
                                   height: 50,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.9,
+                                  width: MediaQuery.of(context).size.width * 0.9,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(radius),
                                     color: greyExtraLightColor,
@@ -922,9 +912,8 @@ class TestItemCard extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        '80 ${LocaleKeys.salary.tr()}',
-                                        style:
-                                            titleStyle.copyWith(fontSize: 18),
+                                        '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
+                                        style: titleStyle.copyWith(fontSize: 18),
                                       ),
                                       horizontalSmallSpace,
                                     ],
@@ -936,38 +925,51 @@ class TestItemCard extends StatelessWidget {
                                   child: Center(
                                     child: Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: MaterialButton(
-                                              onPressed: () {
+                                            onPressed: () {
+                                              if (AppCubit.get(context)
+                                                  .isVisitor ==
+                                                  false) {
                                                 Navigator.push(
                                                   context,
                                                   FadeRoute(
-                                                    page: CardScreen(offersDataModel: offersDataModel,testsDataModel: testsDataModel),
+                                                    page: CardScreen(
+                                                        testsDataModel:
+                                                        testsDataModel,
+                                                        offersDataModel:
+                                                        offersDataModel),
                                                   ),
                                                 );
-                                              },
-                                              height: 80.0,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: blueColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          radius),
-                                                ),
-                                                height: 50.0,
-                                                width: double.infinity,
-                                                child: Center(
-                                                    child: Text(
+                                              } else {
+                                                showPopUp(
+                                                  context,
+                                                  const VisitorHoldingPopUp(),
+                                                );
+                                              }
+                                            },
+                                            height: 80.0,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: blueColor,
+                                                borderRadius:
+                                                BorderRadius.circular(radius),
+                                              ),
+                                              height: 50.0,
+                                              width: double.infinity,
+                                              child: Center(
+                                                child: Text(
                                                   LocaleKeys.BtnCheckout.tr(),
-                                                  style:
-                                                      titleSmallStyle.copyWith(
-                                                          color: whiteColor),
-                                                )),
-                                              )),
+                                                  style: titleSmallStyle.copyWith(
+                                                    color: whiteColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                         Expanded(
                                           child: GeneralUnfilledButton(
@@ -1007,24 +1009,23 @@ class TestItemCard extends StatelessWidget {
               )
             ],
           ),
-          // if (index % 2 != 0)
-          //   Padding(
-          //     padding: const EdgeInsets.only(top: 5.0),
-          //     child: Container(
-          //       height: 30,
-          //       width: 30,
-          //       decoration: BoxDecoration(
-          //         color: redColor,
-          //         borderRadius: BorderRadius.circular(30),
-          //       ),
-          //       child: const Center(
-          //         child: Text(
-          //           '%',
-          //           style: TextStyle(color: whiteColor, fontSize: 16),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 5.0),
+            //   child: Container(
+            //     height: 30,
+            //     width: 30,
+            //     decoration: BoxDecoration(
+            //       color: redColor,
+            //       borderRadius: BorderRadius.circular(30),
+            //     ),
+            //     child: const Center(
+            //       child: Text(
+            //         '%',
+            //         style: TextStyle(color: whiteColor, fontSize: 16),
+            //       ),
+            //     ),
+            //   ),
+            // ),
         ],
       ),
     );

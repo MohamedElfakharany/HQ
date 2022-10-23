@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,19 +13,23 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class ReservedSuccessScreen extends StatefulWidget {
-  const ReservedSuccessScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ReservedSuccessScreen> createState() => _ReservedSuccessScreenState();
-}
-
-class _ReservedSuccessScreenState extends State<ReservedSuccessScreen> {
+class ReservedSuccessScreen extends StatelessWidget {
+  ReservedSuccessScreen({Key? key, required this.time, required this.date, required this.branchName, required this.isLab}) : super(key: key);
+  final String time;
+  final String date;
+  final String branchName;
+  bool? isLab;
   @override
   Widget build(BuildContext context) {
+    String where;
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        if(isLab == true){
+          where = LocaleKeys.BtnAtLab.tr();
+        }else{
+          where = LocaleKeys.BtnAtHome.tr();
+        }
         return Scaffold(
           backgroundColor: whiteColor,
           body: Padding(
@@ -44,8 +50,8 @@ class _ReservedSuccessScreenState extends State<ReservedSuccessScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
-                    'The Reservation has Successfully, at lab - KSA, Riyadh, Branch King ST 7001 , 20 May, at 4:00 PM',
-                    style: subTitleSmallStyle.copyWith(
+                    '$where,\n $branchName ,\n $date,\n at $time',
+                    style: titleSmallStyle.copyWith(
                       color: greyDarkColor,
                       fontWeight: FontWeight.normal,
                     ),

@@ -107,6 +107,8 @@ class CodegenLoader extends AssetLoader {
     "txtFieldNationality": "National Code",
     "txtEnterValidEmail": "Enter Valid Email",
     "txtNationalIdValidate": "Enter Valid Id Number",
+    "txtCouponValidation": "Enter Valid Coupon",
+    "txtPeriod": "Period no ",
     "TxtHomeVisit": "Home",
     "HomeVisitTxtMain":
         "Enter patient data and we will contact you to confirm reservation",
@@ -346,6 +348,8 @@ class CodegenLoader extends AssetLoader {
     "txtFieldNationality": "كود الدولة",
     "txtEnterValidEmail": "أدخل بريد إلكتروني صالح",
     "txtNationalIdValidate": "أدخل رقم هوية صالح",
+    "txtCouponValidation": "أدخل كود خصم صالح",
+    "txtPeriod": "الفترة رقم ",
     "txtTotal": "الإجمالي",
     "TxtHomeVisit": "الرئيسية",
     "HomeVisitTxtMain": "أدخل بيانات المريض وسوف نتصل بك لتأكيد الحجز",

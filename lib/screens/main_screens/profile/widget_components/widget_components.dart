@@ -193,7 +193,7 @@ class MedicalInquiriesCard extends StatelessWidget {
                     children: [
                       Text(
                         medicalInquiriesDataModel.message,
-                        maxLines: 3,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(

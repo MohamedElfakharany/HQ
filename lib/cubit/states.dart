@@ -7,6 +7,7 @@ import 'package:hq/models/cores_models/carousel_model.dart';
 import 'package:hq/models/cores_models/city_model.dart';
 import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
+import 'package:hq/models/home_appointments_model/home_appointments_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
@@ -44,6 +45,7 @@ class AppRegisterErrorState extends AppStates{
   final String error;
   AppRegisterErrorState(this.error);
 }
+
 class AppCreateMemberLoadingState extends AppStates{}
 
 class AppCreateMemberSuccessState extends AppStates{
@@ -54,6 +56,30 @@ class AppCreateMemberSuccessState extends AppStates{
 class AppCreateMemberErrorState extends AppStates{
   final String error;
   AppCreateMemberErrorState(this.error);
+}
+
+class AppCreateLabReservationLoadingState extends AppStates{}
+
+class AppCreateLabReservationSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCreateLabReservationSuccessState(this.successModel);
+}
+
+class AppCreateLabReservationErrorState extends AppStates{
+  final String error;
+  AppCreateLabReservationErrorState(this.error);
+}
+
+class AppCreateHomeReservationLoadingState extends AppStates{}
+
+class AppCreateHomeReservationSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCreateHomeReservationSuccessState(this.successModel);
+}
+
+class AppCreateHomeReservationErrorState extends AppStates{
+  final String error;
+  AppCreateHomeReservationErrorState(this.error);
 }
 
 class AppCreateInquiryLoadingState extends AppStates{}
@@ -226,6 +252,30 @@ class AppChangeNumberErrorState extends AppStates{
   AppChangeNumberErrorState(this.error);
 }
 
+class AppCheckCouponLoadingState extends AppStates{}
+
+class AppCheckCouponSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCheckCouponSuccessState(this.successModel);
+}
+
+class AppCheckCouponErrorState extends AppStates{
+  final String error;
+  AppCheckCouponErrorState(this.error);
+}
+
+class AppGetInvoicesLoadingState extends AppStates{}
+
+class AppGetInvoicesSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppGetInvoicesSuccessState(this.successModel);
+}
+
+class AppGetInvoicesErrorState extends AppStates{
+  final String error;
+  AppGetInvoicesErrorState(this.error);
+}
+
 class AppGetCitiesLoadingState extends AppStates{}
 
 class AppGetCitiesSuccessState extends AppStates{
@@ -304,6 +354,18 @@ class AppGetLabAppointmentsSuccessState extends AppStates{
 class AppGetLabAppointmentsErrorState extends AppStates{
   final String error;
   AppGetLabAppointmentsErrorState(this.error);
+}
+
+class AppGetHomeAppointmentsLoadingState extends AppStates{}
+
+class AppGetHomeAppointmentsSuccessState extends AppStates{
+  final HomeAppointmentsModel homeAppointmentsModel;
+  AppGetHomeAppointmentsSuccessState(this.homeAppointmentsModel);
+}
+
+class AppGetHomeAppointmentsErrorState extends AppStates{
+  final String error;
+  AppGetHomeAppointmentsErrorState(this.error);
 }
 
 class AppGetCarouselLoadingState extends AppStates{}

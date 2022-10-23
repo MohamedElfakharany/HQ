@@ -545,6 +545,12 @@ class DefaultFormField extends StatelessWidget {
               return LocaleKeys.txtCheckCodeTrue.tr();
             }
           }
+
+          if (validatedText == LocaleKeys.txtFieldCoupon.tr()) {
+            if (value.length != 10) {
+              return LocaleKeys.txtCouponValidation.tr();
+            }
+          }
         },
         autofocus: autoFocus,
         controller: controller,
@@ -620,7 +626,7 @@ class GeneralNationalityCode extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.none,
-      readOnly: true,
+      readOnly: canSelect!,
       validator: (value) {
         if (value!.isEmpty) {
           return '${LocaleKeys.txtFill.tr()} ${LocaleKeys.txtFieldNationality.tr()}';

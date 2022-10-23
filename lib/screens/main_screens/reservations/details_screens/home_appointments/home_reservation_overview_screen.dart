@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -18,8 +16,8 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
-class LabReservationOverviewScreen extends StatefulWidget {
-  LabReservationOverviewScreen(
+class HomeReservationOverviewScreen extends StatefulWidget {
+  HomeReservationOverviewScreen(
       {Key? key,
       this.offersDataModel,
       this.testsDataModel,
@@ -40,12 +38,12 @@ class LabReservationOverviewScreen extends StatefulWidget {
   OffersDataModel? offersDataModel;
 
   @override
-  State<LabReservationOverviewScreen> createState() =>
-      _LabReservationOverviewScreenState();
+  State<HomeReservationOverviewScreen> createState() =>
+      _HomeReservationOverviewScreenState();
 }
 
-class _LabReservationOverviewScreenState
-    extends State<LabReservationOverviewScreen> {
+class _HomeReservationOverviewScreenState
+    extends State<HomeReservationOverviewScreen> {
   var couponController = TextEditingController();
 
   var formKey = GlobalKey<FormState>();
@@ -80,7 +78,7 @@ class _LabReservationOverviewScreenState
             ),
           );
         }
-        if (state is AppCreateLabReservationSuccessState) {
+        if (state is AppCreateHomeReservationSuccessState) {
           if (state.successModel.status) {
             showToast(
               msg: state.successModel.message,
@@ -90,10 +88,11 @@ class _LabReservationOverviewScreenState
             navigateAndFinish(
               context,
               ReservedSuccessScreen(
-                  date: widget.date,
-                  time: widget.time,
-                  isLab: true,
-                  branchName: widget.branchName),
+                date: widget.date,
+                time: widget.time,
+                isLab: false,
+                branchName: widget.branchName,
+              ),
             );
           } else {
             showDialog(
@@ -103,7 +102,7 @@ class _LabReservationOverviewScreenState
               ),
             );
           }
-        } else if (state is AppCreateLabReservationErrorState) {
+        } else if (state is AppCreateHomeReservationErrorState) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -210,8 +209,7 @@ class _LabReservationOverviewScreenState
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  widget.testsDataModel?.category?.name ??
-                                      '',
+                                  widget.testsDataModel?.category?.name ?? '',
                                   style: subTitleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -505,19 +503,20 @@ class _LabReservationOverviewScreenState
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
-                      condition: state is! AppCreateLabReservationLoadingState,
+                      condition: state is! AppCreateHomeReservationLoadingState,
                       builder: (context) => MaterialButton(
                         onPressed: () {
-                          AppCubit.get(context).createLabReservation(
+                          AppCubit.get(context).createHomeReservation(
                             date: widget.date,
                             time: widget.time,
                             familyId: widget.familyId,
                             branchId: widget.branchId,
                             coupon: couponController.text,
                             testId: [
-                              widget.testsDataModel?.id
+                              widget.testsDataModel?.id ??
+                                  widget.offersDataModel?.id
                             ],
-                            offerId: [widget.offersDataModel?.id]
+                            addressId: '34',
                           );
                         },
                         child: Container(
@@ -541,6 +540,31 @@ class _LabReservationOverviewScreenState
                       fallback: (context) =>
                           const Center(child: CircularProgressIndicator()),
                     ),
+                    // MaterialButton(
+                    //   onPressed: () {
+                    //     // navigateAndFinish(
+                    //     //   context,
+                    //     //   ReservedSuccessScreen(),
+                    //     // );
+                    //   },
+                    //   child: Container(
+                    //     height: 50,
+                    //     decoration: BoxDecoration(
+                    //       color: blueColor,
+                    //       borderRadius: BorderRadius.circular(radius),
+                    //     ),
+                    //     child: Center(
+                    //       child: Text(
+                    //         LocaleKeys.BtnConfirm.tr(),
+                    //         style: titleStyle.copyWith(
+                    //           fontSize: 20.0,
+                    //           color: whiteColor,
+                    //           fontWeight: FontWeight.normal,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

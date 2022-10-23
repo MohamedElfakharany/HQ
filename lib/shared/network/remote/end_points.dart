@@ -10,6 +10,8 @@
 
       const labURL = '$mainURL/lab';
 
+      const homeURL = '$mainURL/home';
+
 ///Auth
 
       const registerURL = '$authURL/register';
@@ -75,3 +77,15 @@
 /// Lab Reservations
 
       const labAppointmentURL = '$labURL/appointments';
+
+      const labCheckCouponsURL = '$labURL/check-coupons';
+
+      const labInvoicesURL = '$labURL/invoices';
+
+      const labReservationsCreateURL = '$labURL/reservations/create';
+
+/// Home Reservations
+
+      const homeAppointmentURL = '$homeURL/appointments';
+
+      const homeReservationCreateURL = '$homeURL/reservations/create';

@@ -16,6 +16,7 @@ import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/auth_models/verify_model.dart';
 import 'package:hq/models/auth_models/user_resource_model.dart';
+import 'package:hq/models/home_appointments_model/home_appointments_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
@@ -59,6 +60,7 @@ class AppCubit extends Cubit<AppStates> {
   FamiliesModel? familiesModel;
   MedicalInquiriesModel? medicalInquiriesModel;
   LabAppointmentsModel? labAppointmentsModel;
+  HomeAppointmentsModel? homeAppointmentsModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -73,11 +75,21 @@ class AppCubit extends Cubit<AppStates> {
 
   int? relationIdList;
 
+  int? branchIdForReservationList;
+
   void selectBranch({required String name}) {
     for (int i = 0; i < branchNames!.length; i++) {
       if (branchNames![i].title == name) {
         branchIdList = branchNames![i].id;
         getBranch(cityID: branchIdList!);
+      }
+    }
+  }
+
+  void selectBranchForReservation({required String name}) {
+    for (int i = 0; i < branchNames!.length; i++) {
+      if (branchNames![i].title == name) {
+        branchIdList = branchNames![i].id;
       }
     }
   }
@@ -376,9 +388,11 @@ class AppCubit extends Cubit<AppStates> {
         print('responseJson : $responseJson');
       }
       familiesModel = FamiliesModel.fromJson(responseJson);
+      familiesName = [];
       familiesNames = familiesModel?.data;
       for (var i = 0; i < familiesNames!.length; i++) {
-        familiesName.add('${familiesNames?[i].name} ( ${familiesNames?[i].relation} )');
+        familiesName.add(
+            '${familiesNames?[i].name} ( ${familiesNames![i].relation!.title} )');
       }
       if (kDebugMode) {
         print('familiesModel : ${familiesModel?.data?.first.profile}');
@@ -853,7 +867,8 @@ class AppCubit extends Cubit<AppStates> {
   String? verificationId = "";
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Future<void> fetchOtp({required String number, required String phoneCode}) async {
+  Future<void> fetchOtp(
+      {required String number, required String phoneCode}) async {
     emit(AppStartFetchOTPState());
     await auth.verifyPhoneNumber(
       phoneNumber: '+$phoneCode$number',
@@ -1095,9 +1110,216 @@ class AppCubit extends Cubit<AppStates> {
       var responseJson = json.decode(convertedResponse);
       labAppointmentsModel = null;
       labAppointmentsModel = LabAppointmentsModel.fromJson(responseJson);
+      print('labAppointmentsModel!.extra!.date : ${labAppointmentsModel!.extra!.date}');
       emit(AppGetLabAppointmentsSuccessState(labAppointmentsModel!));
     } catch (error) {
       emit(AppGetLabAppointmentsErrorState(error.toString()));
+    }
+  }
+
+  Future getHomeAppointments({
+    required String date,
+  }) async {
+    emit(AppGetHomeAppointmentsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$homeAppointmentURL?date=$date',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      homeAppointmentsModel = null;
+      homeAppointmentsModel = HomeAppointmentsModel.fromJson(responseJson);
+      emit(AppGetHomeAppointmentsSuccessState(homeAppointmentsModel!));
+    } catch (error) {
+      emit(AppGetHomeAppointmentsErrorState(error.toString()));
+    }
+  }
+
+  Future checkCoupon({
+    required String coupon,
+  }) async {
+    emit(AppCheckCouponLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = {
+      'coupon': coupon,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        labCheckCouponsURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCheckCouponSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCheckCouponErrorState(error.toString()));
+    }
+  }
+
+  Future getInvoices({
+    required List<int> testId,
+  }) async {
+    emit(AppGetInvoicesLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = {
+      'testId[]': testId,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        labCheckCouponsURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('AppGetInvoicesSuccessState : $responseJson');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppGetInvoicesSuccessState(successModel!));
+    } catch (error) {
+      emit(AppGetInvoicesErrorState(error.toString()));
+    }
+  }
+
+  Future createLabReservation({
+    required String date,
+    required String time,
+    int? familyId,
+    required int branchId,
+    String? coupon,
+    List<int>? testId,
+    List<int>? offerId,
+  }) async {
+    emit(AppCreateLabReservationLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap(
+      {
+        'date': date,
+        'time': time,
+        'branchId': branchId,
+        if (familyId != null) 'familyId': familyId,
+        if (offerId != null) 'offerId[]': offerId,
+        if (testId != null) 'testId[]': testId,
+        if (coupon != null) 'coupon': coupon,
+      },
+    );
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        labReservationsCreateURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+        print('formData : ${formData.fields}');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCreateLabReservationSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCreateLabReservationErrorState(error.toString()));
+    }
+  }
+
+  Future createHomeReservation({
+    required String date,
+    required String time,
+    required String addressId,
+    int? familyId,
+    required int branchId,
+    String? coupon,
+    required List<int> testId,
+  }) async {
+    emit(AppCreateHomeReservationLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap(
+      {
+        'date': date,
+        'time': time,
+        'addressId': addressId,
+        'branchId': branchId,
+        'testId[]': testId,
+        if (familyId != null) 'familyId': familyId,
+        if (coupon != null) 'coupon': coupon,
+      },
+    );
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        homeReservationCreateURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+        print('formData : ${formData.fields}');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCreateHomeReservationSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCreateHomeReservationErrorState(error.toString()));
     }
   }
 
@@ -1437,7 +1659,6 @@ class AppCubit extends Cubit<AppStates> {
       }
     }
   }
-
 
   void signOut(context) async {
     CacheHelper.removeData(key: 'token').then((value) {

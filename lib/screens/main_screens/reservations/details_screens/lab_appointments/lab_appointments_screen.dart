@@ -24,7 +24,7 @@ class LabAppointmentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) =>
-          AppCubit()..getLabAppointments(date: DateTime.now().toString()),
+          AppCubit()..getLabAppointments(date: '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}'),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -67,8 +67,8 @@ class LabAppointmentsScreen extends StatelessWidget {
                                       page: LabReservationDetailsScreen(
                                         testsDataModel: testsDataModel,
                                         offersDataModel: offersDataModel,
-                                        time: labAppointmentModel?.data?[index].time,
-                                        date: labAppointmentModel?.extra?.date,
+                                        time: labAppointmentModel?.data?[index].time24,
+                                        date: labAppointmentModel?.extra?.date.toString() ?? '',
                                       ),
                                     ),
                                   );

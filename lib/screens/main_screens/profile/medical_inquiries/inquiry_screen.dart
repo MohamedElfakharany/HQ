@@ -98,7 +98,7 @@ class InquiryScreen extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          medicalInquiriesDataModel.date?.date ?? '',
+                          medicalInquiriesDataModel.answer?.date?.date ?? '',
                           style: subTitleSmallStyle,
                         ),
                       ),
@@ -119,7 +119,7 @@ class InquiryScreen extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              medicalInquiriesDataModel.message ?? '',
+                              '${medicalInquiriesDataModel.answer?.message ?? ''} \n \n ${medicalInquiriesDataModel.answer?.user?.name ?? ''},',
                               textAlign: TextAlign.start,
                               style:
                                   subTitleSmallStyle.copyWith(color: whiteColor),
@@ -129,11 +129,11 @@ class InquiryScreen extends StatelessWidget {
                         verticalSmallSpace,
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
-                          child: CachedNetworkImage(imageUrl: medicalInquiriesDataModel.file,),
+                          child: CachedNetworkImage(imageUrl: medicalInquiriesDataModel.answer?.file,),
                         ),
                         verticalMicroSpace,
                         Text(
-                          medicalInquiriesDataModel.date?.time ?? '',
+                          medicalInquiriesDataModel.answer?.date?.time ?? '',
                           style: subTitleSmallStyle3,
                         ),
                       ],

@@ -1,5 +1,4 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:country_picker/country_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
       print('token: $token');
     }
   }
-
   bool isLoading = false;
 
   @override
