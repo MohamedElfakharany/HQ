@@ -84,8 +84,16 @@
 
       const labReservationsCreateURL = '$labURL/reservations/create';
 
+      const getLabReservationsURL = '$labURL/reservations';
+
+      const getLabResultsURL = '$labURL/results';
+
 /// Home Reservations
 
       const homeAppointmentURL = '$homeURL/appointments';
 
       const homeReservationCreateURL = '$homeURL/reservations/create';
+
+      const getHomeReservationsURL = '$homeURL/reservations';
+
+      const getHomeResultsURL = '$homeURL/results';

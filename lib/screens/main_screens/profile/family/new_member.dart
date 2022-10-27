@@ -299,6 +299,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                           Expanded(
                             flex: 1,
                             child: GeneralNationalityCode(
+                              canSelect: true,
                                 controller: nationalCodeController),
                           ),
                           horizontalMiniSpace,

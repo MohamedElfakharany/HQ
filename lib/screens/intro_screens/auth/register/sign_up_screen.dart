@@ -215,6 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Expanded(
                             flex: 1,
                             child: GeneralNationalityCode(
+                              canSelect: true,
                               controller: nationalCodeController,
                             ),
                           ),

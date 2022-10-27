@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
-import 'package:hq/screens/main_screens/reservations/details_screens/upcoming_screen.dart';
+import 'package:hq/screens/main_screens/reservations/details_screens/reservation_details_upcoming_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
@@ -59,33 +59,32 @@ class ReservedSuccessScreen extends StatelessWidget {
                   ),
                 ),
                 verticalSmallSpace,
-
-                MaterialButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      FadeRoute(
-                        page: const ReservationDetailsUpcomingScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: blueColor,
-                      borderRadius: BorderRadius.circular(radius),
-                    ),
-                    child: Center(
-                      child: Text(
-                        LocaleKeys.txtViewReservation.tr(),
-                        style: titleStyle.copyWith(
-                            fontSize: 15.0,
-                            color: whiteColor,
-                            fontWeight: FontWeight.normal),
-                      ),
-                    ),
-                  ),
-                ),
+                // MaterialButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       FadeRoute(
+                //         page: ReservationDetailsUpcomingScreen(index: 1,),
+                //       ),
+                //     );
+                //   },
+                //   child: Container(
+                //     height: 50,
+                //     decoration: BoxDecoration(
+                //       color: blueColor,
+                //       borderRadius: BorderRadius.circular(radius),
+                //     ),
+                //     child: Center(
+                //       child: Text(
+                //         LocaleKeys.txtViewReservation.tr(),
+                //         style: titleStyle.copyWith(
+                //             fontSize: 15.0,
+                //             color: whiteColor,
+                //             fontWeight: FontWeight.normal),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 TextButton(
                   onPressed: () {
                     AppCubit.get(context).changeBottomScreen(0);

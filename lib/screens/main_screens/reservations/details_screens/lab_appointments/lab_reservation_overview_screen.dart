@@ -210,14 +210,13 @@ class _LabReservationOverviewScreenState
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  widget.testsDataModel?.category?.name ??
-                                      '',
+                                  widget.testsDataModel?.category?.name ?? '',
                                   style: subTitleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  '${widget.offersDataModel?.price ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                  '${widget.offersDataModel?.discount ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                   style: titleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -508,17 +507,24 @@ class _LabReservationOverviewScreenState
                       condition: state is! AppCreateLabReservationLoadingState,
                       builder: (context) => MaterialButton(
                         onPressed: () {
-                          AppCubit.get(context).createLabReservation(
-                            date: widget.date,
-                            time: widget.time,
-                            familyId: widget.familyId,
-                            branchId: widget.branchId,
-                            coupon: couponController.text,
-                            testId: [
-                              widget.testsDataModel?.id
-                            ],
-                            offerId: [widget.offersDataModel?.id]
-                          );
+                          if (widget.testsDataModel?.id == null) {
+                            AppCubit.get(context).createLabReservation(
+                              date: widget.date,
+                              time: widget.time,
+                              familyId: widget.familyId,
+                              branchId: widget.branchId,
+                              coupon: couponController.text,
+                              offerId: [widget.offersDataModel?.id],
+                            );
+                          } else if (widget.offersDataModel?.id == null){
+                            AppCubit.get(context).createLabReservation(
+                                date: widget.date,
+                                time: widget.time,
+                                familyId: widget.familyId,
+                                branchId: widget.branchId,
+                                coupon: couponController.text,
+                                testId: [widget.testsDataModel?.id]);
+                          }
                         },
                         child: Container(
                           height: 50,

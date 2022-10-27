@@ -208,27 +208,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     padding: const EdgeInsetsDirectional.only(
                                         start: 15.0,end: 15.0),
-                                    decoration: BoxDecoration(
-                                      color: greyExtraLightColor.withOpacity(0.7),
-                                    ),
+                                    // decoration: BoxDecoration(
+                                    //   color: greyExtraLightColor.withOpacity(0.7),
+                                    // ),
                                     child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         verticalMiniSpace,
                                         Text(
-                                          e.title,
-                                          style: titleSmallStyleRed.copyWith(
-                                              fontSize: 25),
+                                          e.title ?? '',
+                                          style: titleSmallStyleRed.copyWith(fontSize: 20),
                                         ),
                                         verticalMiniSpace,
                                         SizedBox(
                                           width: double.infinity,
                                           child: Text(
-                                            e.text,
+                                            e.text ?? '',
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style: titleSmallStyleRed.copyWith(fontSize: 20.0,color: blueColor),
+                                            style: titleSmallStyle,
                                           ),
                                         ),
                                       ],

@@ -535,7 +535,7 @@ class DefaultFormField extends StatelessWidget {
               return LocaleKeys.txtPasswordValidate.tr();
             }
           }
-          if (validatedText == LocaleKeys.txtFieldIdNumber.tr()){
+          if (validatedText == LocaleKeys.txtFieldIdNumber.tr()) {
             if (value.length != 9) {
               return LocaleKeys.txtNationalIdValidate.tr();
             }
@@ -616,8 +616,11 @@ class DefaultFormField extends StatelessWidget {
 }
 
 class GeneralNationalityCode extends StatelessWidget {
-  GeneralNationalityCode({this.canSelect, Key? key, required this.controller})
-      : super(key: key);
+  GeneralNationalityCode({
+    this.canSelect,
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
   final TextEditingController controller;
   bool? canSelect = true;
 
@@ -626,7 +629,7 @@ class GeneralNationalityCode extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.none,
-      readOnly: canSelect!,
+      readOnly: canSelect != null ? true : false,
       validator: (value) {
         if (value!.isEmpty) {
           return '${LocaleKeys.txtFill.tr()} ${LocaleKeys.txtFieldNationality.tr()}';
@@ -640,7 +643,7 @@ class GeneralNationalityCode extends StatelessWidget {
               controller.text = country.phoneCode;
             },
           );
-        }
+        } else {}
       },
       decoration: InputDecoration(
         labelText: LocaleKeys.txtFieldNationality.tr(),

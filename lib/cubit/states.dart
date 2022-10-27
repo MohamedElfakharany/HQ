@@ -8,7 +8,11 @@ import 'package:hq/models/cores_models/city_model.dart';
 import 'package:hq/models/cores_models/country_model.dart';
 import 'package:hq/models/cores_models/relations_model.dart';
 import 'package:hq/models/home_appointments_model/home_appointments_model.dart';
+import 'package:hq/models/home_appointments_model/home_reservation_model.dart';
+import 'package:hq/models/home_appointments_model/home_result_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
+import 'package:hq/models/lab_appointments_model/lab_reservation_model.dart';
+import 'package:hq/models/lab_appointments_model/lab_result_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
@@ -286,6 +290,54 @@ class AppGetCitiesSuccessState extends AppStates{
 class AppGetCitiesErrorState extends AppStates{
   final String error;
   AppGetCitiesErrorState(this.error);
+}
+
+class AppGetLabReservationsLoadingState extends AppStates{}
+
+class AppGetLabReservationsSuccessState extends AppStates{
+  final LabReservationsModel labReservationsModel;
+  AppGetLabReservationsSuccessState(this.labReservationsModel);
+}
+
+class AppGetLabReservationsErrorState extends AppStates{
+  final String error;
+  AppGetLabReservationsErrorState(this.error);
+}
+
+class AppGetLabResultsLoadingState extends AppStates{}
+
+class AppGetLabResultsSuccessState extends AppStates{
+  final LabResultsModel labResultsModel;
+  AppGetLabResultsSuccessState(this.labResultsModel);
+}
+
+class AppGetLabResultsErrorState extends AppStates{
+  final String error;
+  AppGetLabResultsErrorState(this.error);
+}
+
+class AppGetHomeResultsLoadingState extends AppStates{}
+
+class AppGetHomeResultsSuccessState extends AppStates{
+  final HomeResultsModel homeResultsModel;
+  AppGetHomeResultsSuccessState(this.homeResultsModel);
+}
+
+class AppGetHomeResultsErrorState extends AppStates{
+  final String error;
+  AppGetHomeResultsErrorState(this.error);
+}
+
+class AppGetHomeReservationsLoadingState extends AppStates{}
+
+class AppGetHomeReservationsSuccessState extends AppStates{
+  final HomeReservationsModel labReservationsModel;
+  AppGetHomeReservationsSuccessState(this.labReservationsModel);
+}
+
+class AppGetHomeReservationsErrorState extends AppStates{
+  final String error;
+  AppGetHomeReservationsErrorState(this.error);
 }
 
 class AppStartLoadingState extends AppStates{}

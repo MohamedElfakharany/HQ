@@ -466,7 +466,7 @@ class OffersCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                '${offersDataModel.discount}% Off',
+                                'Off',
                                 style: const TextStyle(color: whiteColor),
                               ),
                             ),
@@ -531,7 +531,7 @@ class OffersCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 child: Text(
-                  offersDataModel.description,
+                  offersDataModel.title,
                   style: titleSmallStyle2,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

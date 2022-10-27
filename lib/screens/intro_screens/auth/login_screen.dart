@@ -175,6 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Expanded(
                           flex: 1,
                           child: GeneralNationalityCode(
+                            canSelect: true,
                             controller: nationalCodeController,
                           ),
                         ),

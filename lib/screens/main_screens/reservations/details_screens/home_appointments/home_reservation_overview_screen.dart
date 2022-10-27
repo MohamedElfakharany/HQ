@@ -506,18 +506,25 @@ class _HomeReservationOverviewScreenState
                       condition: state is! AppCreateHomeReservationLoadingState,
                       builder: (context) => MaterialButton(
                         onPressed: () {
+                          if (widget.offersDataModel?.id == null) {
                           AppCubit.get(context).createHomeReservation(
-                            date: widget.date,
-                            time: widget.time,
-                            familyId: widget.familyId,
-                            branchId: widget.branchId,
-                            coupon: couponController.text,
-                            testId: [
-                              widget.testsDataModel?.id ??
-                                  widget.offersDataModel?.id
-                            ],
-                            addressId: '34',
-                          );
+                              date: widget.date,
+                              time: widget.time,
+                              familyId: widget.familyId,
+                              branchId: widget.branchId,
+                              coupon: couponController.text,
+                              testId: [widget.testsDataModel?.id],
+                              addressId: '34');
+                          }else if (widget.testsDataModel?.id == null){
+                            AppCubit.get(context).createHomeReservation(
+                                date: widget.date,
+                                time: widget.time,
+                                familyId: widget.familyId,
+                                branchId: widget.branchId,
+                                coupon: couponController.text,
+                                offerId: [widget.offersDataModel?.id],
+                                addressId: '34');
+                          }
                         },
                         child: Container(
                           height: 50,
