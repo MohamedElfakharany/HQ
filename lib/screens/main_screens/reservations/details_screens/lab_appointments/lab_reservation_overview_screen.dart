@@ -147,6 +147,7 @@ class _LabReservationOverviewScreenState
           print('time ya ro7 omak ${widget.time}');
           print('branchId ya ro7 omak ${widget.branchId}');
           print('familyName ya ro7 omak ${widget.familyName}');
+          print('test image ya ro7 omak ${widget.testsDataModel?.image}');
         }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
@@ -192,7 +193,7 @@ class _LabReservationOverviewScreenState
                           horizontalMicroSpace,
                           CachedNetworkImageNormal(
                             imageUrl: widget.offersDataModel?.image ??
-                                widget.testsDataModel?.image,
+                                widget.testsDataModel?.image ?? '',
                             width: 80,
                             height: 80,
                           ),
@@ -254,7 +255,7 @@ class _LabReservationOverviewScreenState
                                   'assets/images/profile.png',
                                   width: 25,
                                   height: 35,
-                                  color: blueColor,
+                                  color: mainColor,
                                 ),
                                 myVerticalDivider(),
                                 Column(
@@ -293,7 +294,7 @@ class _LabReservationOverviewScreenState
                                   'assets/images/reserved.png',
                                   width: 25,
                                   height: 35,
-                                  color: blueColor,
+                                  color: mainColor,
                                 ),
                                 myVerticalDivider(),
                                 Column(
@@ -529,7 +530,7 @@ class _LabReservationOverviewScreenState
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            color: blueColor,
+                            color: mainColor,
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           child: Center(

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/auth_models/create_token_model.dart';
 import 'package:hq/models/auth_models/reset_password_model.dart';
@@ -22,6 +23,7 @@ import 'package:hq/models/home_appointments_model/home_result_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_reservation_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_result_model.dart';
+import 'package:hq/models/profile_models/address_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
@@ -39,9 +41,11 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/models/test_models/tests_model.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as p;
+import 'package:geocoding/geocoding.dart' as geo;
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppStates());
@@ -69,6 +73,7 @@ class AppCubit extends Cubit<AppStates> {
   HomeReservationsModel? homeReservationsModel;
   LabResultsModel? labResultsModel;
   HomeResultsModel? homeResultsModel;
+  AddressModel? addressModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -84,6 +89,107 @@ class AppCubit extends Cubit<AppStates> {
   int? relationIdList;
 
   int? branchIdForReservationList;
+
+  double mLatitude = 0;
+  double mLongitude = 0;
+  GoogleMapController? controller;
+  Location currentLocation = Location();
+  final Set<Marker> markers = {};
+  geo.Placemark? userAddress;
+  String? addressLocation;
+  Location location = Location();
+
+  Future _getLocation({double? lat, double? long}) async {
+    LocationData pos = await location.getLocation();
+    mLatitude = pos.latitude!;
+    mLongitude = pos.longitude!;
+    lat = mLatitude;
+    long = mLongitude;
+    if (kDebugMode) {
+      print('latitude inside get location $lat');
+    }
+    var permission = await currentLocation.hasPermission();
+    if (permission == PermissionStatus.denied) {
+      permission = await currentLocation.requestPermission();
+      if (permission != PermissionStatus.granted) {
+        return;
+      }
+    } else {
+      currentLocation.onLocationChanged.listen((LocationData loc) {
+        lat = loc.latitude!;
+        long = loc.longitude!;
+        controller?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(
+                  loc.latitude ?? lat ?? mLatitude, loc.longitude ?? long ?? mLongitude),
+              zoom: 17.0,
+            ),
+          ),
+        );
+        markers.add(
+          Marker(
+              markerId: const MarkerId('Home'),
+              position: LatLng(
+                  loc.latitude ?? lat ?? mLatitude, loc.longitude ?? long ?? mLongitude)),
+        );
+      });
+    }
+  }
+
+  Future<void> getAddressBasedOnLocation({double? lat, double? long}) async {
+    // if (mLatitude == 0.0 && mLongitude == 0.0) {
+    //   lat = mLatitude;
+    //   long = mLongitude;
+    //   await _getLocation().then((value) async {
+    //     print('latitude, longitude after $lat, $long}');
+    //     var address = await geo.placemarkFromCoordinates(lat!, long!);
+    //     userAddress = address.first;
+    //     if (kDebugMode) {
+    //       print('from getAddressBasedOnLocation userAddress : $userAddress');
+    //     }
+    //     controller?.animateCamera(
+    //       CameraUpdate.newCameraPosition(
+    //         CameraPosition(
+    //           target: LatLng(lat, long),
+    //           zoom: 17.0,
+    //         ),
+    //       ),
+    //     );
+    //     markers.add(
+    //       Marker(
+    //           markerId: const MarkerId('Home'),
+    //           position: LatLng(lat, long)),
+    //     );
+    //     addressLocation =
+    //     '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
+    //   });
+    // }
+    lat = mLatitude;
+    long = mLongitude;
+    await _getLocation(lat: lat, long: long).then((value) async {
+      var address = await geo.placemarkFromCoordinates(lat!, long!);
+      userAddress = address.first;
+      if (kDebugMode) {
+        print('from getAddressBasedOnLocation userAddress : $userAddress');
+      }
+      controller?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(lat, long),
+            zoom: 17.0,
+          ),
+        ),
+      );
+      markers.add(
+        Marker(
+            markerId: const MarkerId('Home'),
+            position: LatLng(lat, long)),
+      );
+      addressLocation =
+      '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
+    });
+  }
 
   void selectBranch({required String name}) {
     for (int i = 0; i < branchNames!.length; i++) {
@@ -411,6 +517,147 @@ class AppCubit extends Cubit<AppStates> {
         print(error);
       }
       emit(AppGetFamiliesErrorState(error.toString()));
+    }
+  }
+
+  Future getAddress() async {
+    try {
+      emit(AppGetAddressLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        addressURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
+      addressModel = AddressModel.fromJson(responseJson);
+      emit(AppGetAddressSuccessState(addressModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetAddressErrorState(error.toString()));
+    }
+  }
+
+  Future deleteAddress({
+    required var addressId,
+  }) async {
+    emit(AppDeleteAddressLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.delete(
+        '$addressURL/$addressId/delete',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getAddress();
+      emit(AppDeleteAddressSuccessState(successModel!));
+    } catch (error) {
+      emit(AppDeleteAddressErrorState(error.toString()));
+    }
+  }
+
+  Future createAddress({
+    required var latitude,
+    required var longitude,
+    required String address,
+    String? specialMark,
+    String? floorNumber,
+    String? buildingNumber,
+  }) async {
+    emit(AppCreateAddressLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = {
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address,
+      'specialMark': specialMark,
+      'floorNumber': floorNumber,
+      'buildingNumber': buildingNumber,
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        createAddressURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      print ('AppCreateAddressSuccessState : $responseJson');
+      successModel = SuccessModel.fromJson(responseJson);
+      getAddress();
+      emit(AppCreateAddressSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCreateAddressErrorState(error.toString()));
+    }
+  }
+
+  Future selectAddress({
+    required var addressId,
+  }) async {
+    emit(AppSelectAddressLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        '$addressURL/$addressId/select',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getAddress();
+      emit(AppSelectAddressSuccessState(successModel!));
+    } catch (error) {
+      emit(AppSelectAddressErrorState(error.toString()));
     }
   }
 
@@ -1299,10 +1546,7 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print('labReservationsModel responseJson : $responseJson');
       labReservationsModel = LabReservationsModel.fromJson(responseJson);
-      print(
-          'labReservationsModel : ${labReservationsModel?.data?.first.statusEn}');
       emit(AppGetLabReservationsSuccessState(labReservationsModel!));
     } catch (error) {
       emit(AppGetLabReservationsErrorState(error.toString()));
@@ -1384,10 +1628,7 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print('labReservationsModel responseJson : $responseJson');
       homeReservationsModel = HomeReservationsModel.fromJson(responseJson);
-      print(
-          'labReservationsModel : ${homeReservationsModel?.data?.first.statusEn}');
       emit(AppGetHomeReservationsSuccessState(homeReservationsModel!));
     } catch (error) {
       emit(AppGetHomeReservationsErrorState(error.toString()));
@@ -1404,9 +1645,9 @@ class AppCubit extends Cubit<AppStates> {
       'Authorization': 'Bearer $token',
     };
     String getLabResultUrl;
-    if(resultId != null){
+    if (resultId != null) {
       getLabResultUrl = '$getLabResultsURL?resultId=$resultId';
-    }else{
+    } else {
       getLabResultUrl = getLabResultsURL;
     }
 
@@ -1424,10 +1665,7 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print('labReservationsModel responseJson : $responseJson');
       labResultsModel = LabResultsModel.fromJson(responseJson);
-      print(
-          'labReservationsModel : ${labResultsModel?.data?.first.results?.first.title}');
       emit(AppGetLabResultsSuccessState(labResultsModel!));
     } catch (error) {
       emit(AppGetLabResultsErrorState(error.toString()));
@@ -1444,12 +1682,11 @@ class AppCubit extends Cubit<AppStates> {
       'Authorization': 'Bearer $token',
     };
     String getHomeResultUrl;
-    if(resultId != null){
+    if (resultId != null) {
       getHomeResultUrl = '$getHomeResultsURL?resultId=$resultId';
-    }else{
+    } else {
       getHomeResultUrl = getHomeResultsURL;
     }
-
     try {
       Dio dio = Dio();
       var response = await dio.get(
@@ -1464,10 +1701,7 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print('labReservationsModel responseJson : $responseJson');
       homeResultsModel = HomeResultsModel.fromJson(responseJson);
-      print(
-          'homeReservationsModel : ${homeResultsModel?.data?.first.results?.first.title}');
       emit(AppGetHomeResultsSuccessState(homeResultsModel!));
     } catch (error) {
       emit(AppGetHomeResultsErrorState(error.toString()));

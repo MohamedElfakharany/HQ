@@ -70,7 +70,7 @@ class TestDetailsScreen extends StatelessWidget {
                           height: 30,
                           width: 80,
                           decoration: BoxDecoration(
-                            color: blueLightColor,
+                            color: mainLightColor,
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           child: Center(
@@ -205,7 +205,7 @@ class TestDetailsScreen extends StatelessWidget {
                     const Spacer(),
                     const Icon(
                       Icons.arrow_forward,
-                      color: blueColor,
+                      color: mainColor,
                     ),
                   ],
                 ),
@@ -269,7 +269,7 @@ class TestDetailsScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(radius),
                                     border:
-                                        Border.all(width: 1, color: blueColor),
+                                        Border.all(width: 1, color: mainColor),
                                     color: greyExtraLightColor,
                                   ),
                                   child: Row(
@@ -279,7 +279,7 @@ class TestDetailsScreen extends StatelessWidget {
                                         LocaleKeys.BtnAtLab.tr(),
                                         style: titleStyle.copyWith(
                                           fontWeight: FontWeight.normal,
-                                          color: blueColor,
+                                          color: mainColor,
                                           fontSize: 20,
                                         ),
                                       ),
@@ -287,7 +287,7 @@ class TestDetailsScreen extends StatelessWidget {
                                       Image.asset('assets/images/atLabIcon.png',
                                           height: 40,
                                           width: 30,
-                                          color: blueColor),
+                                          color: mainColor),
                                       horizontalSmallSpace,
                                     ],
                                   ),
@@ -317,7 +317,7 @@ class TestDetailsScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(radius),
                                     color: greyExtraLightColor,
                                     border:
-                                        Border.all(width: 1, color: blueColor),
+                                        Border.all(width: 1, color: mainColor),
                                   ),
                                   child: Row(
                                     children: [
@@ -326,14 +326,14 @@ class TestDetailsScreen extends StatelessWidget {
                                         LocaleKeys.BtnAtHome.tr(),
                                         style: titleStyle.copyWith(
                                           fontWeight: FontWeight.normal,
-                                          color: blueColor,
+                                          color: mainColor,
                                           fontSize: 20,
                                         ),
                                       ),
                                       const Spacer(),
                                       const Icon(
                                         Icons.home_outlined,
-                                        color: blueColor,
+                                        color: mainColor,
                                         size: 40,
                                       ),
                                       horizontalSmallSpace,
@@ -380,7 +380,7 @@ class TestDetailsScreen extends StatelessWidget {
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.5,
                     decoration: BoxDecoration(
-                      color: blueColor,
+                      color: mainColor,
                       borderRadius: BorderRadius.circular(radius),
                     ),
                     child: Center(
@@ -572,7 +572,7 @@ class TestDetailsScreen extends StatelessWidget {
                                           height: 80.0,
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: blueColor,
+                                              color: mainColor,
                                               borderRadius:
                                                   BorderRadius.circular(radius),
                                             ),

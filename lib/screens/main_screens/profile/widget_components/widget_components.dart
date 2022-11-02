@@ -4,8 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/models/profile_models/address_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/screens/main_screens/profile/family/edit_member.dart';
@@ -49,7 +51,7 @@ class FamiliesMemberCard extends StatelessWidget {
                         height: 30,
                         child: Center(
                             child: CircularProgressIndicator(
-                          color: blueColor,
+                          color: mainColor,
                         )),
                       ),
                       errorWidget: (context, url, error) => Container(
@@ -59,7 +61,7 @@ class FamiliesMemberCard extends StatelessWidget {
                         child: const Icon(
                           Icons.perm_identity,
                           size: 100,
-                          color: blueColor,
+                          color: mainColor,
                         ),
                       ),
                       width: 50,
@@ -78,14 +80,14 @@ class FamiliesMemberCard extends StatelessWidget {
                     children: [
                       const Icon(
                         Icons.monitor_heart_outlined,
-                        color: blueColor,
+                        color: mainColor,
                       ),
                       horizontalMicroSpace,
                       Text(
                         familiesDataModel.relation!.title,
                         // '',
                         style:
-                            subTitleSmallStyle.copyWith(color: blueLightColor),
+                            subTitleSmallStyle.copyWith(color: mainLightColor),
                       ),
                     ],
                   ),
@@ -106,7 +108,8 @@ class FamiliesMemberCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       FadeRoute(
-                        page: EditMemberScreen(familiesDataModel: familiesDataModel),
+                        page: EditMemberScreen(
+                            familiesDataModel: familiesDataModel),
                       ),
                     );
                   },
@@ -114,7 +117,7 @@ class FamiliesMemberCard extends StatelessWidget {
                     height: 35,
                     width: 90,
                     decoration: BoxDecoration(
-                      color: blueColor,
+                      color: mainColor,
                       borderRadius: BorderRadius.circular(radius),
                     ),
                     child: Row(
@@ -145,14 +148,17 @@ class FamiliesMemberCard extends StatelessWidget {
 }
 
 class MedicalInquiriesCard extends StatelessWidget {
-  const MedicalInquiriesCard({Key? key, required this.medicalInquiriesDataModel}) : super(key: key);
+  const MedicalInquiriesCard(
+      {Key? key, required this.medicalInquiriesDataModel})
+      : super(key: key);
 
   final MedicalInquiriesDataModel medicalInquiriesDataModel;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state){},
-      builder: (context, state){
+      listener: (context, state) {},
+      builder: (context, state) {
         return Container(
           width: double.infinity,
           height: 100.0,
@@ -174,7 +180,7 @@ class MedicalInquiriesCard extends StatelessWidget {
                   width: 40.0,
                   height: 40.0,
                   decoration: BoxDecoration(
-                    color: blueLightColor.withOpacity(0.2),
+                    color: mainLightColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(
                       radius,
                     ),
@@ -182,7 +188,7 @@ class MedicalInquiriesCard extends StatelessWidget {
                   child: const Icon(
                     Icons.notifications_rounded,
                     size: 35.0,
-                    color: blueColor,
+                    color: mainColor,
                   ),
                 ),
                 horizontalSmallSpace,
@@ -206,24 +212,108 @@ class MedicalInquiriesCard extends StatelessWidget {
                   ),
                 ),
                 horizontalSmallSpace,
-                  Container(
-                    width: 60.0,
-                    height: 30.0,
-                    decoration: BoxDecoration(
-                      color: greenColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(
-                        radius,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'New',
-                        style: titleSmallStyleGreen,
-                      ),
+                Container(
+                  width: 60.0,
+                  height: 30.0,
+                  decoration: BoxDecoration(
+                    color: greenColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(
+                      radius,
                     ),
                   ),
+                  child: const Center(
+                    child: Text(
+                      'New',
+                      style: titleSmallStyleGreen,
+                    ),
+                  ),
+                ),
               ],
             ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class AddressCard extends StatelessWidget {
+  const AddressCard(
+      {Key? key, required this.addressDataModel, required this.index})
+      : super(key: key);
+  final index;
+  final AddressDataModel addressDataModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        Widget isSelectedAddress;
+        if (AppCubit.get(context).addressModel?.data?[index].isSelected ==
+            '1') {
+          isSelectedAddress = SvgPicture.asset(
+            'assets/images/checkTrue.svg',
+            width: 20,
+            height: 20,
+          );
+        } else {
+          isSelectedAddress = const Icon(
+            Icons.adjust_rounded,
+            size: 20,
+            color: greyDarkColor,
+          );
+        }
+        return Container(
+          width: double.infinity,
+          height: 90,
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(radius),
+            border: Border.all(width: 1, color: greyDarkColor),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 10.0),
+                  child: Row(
+                    children: [
+                      isSelectedAddress,
+                      horizontalSmallSpace,
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${addressDataModel.address}',
+                              style: titleSmallStyle.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${addressDataModel.specialMark}',
+                              style: titleSmallStyle.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.location_on_rounded,
+                        color: greyDarkColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

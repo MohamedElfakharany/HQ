@@ -86,7 +86,7 @@ class HomeAppointmentsCard extends StatelessWidget {
                   vertical: 5.0, horizontal: 10.0),
               decoration: BoxDecoration(
                 color: cardBgColor,
-                border: Border.all(color: blueColor),
+                border: Border.all(color: mainColor),
                 borderRadius: BorderRadius.circular(radius),
               ),
               child: Column(

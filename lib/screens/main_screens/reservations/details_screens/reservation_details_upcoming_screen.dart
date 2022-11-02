@@ -63,6 +63,7 @@ class _ReservationDetailsUpcomingScreenState
   Widget build(BuildContext context) {
     String title;
     String image;
+    int price;
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -73,16 +74,23 @@ class _ReservationDetailsUpcomingScreenState
           title = labReservationsDataModel?.offers?[widget.index].title ??
               widget.homeReservationsModel!.data?[widget.index].offers?.first
                   .title;
+          price = labReservationsDataModel?.offers?[widget.index].price ??
+              widget.homeReservationsModel!.data?[widget.index].offers?.first
+                  .price;
           image = labReservationsDataModel?.offers?[widget.index].image ?? imageTest;
         } else if (labReservationsDataModel?.offers?.isEmpty ??
             widget.homeReservationsModel!.data![widget.index].offers!.isEmpty) {
           title = labReservationsDataModel?.tests?.first.title ??
               widget.homeReservationsModel!.data?[widget.index].tests?.first
                   .title;
+          price = labReservationsDataModel?.offers?[widget.index].price ??
+              widget.homeReservationsModel!.data?[widget.index].offers?.first
+                  .price;
           image = labReservationsDataModel?.tests?.first.image ?? imageTest;
         } else {
           title = '';
           image = '';
+          price = 0;
         }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
@@ -133,7 +141,7 @@ class _ReservationDetailsUpcomingScreenState
                           Container(
                             height: 36,
                             decoration: BoxDecoration(
-                              color: blueLightColor.withOpacity(0.2),
+                              color: mainLightColor.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(radius),
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -144,7 +152,7 @@ class _ReservationDetailsUpcomingScreenState
                                     labReservationsDataModel?.status,
                                 style: titleStyle.copyWith(
                                     fontSize: 15.0,
-                                    color: blueColor,
+                                    color: mainColor,
                                     fontWeight: FontWeight.normal),
                               ),
                             ),
@@ -209,7 +217,7 @@ class _ReservationDetailsUpcomingScreenState
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         Text(
-                                          '${widget.homeReservationsModel?.data?[widget.index].price} ${LocaleKeys.salary.tr()}',
+                                          '$price ${LocaleKeys.salary.tr()}',
                                           style: titleSmallStyle2,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -278,7 +286,7 @@ class _ReservationDetailsUpcomingScreenState
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         Text(
-                                          '${labReservationsDataModel.tests?[index].price ?? labReservationsDataModel.offers?[index].price} ${LocaleKeys.salary.tr()}',
+                                          '$price ${LocaleKeys.salary.tr()}',
                                           style: titleSmallStyle2,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -322,7 +330,7 @@ class _ReservationDetailsUpcomingScreenState
                                 'assets/images/profile.png',
                                 width: 25,
                                 height: 35,
-                                color: blueColor,
+                                color: mainColor,
                               ),
                               myVerticalDivider(),
                               Column(
@@ -388,7 +396,7 @@ class _ReservationDetailsUpcomingScreenState
                                 'assets/images/reserved.png',
                                 width: 25,
                                 height: 35,
-                                color: blueColor,
+                                color: mainColor,
                               ),
                               myVerticalDivider(),
                               Column(

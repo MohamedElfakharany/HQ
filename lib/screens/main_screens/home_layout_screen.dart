@@ -24,7 +24,7 @@ class HomeLayoutScreen extends StatelessWidget {
               cubit.changeBottomScreen(index);
             },
             showUnselectedLabels: true,
-            selectedItemColor: blueColor,
+            selectedItemColor: mainColor,
             unselectedItemColor: greyLightColor,
             currentIndex: cubit.currentIndex,
             items: [

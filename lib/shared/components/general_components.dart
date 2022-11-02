@@ -94,7 +94,7 @@ class GeneralButton extends StatelessWidget {
     this.radius = 8,
     this.offSet = 15,
     this.fontSize = 18,
-    this.btnBackgroundColor = blueColor,
+    this.btnBackgroundColor = mainColor,
     this.txtColor = whiteColor,
     required this.title,
     required this.onPress,
@@ -142,8 +142,8 @@ class GeneralUnfilledButton extends StatelessWidget {
   const GeneralUnfilledButton({
     Key? key,
     required this.title,
-    this.color = blueColor,
-    this.borderColor = blueColor,
+    this.color = mainColor,
+    this.borderColor = mainColor,
     required this.onPress,
     this.width = 50,
     this.height = 50,
@@ -306,7 +306,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                         height: 30,
                         child: Center(
                             child: CircularProgressIndicator(
-                          color: blueColor,
+                          color: mainColor,
                         )),
                       ),
                       errorWidget: (context, url, error) => Container(
@@ -316,7 +316,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                         child: const Icon(
                           Icons.perm_identity,
                           size: 100,
-                          color: blueColor,
+                          color: mainColor,
                         ),
                       ),
                       width: 120,
@@ -360,7 +360,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
               icon: const Icon(
                 Icons.search,
                 size: 30,
-                color: blueColor,
+                color: mainColor,
               ),
             ),
             InkWell(
@@ -381,7 +381,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                   AssetImage(
                     'assets/images/lab.png',
                   ),
-                  color: blueColor,
+                  color: mainColor,
                 ),
               ),
             ),
@@ -396,7 +396,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
               },
               icon: const ImageIcon(
                 AssetImage('assets/images/notification.png'),
-                color: blueColor,
+                color: mainColor,
               ),
             ),
             horizontalMicroSpace
@@ -436,7 +436,7 @@ class DefaultTextButton extends StatelessWidget {
           title,
           style: TextStyle(
             fontSize: 16,
-            color: blueColor,
+            color: mainColor,
             fontFamily: fontFamily,
             fontWeight: weight,
             decoration: TextDecoration.underline,
@@ -487,12 +487,12 @@ class DefaultFormField extends StatelessWidget {
     this.hintText,
     this.removeBorder = true,
     this.obscureText = false,
-    this.prefixColor = blueColor,
+    this.prefixColor = mainColor,
     required this.label,
     this.prefixIcon,
     this.prefixPressed,
     this.suffixIcon,
-    this.suffixColor = blueColor,
+    this.suffixColor = mainColor,
     this.suffixPressed,
     this.isClickable = true,
     this.readOnly = false,
@@ -569,7 +569,7 @@ class DefaultFormField extends StatelessWidget {
         onTap: () {
           onTap();
         },
-        cursorColor: blueColor,
+        cursorColor: mainColor,
         decoration: InputDecoration(
           labelText: label,
           hintText: hintText,
@@ -592,7 +592,7 @@ class DefaultFormField extends StatelessWidget {
               suffixPressed!();
             },
             icon: Icon(suffixIcon),
-            color: blueColor,
+            color: mainColor,
           ),
           hintStyle: const TextStyle(color: greyDarkColor, fontSize: 14),
           labelStyle: const TextStyle(
@@ -609,7 +609,7 @@ class DefaultFormField extends StatelessWidget {
                   start: 15.0, end: 15.0, bottom: 15.0, top: 15.0),
         ),
         style: const TextStyle(
-            color: blueLightColor, fontSize: 18, fontFamily: fontFamily),
+            color: mainLightColor, fontSize: 18, fontFamily: fontFamily),
       ),
     );
   }
@@ -668,7 +668,7 @@ class GeneralNationalityCode extends StatelessWidget {
             start: 5.0, end: 0.0, bottom: 0.0, top: 0.0),
       ),
       style: const TextStyle(
-          color: blueLightColor, fontSize: 18, fontFamily: fontFamily),
+          color: mainLightColor, fontSize: 18, fontFamily: fontFamily),
     );
   }
 }
@@ -813,7 +813,7 @@ final otpInputDecoration = InputDecoration(
 OutlineInputBorder outlineInputBorder() {
   return OutlineInputBorder(
     borderRadius: BorderRadius.circular(15),
-    borderSide: const BorderSide(color: blueColor),
+    borderSide: const BorderSide(color: mainColor),
   );
 }
 
@@ -877,7 +877,7 @@ class ScreenHolder extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .headlineSmall
-            ?.copyWith(color: blueColor),
+            ?.copyWith(color: mainColor),
       ),
     );
   }

@@ -149,7 +149,7 @@ class _LabReservationDetailsScreenState
                               iconSize: 30,
                               icon: const Icon(
                                 Icons.keyboard_arrow_down_rounded,
-                                color: blueColor,
+                                color: mainColor,
                               ),
                               items: AppCubit
                                   .get(context)
@@ -162,13 +162,6 @@ class _LabReservationDetailsScreenState
                                     AppCubit.get(context)
                                         .selectBranchForReservation(
                                         name: memberValue ?? '');
-                                    print(memberValue);
-                                    print(AppCubit
-                                        .get(context)
-                                        .relationIdList);
-                                    print(AppCubit
-                                        .get(context)
-                                            .familiesName);
                                   }),
                               onSaved: (v) {
                                 FocusScope.of(context).unfocus();
@@ -202,7 +195,7 @@ class _LabReservationDetailsScreenState
                                   Text(
                                     LocaleKeys.BtnAtLab.tr(),
                                     style: titleSmallStyle.copyWith(
-                                        color: blueColor),
+                                        color: mainColor),
                                   ),
                                   const Spacer(),
                                   Image.asset('assets/images/atLabIcon.png',
@@ -245,7 +238,7 @@ class _LabReservationDetailsScreenState
                                   iconSize: 30,
                                   icon: const Icon(
                                     Icons.keyboard_arrow_down_rounded,
-                                    color: blueColor,
+                                    color: mainColor,
                                   ),
                                   items: AppCubit
                                       .get(context)
@@ -256,9 +249,6 @@ class _LabReservationDetailsScreenState
                                       setState(() {
                                         locationValue = value;
                                         AppCubit.get(context).selectBranchForReservation(name: locationValue!);
-                                        print(AppCubit
-                                            .get(context)
-                                                .branchIdForReservationList);
                                       }),
                                   onSaved: (v) {
                                     FocusScope.of(context).unfocus();
@@ -293,7 +283,7 @@ class _LabReservationDetailsScreenState
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            color: blueColor,
+                            color: mainColor,
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           child: Center(

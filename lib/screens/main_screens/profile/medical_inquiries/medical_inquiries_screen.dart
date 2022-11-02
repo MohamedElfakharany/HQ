@@ -60,7 +60,7 @@ class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
                 ),
                 verticalMediumSpace,
                 ConditionalBuilder(
-                  condition: state is! AppGetMedicalInquiriesLoadingState,
+                  condition: state is! AppGetMedicalInquiriesLoadingState && state is! AppCreateInquiryLoadingState,
                   builder: (context) => ConditionalBuilder(
                     condition:
                         AppCubit.get(context).medicalInquiriesModel?.data !=

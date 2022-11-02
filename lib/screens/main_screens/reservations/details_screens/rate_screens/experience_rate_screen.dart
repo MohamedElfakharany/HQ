@@ -115,7 +115,7 @@ class _ExperienceRateScreenState extends State<ExperienceRateScreen> {
                                   child: Container(
                                     height: 50,
                                     decoration: BoxDecoration(
-                                      color: blueColor,
+                                      color: mainColor,
                                       borderRadius: BorderRadius.circular(radius),
                                     ),
                                     child: Center(

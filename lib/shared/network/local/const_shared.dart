@@ -24,6 +24,10 @@ String? sharedLanguage = 'en';
 
 const String fontFamily = 'Poppins';
 
+String appLogo  = "assets/images/appLogo.jpg";
+
 double radius = 8;
+
+double radiusPlus = 12;
 
 String imageTest = 'https://png.pngtree.com/png-clipart/20200701/original/pngtree-covid-test-blood-test-in-tuvo-blood-analysis-samples-to-evaluate-png-image_5355154.jpg';

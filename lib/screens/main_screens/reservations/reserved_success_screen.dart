@@ -6,11 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
-import 'package:hq/screens/main_screens/reservations/details_screens/reservation_details_upcoming_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class ReservedSuccessScreen extends StatelessWidget {

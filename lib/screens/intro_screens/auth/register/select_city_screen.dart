@@ -34,7 +34,6 @@ class SelectCityScreen extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit = AppCubit.get(context);
-        print(countryId);
         return Scaffold(
           appBar: GeneralAppBar(title: ''),
           body: Container(
@@ -67,7 +66,6 @@ class SelectCityScreen extends StatelessWidget {
                         itemBuilder: (context, index) => InkWell(
                           onTap: () async {
                             cityId = cubit.cityModel!.data![index].id;
-                            print(cityId);
                             extraCityId = cityId;
                             cubit.getBranch(
                                 cityID: cubit.cityModel!.data![index].id);

@@ -29,27 +29,34 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var searchController = TextEditingController();
 
-  String? locationValue;
+
 
   @override
   void initState() {
     super.initState();
+
+    if (AppCubit.get(context).isVisitor == false) {
+      AppCubit.get(context).getCarouselData();
+      AppCubit.get(context).getTerms();
+      AppCubit.get(context).getProfile();
+    }
+    if (AppCubit.get(context).isVisitor == true) {
     Timer(
-      const Duration(milliseconds: 0),
+      const Duration(microseconds: 0),
       () async {
-        AppCubit.get(context).getCarouselData();
-        AppCubit.get(context).getProfile();
-        AppCubit.get(context).getTerms();
-        extraBranchTitle = await CacheHelper.getData(key: 'extraBranchTitle');
-        extraCityId = await CacheHelper.getData(key: 'extraCityId');
-        extraBranchId = await CacheHelper.getData(key: 'extraBranchId');
+      AppCubit.get(context).getProfile();
+    extraBranchTitle = await CacheHelper.getData(key: 'extraBranchTitle');
+    extraCityId = await CacheHelper.getData(key: 'extraCityId');
+    extraBranchId = await CacheHelper.getData(key: 'extraBranchId');
       },
     );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var cubit = AppCubit.get(context);
+    String? locationValue;
     return BlocProvider(
       create: (BuildContext context) => AppCubit()
         ..getCountry()
@@ -57,12 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ..getCity(countryId: extraCountryId!)
         ..getBranch(cityID: extraCityId!)
         ..getCategories()
-        ..getOffers()
-        ..getProfile(),
+        ..getOffers(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
           locationValue = extraBranchTitle;
+          // AppCubit.get(context).getProfile();
           // AppCubit.get(context).userResourceModel?.data?.branch?.title;
           return Scaffold(
             backgroundColor: greyExtraLightColor,
@@ -207,19 +214,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Container(
                                     padding: const EdgeInsetsDirectional.only(
-                                        start: 15.0,end: 15.0),
+                                        start: 15.0, end: 15.0),
                                     // decoration: BoxDecoration(
                                     //   color: greyExtraLightColor.withOpacity(0.7),
                                     // ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         verticalMiniSpace,
                                         Text(
                                           e.title ?? '',
-                                          style: titleSmallStyleRed.copyWith(fontSize: 20),
+                                          style: titleSmallStyleRed.copyWith(
+                                              fontSize: 20),
                                         ),
                                         verticalMiniSpace,
                                         SizedBox(

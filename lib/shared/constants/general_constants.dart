@@ -1,4 +1,6 @@
 
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/network/local/const_shared.dart';

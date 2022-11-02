@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   verticalMediumSpace,
                   Center(
                     child: Image.asset(
-                      'assets/images/logo.png',
+                      appLogo,
                       width: 150,
                       height: 125,
                     ),
@@ -270,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           LocaleKeys.registerTxtMain.tr(),
-                          style: titleSmallStyle.copyWith(color: blueColor),
+                          style: titleSmallStyle.copyWith(color: mainColor),
                         ),
                       ),
                     ],

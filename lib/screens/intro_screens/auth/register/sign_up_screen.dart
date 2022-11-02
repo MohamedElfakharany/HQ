@@ -273,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   .resetChangePasswordVisibility();
                             },
                             icon: Icon(AppCubit.get(context).resetSufIcon),
-                            color: blueColor,
+                            color: mainColor,
                           ),
                           label: Text(LocaleKeys.txtFieldPassword.tr()),
                           hintStyle: const TextStyle(
@@ -296,7 +296,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         style: const TextStyle(
-                            color: blueLightColor,
+                            color: mainLightColor,
                             fontSize: 18,
                             fontFamily: fontFamily),
                         obscureText: AppCubit.get(context).resetIsPassword,
@@ -368,7 +368,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             icon:
                                 Icon(AppCubit.get(context).resetConfirmSufIcon),
-                            color: blueColor,
+                            color: mainColor,
                           ),
                           label: Text(LocaleKeys.TxtFieldConfirmPassword.tr()),
                           hintStyle: const TextStyle(
@@ -391,7 +391,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         style: const TextStyle(
-                            color: blueLightColor,
+                            color: mainLightColor,
                             fontSize: 18,
                             fontFamily: fontFamily),
                         obscureText:
@@ -466,7 +466,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 fontSize: 20,
                                                 fontFamily: fontFamily,
                                                 fontWeight: FontWeight.bold,
-                                                color: blueColor,
+                                                color: mainColor,
                                               ),
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -502,7 +502,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: Text(
                               LocaleKeys.txtTitleOfOurTermsOfService.tr(),
-                              style: const TextStyle(color: blueColor),
+                              style: const TextStyle(color: mainColor),
                             ),
                           ),
                           // const Text(
@@ -542,7 +542,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 fontSize: 20,
                                                 fontFamily: fontFamily,
                                                 fontWeight: FontWeight.bold,
-                                                color: blueColor,
+                                                color: mainColor,
                                               ),
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -578,7 +578,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: Text(
                               LocaleKeys.txtTitleOfOurPrivacyPolicy.tr(),
-                              style: const TextStyle(color: blueColor),
+                              style: const TextStyle(color: mainColor),
                             ),
                           )
                         ],
@@ -625,7 +625,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                         child: Text(
                           LocaleKeys.BtnSignIn.tr(),
-                          style: titleSmallStyle.copyWith(color: blueColor),
+                          style: titleSmallStyle.copyWith(color: mainColor),
                         ),
                       ),
                     ],

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +25,13 @@ class _ReservedScreenState extends State<ReservedScreen> {
   @override
   void initState() {
     super.initState();
-    AppCubit.get(context).getLabReservations();
-    AppCubit.get(context).getHomeReservations();
+    Timer(
+      const Duration(microseconds: 0),
+      () {
+        AppCubit.get(context).getLabReservations();
+        AppCubit.get(context).getHomeReservations();
+      },
+    );
   }
 
   @override
@@ -55,6 +62,7 @@ class _ReservedScreenState extends State<ReservedScreen> {
                         //   borderRadius: BorderRadius.circular(20),
                         // ),
                         bottom: TabBar(
+                          indicatorColor: mainColor,
                           tabs: [
                             Tab(
                               child: Column(
@@ -66,7 +74,7 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                            color: blueLightColor, width: 2),
+                                            color: mainLightColor, width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color:
@@ -86,7 +94,7 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                             'assets/images/atLabIcon.png',
                                             width: 25,
                                             height: 25,
-                                            color: blueColor,
+                                            color: mainColor,
                                           ),
                                           horizontalSmallSpace,
                                           Text(
@@ -115,7 +123,7 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                            color: blueLightColor, width: 2),
+                                            color: mainLightColor, width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color:
@@ -135,7 +143,7 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                             'assets/images/atHomeIcon.png',
                                             width: 25,
                                             height: 25,
-                                            color: blueColor,
+                                            color: mainColor,
                                           ),
                                           horizontalSmallSpace,
                                           Text(
@@ -220,7 +228,7 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                           FadeRoute(
                                             page:
                                                 ReservationDetailsUpcomingScreen(
-                                                  index: index,
+                                              index: index,
                                               labReservationsModel:
                                                   AppCubit.get(context)
                                                       .labReservationsModel,
@@ -237,7 +245,11 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                     ),
                                     separatorBuilder: (context, index) =>
                                         verticalMiniSpace,
-                                    itemCount: AppCubit.get(context).labReservationsModel?.data?.length ?? 0,
+                                    itemCount: AppCubit.get(context)
+                                            .labReservationsModel
+                                            ?.data
+                                            ?.length ??
+                                        0,
                                   ),
                                 ),
                                 fallback: (context) => const Center(
@@ -252,7 +264,8 @@ class _ReservedScreenState extends State<ReservedScreen> {
                               verticalSmallSpace,
                               ConditionalBuilder(
                                 condition: state
-                                    is! AppGetHomeReservationsLoadingState || state is! AppGetLabReservationsLoadingState,
+                                        is! AppGetHomeReservationsLoadingState ||
+                                    state is! AppGetLabReservationsLoadingState,
                                 builder: (context) => Expanded(
                                   child: ListView.separated(
                                     physics: const BouncingScrollPhysics(),
@@ -263,11 +276,11 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                           context,
                                           FadeRoute(
                                             page:
-                                            ReservationDetailsUpcomingScreen(
+                                                ReservationDetailsUpcomingScreen(
                                               index: index,
                                               homeReservationsModel:
-                                              AppCubit.get(context)
-                                                  .homeReservationsModel,
+                                                  AppCubit.get(context)
+                                                      .homeReservationsModel,
                                             ),
                                           ),
                                         );
@@ -281,7 +294,11 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                     ),
                                     separatorBuilder: (context, index) =>
                                         verticalMiniSpace,
-                                    itemCount: AppCubit.get(context).homeReservationsModel?.data?.length ?? 0,
+                                    itemCount: AppCubit.get(context)
+                                            .homeReservationsModel
+                                            ?.data
+                                            ?.length ??
+                                        0,
                                   ),
                                 ),
                                 fallback: (context) => const Center(

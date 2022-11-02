@@ -10,7 +10,6 @@ import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
-import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
@@ -149,7 +148,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                             },
                             child: const CircleAvatar(
                               radius: 15.0,
-                              backgroundColor: blueColor,
+                              backgroundColor: mainColor,
                               child: Icon(
                                 Icons.edit,
                                 color: whiteColor,

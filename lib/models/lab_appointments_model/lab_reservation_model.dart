@@ -67,7 +67,7 @@ class LabReservationsDateModel {
   dynamic rateMessage;
   LabReservationsModelCreatedAt? createdAt;
   List<LabReservationsModelTest>? tests;
-  List<dynamic>? offers;
+  List<LabReservationsModelOffers>? offers;
 
   factory LabReservationsDateModel.fromJson(Map<dynamic, dynamic> json) => LabReservationsDateModel(
     id: json["id"],
@@ -86,7 +86,7 @@ class LabReservationsDateModel {
     rateMessage: json["rateMessage"],
     createdAt: LabReservationsModelCreatedAt.fromJson(json["created_at"]),
     tests: List<LabReservationsModelTest>.from(json["tests"].map((x) => LabReservationsModelTest.fromJson(x))),
-    offers: List<dynamic>.from(json["offers"].map((x) => x)),
+    offers: List<LabReservationsModelOffers>.from(json["offers"].map((x) => LabReservationsModelOffers.fromJson(x)))
   );
 }
 
@@ -103,11 +103,6 @@ class LabReservationsModelBranch {
     id: json["id"],
     title: json["title"],
   );
-
-  Map<dynamic, dynamic> toJson() => {
-    "id": id,
-    "title": title,
-  };
 }
 
 class LabReservationsModelCreatedAt {
@@ -152,14 +147,27 @@ class LabReservationsModelTest {
     price: json["price"],
     image: json["image"],
   );
+}
 
-  Map<dynamic, dynamic> toJson() => {
-    "id": id,
-    "title": title,
-    "category": category,
-    "price": price,
-    "image": image,
-  };
+class LabReservationsModelOffers {
+  LabReservationsModelOffers({
+    this.id,
+    this.title,
+    this.price,
+    this.image,
+  });
+
+  dynamic id;
+  dynamic title;
+  dynamic price;
+  dynamic image;
+
+  factory LabReservationsModelOffers.fromJson(Map<dynamic, dynamic> json) => LabReservationsModelOffers(
+    id: json["id"],
+    title: json["title"],
+    price: json["price"],
+    image: json["image"],
+  );
 }
 
 class Errors {
@@ -167,9 +175,6 @@ class Errors {
 
   factory Errors.fromJson(Map<dynamic, dynamic> json) => Errors(
   );
-
-  Map<dynamic, dynamic> toJson() => {
-  };
 }
 
 class Extra {

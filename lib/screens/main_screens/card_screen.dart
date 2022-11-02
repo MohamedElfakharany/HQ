@@ -409,7 +409,7 @@ class _CardScreenState extends State<CardScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(radius),
                                   border:
-                                      Border.all(width: 1, color: blueColor),
+                                      Border.all(width: 1, color: mainColor),
                                   color: greyExtraLightColor,
                                 ),
                                 child: Row(
@@ -419,7 +419,7 @@ class _CardScreenState extends State<CardScreen> {
                                       LocaleKeys.BtnAtLab.tr(),
                                       style: titleStyle.copyWith(
                                         fontWeight: FontWeight.normal,
-                                        color: blueColor,
+                                        color: mainColor,
                                         fontSize: 20,
                                       ),
                                     ),
@@ -427,7 +427,7 @@ class _CardScreenState extends State<CardScreen> {
                                     Image.asset('assets/images/atLabIcon.png',
                                         height: 40,
                                         width: 30,
-                                        color: blueColor),
+                                        color: mainColor),
                                     horizontalSmallSpace,
                                   ],
                                 ),
@@ -455,7 +455,7 @@ class _CardScreenState extends State<CardScreen> {
                                   borderRadius: BorderRadius.circular(radius),
                                   color: greyExtraLightColor,
                                   border:
-                                      Border.all(width: 1, color: blueColor),
+                                      Border.all(width: 1, color: mainColor),
                                 ),
                                 child: Row(
                                   children: [
@@ -464,14 +464,14 @@ class _CardScreenState extends State<CardScreen> {
                                       LocaleKeys.BtnAtHome.tr(),
                                       style: titleStyle.copyWith(
                                         fontWeight: FontWeight.normal,
-                                        color: blueColor,
+                                        color: mainColor,
                                         fontSize: 20,
                                       ),
                                     ),
                                     const Spacer(),
                                     const Icon(
                                       Icons.home_outlined,
-                                      color: blueColor,
+                                      color: mainColor,
                                       size: 40,
                                     ),
                                     horizontalSmallSpace,
@@ -510,7 +510,7 @@ class _CardScreenState extends State<CardScreen> {
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      color: blueColor,
+                      color: mainColor,
                       borderRadius: BorderRadius.circular(radius),
                     ),
                     child: Center(

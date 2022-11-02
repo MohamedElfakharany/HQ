@@ -14,9 +14,13 @@ const redColor = Color(0xFFBD3430);
 
 const pinkColor = Color(0xFFE397CC);
 
-const blueColor = Color(0xFF2685C7);
+/// blue HQ
+// const mainColor = Color(0xFF2685C7);
+// const mainLightColor = Color(0xFF4099D3);
 
-const blueLightColor = Color(0xFF4099D3);
+/// res sultan
+const mainColor = Color(0xFFDD4E4A);
+const mainLightColor = Color(0xFFEDABAC);
 
 const ofWhiteColor = Color(0xFFF8F9FD);
 

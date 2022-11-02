@@ -39,7 +39,7 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/logo.png', width: 150, height: 150,),
+                  Image.asset(appLogo, width: 150, height: 150,),
                   verticalLargeSpace,
                   InkWell(
                     onTap: () {

@@ -41,13 +41,13 @@ class HomeResultsModelData {
   dynamic id;
   dynamic countResult;
   HomeResultsDataDateModel? date;
-  List<HomeResultsModelResult>? results;
+  List<HomeResultsDataFileModel>? results;
 
   factory HomeResultsModelData.fromJson(Map<dynamic, dynamic> json) => HomeResultsModelData(
     id: json["id"],
     countResult: json["countResult"],
     date: HomeResultsDataDateModel.fromJson(json["date"]),
-    results: List<HomeResultsModelResult>.from(json["results"].map((x) => HomeResultsModelResult.fromJson(x))),
+    results: List<HomeResultsDataFileModel>.from(json["results"].map((x) => HomeResultsDataFileModel.fromJson(x))),
   );
 }
 
@@ -66,8 +66,8 @@ class HomeResultsDataDateModel {
   );
 }
 
-class HomeResultsModelResult {
-  HomeResultsModelResult({
+class HomeResultsDataFileModel {
+  HomeResultsDataFileModel({
     this.id,
     this.file,
     this.title,
@@ -81,7 +81,7 @@ class HomeResultsModelResult {
   HomeResultsDataDateModel? date;
   dynamic notes;
 
-  factory HomeResultsModelResult.fromJson(Map<dynamic, dynamic> json) => HomeResultsModelResult(
+  factory HomeResultsDataFileModel.fromJson(Map<dynamic, dynamic> json) => HomeResultsDataFileModel(
     id: json["id"],
     file: json["file"],
     title: json["title"],

@@ -61,7 +61,7 @@ class InquiryScreen extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.8,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(radius),
-                            color: blueLightColor,
+                            color: mainLightColor,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),

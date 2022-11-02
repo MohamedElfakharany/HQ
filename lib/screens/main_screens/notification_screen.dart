@@ -47,7 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     width: 40.0,
                     height: 40.0,
                     decoration: BoxDecoration(
-                      color: blueLightColor.withOpacity(0.2),
+                      color: mainLightColor.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(
                         radius,
                       ),
@@ -55,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: const Icon(
                       Icons.notifications_rounded,
                       size: 35.0,
-                      color: blueColor,
+                      color: mainColor,
                     ),
                   ),
                   horizontalSmallSpace,

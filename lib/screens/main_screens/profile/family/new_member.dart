@@ -267,7 +267,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                             border: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 2,
-                                color: blueColor,
+                                color: mainColor,
                               ),
                             ),
                           ),

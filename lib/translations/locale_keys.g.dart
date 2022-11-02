@@ -87,6 +87,7 @@ abstract class  LocaleKeys {
   static const homeTxtWelcome = 'homeTxtWelcome';
   static const homeTxtAppBarSecondary = 'homeTxtAppBarSecondary';
   static const homeTxtDiscover = 'homeTxtDiscover';
+  static const txtDownloadFailed = 'txtDownloadFailed';
   static const BtnSeeAll = 'BtnSeeAll';
   static const txtReserved = 'txtReserved';
   static const txtTestDetails = 'txtTestDetails';

@@ -253,7 +253,7 @@ class _HomeReservationOverviewScreenState
                                   'assets/images/profile.png',
                                   width: 25,
                                   height: 35,
-                                  color: blueColor,
+                                  color: mainColor,
                                 ),
                                 myVerticalDivider(),
                                 Column(
@@ -292,7 +292,7 @@ class _HomeReservationOverviewScreenState
                                   'assets/images/reserved.png',
                                   width: 25,
                                   height: 35,
-                                  color: blueColor,
+                                  color: mainColor,
                                 ),
                                 myVerticalDivider(),
                                 Column(
@@ -529,7 +529,7 @@ class _HomeReservationOverviewScreenState
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            color: blueColor,
+                            color: mainColor,
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           child: Center(

@@ -49,7 +49,7 @@ class _ThankRatingScreenState extends State<ThankRatingScreen> {
               child: Container(
                 height: 60,
                 decoration: BoxDecoration(
-                  color: blueColor,
+                  color: mainColor,
                   borderRadius: BorderRadius.circular(radius),
                 ),
                 child: Center(

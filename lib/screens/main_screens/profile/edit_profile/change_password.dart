@@ -129,7 +129,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 .resetChangePasswordVisibility();
                           },
                           icon: Icon(AppCubit.get(context).resetSufIcon),
-                          color: blueColor,
+                          color: mainColor,
                         ),
                         label: Text(LocaleKeys.TxtFieldOldPassword.tr()),
                         hintStyle:
@@ -152,7 +152,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                       ),
                       style: const TextStyle(
-                          color: blueLightColor,
+                          color: mainLightColor,
                           fontSize: 18,
                           fontFamily: fontFamily),
                       obscureText: AppCubit.get(context).resetIsPassword,
@@ -176,7 +176,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 .resetChangePasswordVisibility();
                           },
                           icon: Icon(AppCubit.get(context).resetSufIcon),
-                          color: blueColor,
+                          color: mainColor,
                         ),
                         label: Text(LocaleKeys.TxtFieldNewPassword.tr()),
                         hintStyle:
@@ -199,7 +199,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                       ),
                       style: const TextStyle(
-                          color: blueLightColor,
+                          color: mainLightColor,
                           fontSize: 18,
                           fontFamily: fontFamily),
                       obscureText: AppCubit.get(context).resetIsPassword,
@@ -247,7 +247,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 .resetConfirmChangePasswordVisibility();
                           },
                           icon: Icon(AppCubit.get(context).resetConfirmSufIcon),
-                          color: blueColor,
+                          color: mainColor,
                         ),
                         label: Text(LocaleKeys.TxtFieldConfirmPassword.tr()),
                         hintStyle:
@@ -270,7 +270,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                       ),
                       style: const TextStyle(
-                          color: blueLightColor,
+                          color: mainLightColor,
                           fontSize: 18,
                           fontFamily: fontFamily),
                       obscureText: AppCubit.get(context).resetConfirmIsPassword,

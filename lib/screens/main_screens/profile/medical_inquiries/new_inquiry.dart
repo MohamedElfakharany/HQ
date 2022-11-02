@@ -106,7 +106,7 @@ class _NewInquiryScreenState extends State<NewInquiryScreen> {
                                     fontSize: 20,
                                     fontFamily: fontFamily,
                                     fontWeight: FontWeight.bold,
-                                    color: blueColor,
+                                    color: mainColor,
                                     decoration: TextDecoration.underline,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -114,7 +114,7 @@ class _NewInquiryScreenState extends State<NewInquiryScreen> {
                                 horizontalSmallSpace,
                                 const Icon(
                                   Icons.add_a_photo_outlined,
-                                  color: blueLightColor,
+                                  color: mainLightColor,
                                 ),
                               ],
                             )

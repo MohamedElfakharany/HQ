@@ -75,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                     style: const TextStyle(
-                      color: blueLightColor,
+                      color: mainLightColor,
                       fontSize: 18,
                       fontFamily: fontFamily,
                     ),

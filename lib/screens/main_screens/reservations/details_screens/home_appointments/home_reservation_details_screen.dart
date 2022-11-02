@@ -140,7 +140,7 @@ class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScr
                               iconSize: 30,
                               icon: const Icon(
                                 Icons.keyboard_arrow_down_rounded,
-                                color: blueColor,
+                                color: mainColor,
                               ),
                               items: AppCubit
                                   .get(context)
@@ -183,7 +183,7 @@ class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScr
                                   horizontalSmallSpace,
                                   Text(
                                     LocaleKeys.BtnAtHome.tr(),
-                                    style: titleSmallStyle.copyWith(color: blueColor),
+                                    style: titleSmallStyle.copyWith(color: mainColor),
                                   ),
                                   const Spacer(),
                                   Image.asset('assets/images/atHomeIcon.png',
@@ -273,7 +273,7 @@ class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScr
                                   iconSize: 30,
                                   icon: const Icon(
                                     Icons.keyboard_arrow_down_rounded,
-                                    color: blueColor,
+                                    color: mainColor,
                                   ),
                                   items: AppCubit
                                       .get(context)
@@ -316,7 +316,7 @@ class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScr
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            color: blueColor,
+                            color: mainColor,
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           child: Center(

@@ -73,7 +73,7 @@ class ResultsScreenCard extends StatelessWidget {
                             .ellipsis,
                       ),
                       Text(
-                        '${labResultsModel?.data?[index].date?.date ?? homeResultsModel?.data?[index].date}',
+                        '${labResultsModel?.data?[index].date?.date ?? homeResultsModel?.data?[index].date?.date}',
                         style:
                         titleSmallStyle2,
                         maxLines: 1,

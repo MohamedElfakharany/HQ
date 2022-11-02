@@ -10,7 +10,6 @@ import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
-import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class ProfileChangeCityScreen extends StatelessWidget {
@@ -55,7 +54,6 @@ class ProfileChangeCityScreen extends StatelessWidget {
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) => InkWell(
                             onTap: () async {
-                              print('cubit.cityModel!.data![index].id : ${cubit.cityModel!.data![index].id}');
                               await CacheHelper.saveData(
                                       key: 'extraCityId',
                                       value: cubit.cityModel!.data![index].id)

@@ -11,9 +11,7 @@ import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileChangeBranchScreen extends StatefulWidget {
   const ProfileChangeBranchScreen(
@@ -46,7 +44,6 @@ class _ProfileChangeBranchScreenState extends State<ProfileChangeBranchScreen> {
       listener: (context, state) {
         if (state is AppChangeLocationSuccessState) {
           if (state.successModel.status) {
-            print(state.successModel.status);
             AppCubit.get(context).currentIndex = 0;
             navigateAndFinish(context, const HomeLayoutScreen());
           }
@@ -98,14 +95,6 @@ class _ProfileChangeBranchScreenState extends State<ProfileChangeBranchScreen> {
                                     .branchModel!
                                     .data![index]
                                     .id);
-                            print(AppCubit.get(context)
-                                .branchModel!
-                                .data![index]
-                                .id);
-                            print(AppCubit.get(context)
-                                .branchModel!
-                                .data![index]
-                                .title);
                           },
                           child: RegionCard(
                             title: cubit.branchModel!.data![index].title,

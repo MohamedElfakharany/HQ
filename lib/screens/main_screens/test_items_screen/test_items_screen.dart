@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
@@ -5,11 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/models/model_test.dart';
-import 'package:hq/screens/main_screens/search_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
 import 'package:hq/shared/components/general_components.dart';
-import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 
 class TestItemsScreen extends StatefulWidget {

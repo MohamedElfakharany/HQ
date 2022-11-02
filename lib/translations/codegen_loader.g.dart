@@ -109,6 +109,7 @@ class CodegenLoader extends AssetLoader {
     "txtNationalIdValidate": "Enter Valid Id Number",
     "txtCouponValidation": "Enter Valid Coupon",
     "txtPeriod": "Period no ",
+    "txtDownloadFailed": "can't download ",
     "TxtHomeVisit": "Home",
     "HomeVisitTxtMain":
         "Enter patient data and we will contact you to confirm reservation",
@@ -350,6 +351,7 @@ class CodegenLoader extends AssetLoader {
     "txtNationalIdValidate": "أدخل رقم هوية صالح",
     "txtCouponValidation": "أدخل كود خصم صالح",
     "txtPeriod": "الفترة رقم ",
+    "txtDownloadFailed": "فشل التحميل برجاء المحاولة لاحقا ",
     "txtTotal": "الإجمالي",
     "TxtHomeVisit": "الرئيسية",
     "HomeVisitTxtMain": "أدخل بيانات المريض وسوف نتصل بك لتأكيد الحجز",

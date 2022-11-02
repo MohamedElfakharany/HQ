@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 30,
                                 child: Center(
                                     child: CircularProgressIndicator(
-                                      color: blueColor,
+                                      color: mainColor,
                                     )),
                               ),
                               errorWidget: (context, url, error) => Container(
@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(
                                   Icons.perm_identity,
                                   size: 100,
-                                  color: blueColor,
+                                  color: mainColor,
                                 ),
                               ),
                               width: 120,
@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 30,
                                 child: Center(
                                     child: CircularProgressIndicator(
-                                      color: blueColor,
+                                      color: mainColor,
                                     )),
                               ),
                               errorWidget: (context, url, error) => Container(
@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Icon(
                                   Icons.perm_identity,
                                   size: 100,
-                                  color: blueColor,
+                                  color: mainColor,
                                 ),
                               ),
                               width: 120,
@@ -219,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           height: 50,
                                           width: 140,
                                           decoration: BoxDecoration(
-                                            color: blueColor,
+                                            color: mainColor,
                                             borderRadius:
                                             BorderRadius.circular(radius),
                                           ),

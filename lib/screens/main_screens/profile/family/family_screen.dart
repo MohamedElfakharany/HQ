@@ -63,7 +63,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                       height: 50,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: blueColor,
+                        color: mainColor,
                         borderRadius: BorderRadius.circular(radius),
                       ),
                       child: Center(

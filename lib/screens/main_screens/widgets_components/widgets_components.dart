@@ -333,7 +333,7 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
 
                         AppCubit.get(context).getHomeAppointments(
                             date:
-                            '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
+                                '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
                       },
                       availableCalendarFormats: const {
                         CalendarFormat.month: 'Month',
@@ -464,10 +464,10 @@ class OffersCard extends StatelessWidget {
                               color: redColor,
                               borderRadius: BorderRadius.circular(radius),
                             ),
-                            child: Center(
+                            child: const Center(
                               child: Text(
                                 'Off',
-                                style: const TextStyle(color: whiteColor),
+                                style: TextStyle(color: whiteColor),
                               ),
                             ),
                           ),
@@ -477,7 +477,7 @@ class OffersCard extends StatelessWidget {
                               height: 30,
                               width: 80,
                               decoration: BoxDecoration(
-                                color: blueLightColor,
+                                color: mainLightColor,
                                 borderRadius: BorderRadius.circular(radius),
                               ),
                               child: Center(
@@ -710,7 +710,7 @@ class TestItemCard extends StatelessWidget {
                               ),
                             );
                           },
-                          color: blueColor,
+                          color: mainColor,
                           child: Text(
                             LocaleKeys.txtDetails.tr(),
                             style: titleSmallStyle.copyWith(color: whiteColor),
@@ -739,11 +739,11 @@ class TestItemCard extends StatelessWidget {
                                 .testsModel
                                 ?.data?[index]
                                 .gender ==
-                            'male')
+                            'Male')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
-                              backgroundColor: blueLightColor,
+                              backgroundColor: mainLightColor,
                               child: Icon(
                                 Icons.male,
                                 size: 25,
@@ -755,7 +755,7 @@ class TestItemCard extends StatelessWidget {
                                 .testsModel
                                 ?.data?[index]
                                 .gender ==
-                            'female')
+                            'Female')
                           const Center(
                             child: CircleAvatar(
                               radius: 15,
@@ -779,221 +779,239 @@ class TestItemCard extends StatelessWidget {
                             'plus entered',
                           );
                         }
-                        showCustomBottomSheet(
-                          context,
-                          bottomSheetContent: Container(
-                            height: MediaQuery.of(context).size.height * 0.55,
-                            decoration: BoxDecoration(
-                              color: whiteColor,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(radius),
-                                topRight: Radius.circular(radius),
+                        if (AppCubit.get(context).isVisitor == false) {
+                          showPopUp(
+                            context,
+                            const VisitorHoldingPopUp(),
+                          );
+                        } else {
+                          showCustomBottomSheet(
+                            context,
+                            bottomSheetContent: Container(
+                              height: MediaQuery.of(context).size.height * 0.55,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(radius),
+                                  topRight: Radius.circular(radius),
+                                ),
                               ),
-                            ),
-                            padding: const EdgeInsetsDirectional.only(
-                                start: 20.0, end: 20.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                verticalMicroSpace,
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/checkTrue.svg',
-                                    ),
-                                    horizontalMiniSpace,
-                                    Text(
-                                      LocaleKeys.txtReservationSucceeded.tr(),
-                                      style: titleStyle.copyWith(fontSize: 15),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  LocaleKeys.TxtPopUpReservationTypeSecond.tr(),
-                                  style: subTitleSmallStyle.copyWith(
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                Container(
-                                  height: 110.0,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: whiteColor,
-                                    borderRadius: BorderRadius.circular(radius),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: greyDarkColor,
-                                    ),
-                                  ),
-                                  alignment: AlignmentDirectional.center,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 0, horizontal: 4),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                              padding: const EdgeInsetsDirectional.only(
+                                  start: 20.0, end: 20.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  verticalMicroSpace,
+                                  Row(
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional.only(
-                                            start: 10.0, top: 10.0),
-                                        child: Image.asset(
-                                          'assets/images/logo.png',
-                                          width: 80,
-                                          height: 80,
-                                        ),
+                                      SvgPicture.asset(
+                                        'assets/images/checkTrue.svg',
                                       ),
                                       horizontalMiniSpace,
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: [
-                                            verticalMiniSpace,
-                                            Text(
-                                              AppCubit.get(context).testsModel?.data?[index].title ??
-                                                  offersDataModel?.title,
-                                              style: titleStyle.copyWith(
-                                                  fontWeight: FontWeight.normal),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            // const Padding(
-                                            //   padding: EdgeInsets.symmetric(
-                                            //       vertical: 5.0),
-                                            //   child: Text(
-                                            //     'Sugar Checks',
-                                            //     style: TextStyle(),
-                                            //     maxLines: 2,
-                                            //     overflow: TextOverflow.ellipsis,
-                                            //   ),
-                                            // ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
-                                                  style: titleStyle.copyWith(
-                                                      fontSize: 15),
-                                                ),
-                                                horizontalMiniSpace,
-                                                if (AppCubit.get(context).offersModel?.data?[index].price !=  null)
-                                                  Text(
-                                                    '${AppCubit.get(context).offersModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
-                                                    style:
-                                                    subTitleSmallStyle.copyWith(
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                      Text(
+                                        LocaleKeys.txtReservationSucceeded.tr(),
+                                        style:
+                                            titleStyle.copyWith(fontSize: 15),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                     ],
                                   ),
-                                ),
-                                verticalMicroSpace,
-                                Container(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width * 0.9,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(radius),
-                                    color: greyExtraLightColor,
+                                  Text(
+                                    LocaleKeys.TxtPopUpReservationTypeSecond
+                                        .tr(),
+                                    style: subTitleSmallStyle.copyWith(
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      horizontalSmallSpace,
-                                      Text(
-                                        LocaleKeys.txtTotal.tr(),
-                                        style: titleStyle.copyWith(
-                                            fontWeight: FontWeight.normal),
+                                  Container(
+                                    height: 110.0,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: whiteColor,
+                                      borderRadius:
+                                          BorderRadius.circular(radius),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: greyDarkColor,
                                       ),
-                                      const Spacer(),
-                                      Text(
-                                        '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
-                                        style: titleStyle.copyWith(fontSize: 18),
-                                      ),
-                                      horizontalSmallSpace,
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 80.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Center(
+                                    ),
+                                    alignment: AlignmentDirectional.center,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 4),
                                     child: Row(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(
-                                          child: MaterialButton(
-                                            onPressed: () {
-                                              if (AppCubit.get(context)
-                                                  .isVisitor ==
-                                                  false) {
-                                                Navigator.push(
-                                                  context,
-                                                  FadeRoute(
-                                                    page: CardScreen(
-                                                        testsDataModel:
-                                                        testsDataModel,
-                                                        offersDataModel:
-                                                        offersDataModel),
-                                                  ),
-                                                );
-                                              } else {
-                                                showPopUp(
-                                                  context,
-                                                  const VisitorHoldingPopUp(),
-                                                );
-                                              }
-                                            },
-                                            height: 80.0,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: blueColor,
-                                                borderRadius:
-                                                BorderRadius.circular(radius),
-                                              ),
-                                              height: 50.0,
-                                              width: double.infinity,
-                                              child: Center(
-                                                child: Text(
-                                                  LocaleKeys.BtnCheckout.tr(),
-                                                  style: titleSmallStyle.copyWith(
-                                                    color: whiteColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsetsDirectional.only(
+                                                  start: 10.0, top: 10.0),
+                                          child: Image.asset(
+                                            'assets/images/logo.png',
+                                            width: 80,
+                                            height: 80,
                                           ),
                                         ),
+                                        horizontalMiniSpace,
                                         Expanded(
-                                          child: GeneralUnfilledButton(
-                                            width: double.infinity,
-                                            title: LocaleKeys.BtnBrowse.tr(),
-                                            onPress: () {
-                                              AppCubit.get(context)
-                                                  .changeBottomScreen(0);
-                                              navigateAndFinish(
-                                                context,
-                                                const HomeLayoutScreen(),
-                                              );
-                                            },
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              verticalMiniSpace,
+                                              Text(
+                                                AppCubit.get(context)
+                                                        .testsModel
+                                                        ?.data?[index]
+                                                        .title ??
+                                                    offersDataModel?.title,
+                                                style: titleStyle.copyWith(
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              // const Padding(
+                                              //   padding: EdgeInsets.symmetric(
+                                              //       vertical: 5.0),
+                                              //   child: Text(
+                                              //     'Sugar Checks',
+                                              //     style: TextStyle(),
+                                              //     maxLines: 2,
+                                              //     overflow: TextOverflow.ellipsis,
+                                              //   ),
+                                              // ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
+                                                    style: titleStyle.copyWith(
+                                                        fontSize: 15),
+                                                  ),
+                                                  horizontalMiniSpace,
+                                                  if (AppCubit.get(context)
+                                                          .offersModel
+                                                          ?.data?[index]
+                                                          .price !=
+                                                      null)
+                                                    Text(
+                                                      '${AppCubit.get(context).offersModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
+                                                      style: subTitleSmallStyle
+                                                          .copyWith(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
+                                  verticalMicroSpace,
+                                  Container(
+                                    height: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(radius),
+                                      color: greyExtraLightColor,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        horizontalSmallSpace,
+                                        Text(
+                                          LocaleKeys.txtTotal.tr(),
+                                          style: titleStyle.copyWith(
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
+                                          style:
+                                              titleStyle.copyWith(fontSize: 18),
+                                        ),
+                                        horizontalSmallSpace,
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 80.0,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  FadeRoute(
+                                                    page: CardScreen(
+                                                        testsDataModel:
+                                                            testsDataModel,
+                                                        offersDataModel:
+                                                            offersDataModel),
+                                                  ),
+                                                );
+                                              },
+                                              height: 80.0,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: mainColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          radius),
+                                                ),
+                                                height: 50.0,
+                                                width: double.infinity,
+                                                child: Center(
+                                                  child: Text(
+                                                    LocaleKeys.BtnCheckout.tr(),
+                                                    style: titleSmallStyle
+                                                        .copyWith(
+                                                      color: whiteColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: GeneralUnfilledButton(
+                                              width: double.infinity,
+                                              title: LocaleKeys.BtnBrowse.tr(),
+                                              onPress: () {
+                                                AppCubit.get(context)
+                                                    .changeBottomScreen(0);
+                                                navigateAndFinish(
+                                                  context,
+                                                  const HomeLayoutScreen(),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          bottomSheetHeight: 0.55,
-                        );
+                            bottomSheetHeight: 0.55,
+                          );
+                        }
                       },
                       child: const CircleAvatar(
                         radius: 15,
@@ -1009,23 +1027,23 @@ class TestItemCard extends StatelessWidget {
               )
             ],
           ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 5.0),
-            //   child: Container(
-            //     height: 30,
-            //     width: 30,
-            //     decoration: BoxDecoration(
-            //       color: redColor,
-            //       borderRadius: BorderRadius.circular(30),
-            //     ),
-            //     child: const Center(
-            //       child: Text(
-            //         '%',
-            //         style: TextStyle(color: whiteColor, fontSize: 16),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 5.0),
+          //   child: Container(
+          //     height: 30,
+          //     width: 30,
+          //     decoration: BoxDecoration(
+          //       color: redColor,
+          //       borderRadius: BorderRadius.circular(30),
+          //     ),
+          //     child: const Center(
+          //       child: Text(
+          //         '%',
+          //         style: TextStyle(color: whiteColor, fontSize: 16),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

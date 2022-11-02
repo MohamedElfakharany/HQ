@@ -1,4 +1,8 @@
-      const mainURL = 'https://hq.orcav.com/api';
+///Main HQ
+//       const mainURL = 'https://hq.orcav.com/api';
+
+///Main SULTAN
+      const mainURL = 'https://sultan.orcav.com/api';
 
       const authURL = '$mainURL/auth';
 
@@ -26,7 +30,7 @@
 
       const resetPasswordURL = '$authURL/reset-password';
 
-      ///Core
+///Core
 
       const countryURL = '$coreURL/countries';
 
@@ -73,6 +77,10 @@
       const createMemberURL = '$familiesURL/create';
 
 ///addresses
+
+      const addressURL = '$profileURL/addresses';
+
+      const createAddressURL = '$addressURL/create';
 
 /// Lab Reservations
 

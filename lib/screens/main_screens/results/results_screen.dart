@@ -68,7 +68,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                            color: blueLightColor, width: 2),
+                                            color: mainLightColor, width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color:
@@ -88,7 +88,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                             'assets/images/atLabIcon.png',
                                             width: 25,
                                             height: 25,
-                                            color: blueColor,
+                                            color: mainColor,
                                           ),
                                           horizontalSmallSpace,
                                           Text(
@@ -117,7 +117,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                            color: blueLightColor, width: 2),
+                                            color: mainLightColor, width: 2),
                                         boxShadow: [
                                           BoxShadow(
                                             color:
@@ -137,7 +137,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                             'assets/images/atHomeIcon.png',
                                             width: 25,
                                             height: 25,
-                                            color: blueColor,
+                                            color: mainColor,
                                           ),
                                           horizontalSmallSpace,
                                           Text(
@@ -220,8 +220,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                         Navigator.push(
                                           context,
                                           FadeRoute(
-                                            page: ResultDetailsScreen(resultId: AppCubit.get(context)
-                                                .labResultsModel!.data![index].id,),
+                                            page: ResultDetailsScreen(labResultsDataFileModel: AppCubit.get(context)
+                                                .labResultsModel!.data![index].results?.first, index: index,),
                                           ),
                                         );
                                       },
@@ -262,8 +262,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                         Navigator.push(
                                           context,
                                           FadeRoute(
-                                            page: ResultDetailsScreen(resultId: AppCubit.get(context)
-                                                .homeResultsModel!.data![index].id,),
+                                            page: ResultDetailsScreen(homeResultsDataFileModel: AppCubit.get(context)
+                                                .homeResultsModel!.data![index].results?.first, index: index,),
                                           ),
                                         );
                                       },

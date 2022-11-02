@@ -63,7 +63,7 @@ class ReadMoreScreen extends StatelessWidget {
                           height: 30,
                           width: 80,
                           decoration: BoxDecoration(
-                            color: blueLightColor,
+                            color: mainLightColor,
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           child: Center(

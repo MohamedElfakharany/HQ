@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 import 'dart:async';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -46,8 +46,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
       verificationId: AppCubit.get(context).verificationId.toString(),
       smsCode: codeController.text,
     );
-    print(
-        'AppCubit.get(context).verificationId.toString() : ${AppCubit.get(context).verificationId.toString()}');
     signInWithPhoneAuthCredential(phoneAuthCredential);
   }
 
@@ -244,6 +242,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       title: LocaleKeys.BtnVerify.tr(),
                       onPress: () {
                         if (formKey.currentState!.validate()) {
+                          AppCubit.get(context).verify();
                           AppCubit.get(context)
                               .createToken(
                                   mobile: widget.mobileNumber.toString(), phoneCode: widget.phoneCode)
@@ -269,16 +268,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         onPressed: () {
                           codeController.text = '';
                           AppCubit.get(context)
-                              .createToken(
-                                  mobile: widget.mobileNumber.toString(), phoneCode: widget.phoneCode)
+                              .createToken(mobile: widget.mobileNumber.toString(), phoneCode: widget.phoneCode)
                               .then((v) {
-                            AppCubit.get(context)
-                                .fetchOtp(number: widget.mobileNumber, phoneCode: widget.phoneCode);
+                            AppCubit.get(context).fetchOtp(number: widget.mobileNumber, phoneCode: widget.phoneCode);
                           });
                         },
                         child: Text(
                           LocaleKeys.BtnResend.tr(),
-                          style: titleSmallStyle.copyWith(color: blueColor),
+                          style: titleSmallStyle.copyWith(color: mainColor),
                         ),
                       ),
                     ],

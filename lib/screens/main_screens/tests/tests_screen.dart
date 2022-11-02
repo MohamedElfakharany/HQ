@@ -38,8 +38,6 @@ class _TestsScreenState extends State<TestsScreen> {
     return BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          print('cubit.tapIndex : ${cubit.tapIndex}');
-          print('cubit.fromHome : ${cubit.fromHome}');
           return DefaultTabController(
             length: 2,
             initialIndex: cubit.tapIndex,
@@ -54,6 +52,11 @@ class _TestsScreenState extends State<TestsScreen> {
                       backgroundColor: greyExtraLightColor,
                       elevation: 0.0,
                       bottom: TabBar(
+                        indicatorColor: mainColor,
+                        labelColor: mainColor,
+                        unselectedLabelColor: mainLightColor,
+                        labelStyle: titleStyle,
+                        enableFeedback: true,
                         tabs: [
                           Tab(
                             child: Column(
@@ -65,7 +68,7 @@ class _TestsScreenState extends State<TestsScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                          color: blueLightColor, width: 2),
+                                          color: mainLightColor, width: 2),
                                       boxShadow: [
                                         BoxShadow(
                                           color:
@@ -116,7 +119,7 @@ class _TestsScreenState extends State<TestsScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                          color: blueLightColor, width: 2),
+                                          color: mainLightColor, width: 2),
                                       boxShadow: [
                                         BoxShadow(
                                           color:
@@ -229,10 +232,6 @@ class _TestsScreenState extends State<TestsScreen> {
                                           0,
                                       (index) => InkWell(
                                         onTap: () {
-                                          print(AppCubit.get(context)
-                                              .categoriesModel!
-                                              .data![index]
-                                              .id);
                                           Navigator.push(
                                             context,
                                             FadeRoute(
@@ -278,7 +277,6 @@ class _TestsScreenState extends State<TestsScreen> {
                                     scrollDirection: Axis.vertical,
                                     itemBuilder: (context, index) => InkWell(
                                       onTap: () {
-                                        print('mohamed');
                                         Navigator.push(
                                           context,
                                           FadeRoute(

@@ -13,6 +13,7 @@ import 'package:hq/models/home_appointments_model/home_result_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_reservation_model.dart';
 import 'package:hq/models/lab_appointments_model/lab_result_model.dart';
+import 'package:hq/models/profile_models/address_model.dart';
 import 'package:hq/models/profile_models/families_model.dart';
 import 'package:hq/models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/profile_models/terms_model.dart';
@@ -244,6 +245,42 @@ class AppDeleteInquiryErrorState extends AppStates{
   AppDeleteInquiryErrorState(this.error);
 }
 
+class AppDeleteAddressLoadingState extends AppStates{}
+
+class AppDeleteAddressSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppDeleteAddressSuccessState(this.successModel);
+}
+
+class AppDeleteAddressErrorState extends AppStates{
+  final String error;
+  AppDeleteAddressErrorState(this.error);
+}
+
+class AppCreateAddressLoadingState extends AppStates{}
+
+class AppCreateAddressSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCreateAddressSuccessState(this.successModel);
+}
+
+class AppCreateAddressErrorState extends AppStates{
+  final String error;
+  AppCreateAddressErrorState(this.error);
+}
+
+class AppSelectAddressLoadingState extends AppStates{}
+
+class AppSelectAddressSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppSelectAddressSuccessState(this.successModel);
+}
+
+class AppSelectAddressErrorState extends AppStates{
+  final String error;
+  AppSelectAddressErrorState(this.error);
+}
+
 class AppChangeNumberLoadingState extends AppStates{}
 
 class AppChangeNumberSuccessState extends AppStates{
@@ -328,6 +365,18 @@ class AppGetHomeResultsErrorState extends AppStates{
   AppGetHomeResultsErrorState(this.error);
 }
 
+class AppGetAddressLoadingState extends AppStates{}
+
+class AppGetAddressSuccessState extends AppStates{
+  final AddressModel addressModel;
+  AppGetAddressSuccessState(this.addressModel);
+}
+
+class AppGetAddressErrorState extends AppStates{
+  final String error;
+  AppGetAddressErrorState(this.error);
+}
+
 class AppGetHomeReservationsLoadingState extends AppStates{}
 
 class AppGetHomeReservationsSuccessState extends AppStates{
@@ -339,10 +388,6 @@ class AppGetHomeReservationsErrorState extends AppStates{
   final String error;
   AppGetHomeReservationsErrorState(this.error);
 }
-
-class AppStartLoadingState extends AppStates{}
-
-class AppEndLoadingState extends AppStates{}
 
 class AppCreateTokenLoadingState extends AppStates{}
 
