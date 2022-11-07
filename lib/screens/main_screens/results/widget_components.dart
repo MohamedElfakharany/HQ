@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:hq/models/home_appointments_model/home_result_model.dart';
-import 'package:hq/models/lab_appointments_model/lab_result_model.dart';
+import 'package:hq/models/patient_models/home_appointments_model/home_result_model.dart';
+import 'package:hq/models/patient_models/lab_appointments_model/lab_result_model.dart';
 import 'package:hq/shared/components/cached_network_image.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';

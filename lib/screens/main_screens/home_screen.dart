@@ -29,8 +29,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var searchController = TextEditingController();
 
-
-
   @override
   void initState() {
     super.initState();
@@ -41,15 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
       AppCubit.get(context).getProfile();
     }
     if (AppCubit.get(context).isVisitor == true) {
-    Timer(
-      const Duration(microseconds: 0),
-      () async {
-      AppCubit.get(context).getProfile();
-    extraBranchTitle = await CacheHelper.getData(key: 'extraBranchTitle');
-    extraCityId = await CacheHelper.getData(key: 'extraCityId');
-    extraBranchId = await CacheHelper.getData(key: 'extraBranchId');
-      },
-    );
+      Timer(
+        const Duration(microseconds: 0),
+        () async {
+          // AppCubit.get(context).getCarouselData();
+          // AppCubit.get(context).getTerms();
+          // AppCubit.get(context).getProfile();
+          extraBranchTitle = await CacheHelper.getData(key: 'extraBranchTitle');
+          extraCityId = await CacheHelper.getData(key: 'extraCityId');
+          extraBranchId = await CacheHelper.getData(key: 'extraBranchId');
+        },
+      );
     }
   }
 

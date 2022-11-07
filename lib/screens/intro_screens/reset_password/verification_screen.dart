@@ -242,7 +242,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       title: LocaleKeys.BtnVerify.tr(),
                       onPress: () {
                         if (formKey.currentState!.validate()) {
-                          AppCubit.get(context).verify();
+                          // AppCubit.get(context).verify();
                           AppCubit.get(context)
                               .createToken(
                                   mobile: widget.mobileNumber.toString(), phoneCode: widget.phoneCode)

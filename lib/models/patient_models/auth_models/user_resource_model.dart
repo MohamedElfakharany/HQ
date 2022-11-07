@@ -29,6 +29,7 @@ class UserResourceDataModel {
   UserResourceDataModel({
     this.id,
     this.profile,
+    this.type,
     this.code,
     this.name,
     this.phone,
@@ -48,6 +49,7 @@ class UserResourceDataModel {
 
   dynamic id;
   dynamic profile;
+  dynamic type;
   dynamic code;
   dynamic name;
   dynamic phoneCode;
@@ -68,6 +70,7 @@ class UserResourceDataModel {
       UserResourceDataModel(
         id: json["id"],
         profile: json["profile"],
+        type: json["type"],
         code: json["code"],
         name: json["name"],
         phoneCode: json["phoneCode"],

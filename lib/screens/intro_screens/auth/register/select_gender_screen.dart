@@ -35,6 +35,7 @@ class SelectGenderScreen extends StatelessWidget {
         if (state is AppCompleteProfileSuccessState) {
           if (state.userResourceModel.status) {
             AppCubit.get(context).dataSaving(
+              type: state.userResourceModel.data!.type,
               extraTokenSave: state.userResourceModel.extra?.token,
               isVerifiedSave: state.userResourceModel.data?.isVerified,
               countryId: state.userResourceModel.data!.country!.id,
@@ -52,6 +53,7 @@ class SelectGenderScreen extends StatelessWidget {
         if (AppCubit.get(context).isVisitor == true) {
           if (state is AppCompleteProfileSuccessState) {
             AppCubit.get(context).dataSaving(
+              type: state.userResourceModel.data!.type,
               extraTokenSave: state.userResourceModel.extra?.token,
               isVerifiedSave: state.userResourceModel.data?.isVerified,
               countryId: state.userResourceModel.data!.country!.id,

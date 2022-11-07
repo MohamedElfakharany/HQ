@@ -1,8 +1,8 @@
 ///Main HQ
-//       const mainURL = 'https://hq.orcav.com/api';
+      const mainURL = 'https://hq.orcav.com/api';
 
 ///Main SULTAN
-      const mainURL = 'https://sultan.orcav.com/api';
+//       const mainURL = 'https://sultan.orcav.com/api';
 
       const authURL = '$mainURL/auth';
 

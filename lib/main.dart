@@ -8,6 +8,7 @@ import 'package:hq/screens/intro_screens/startup/splash_screen.dart';
 import 'package:hq/shared/bloc_observer.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/remote/dio_helper.dart';
+import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/translations/codegen_loader.g.dart';
 
 void main() async {
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (BuildContext context) => AppCubit()
+        ),
+        BlocProvider(
+          create: (BuildContext context) => AppTechCubit()
         ),
       ],
       child: MaterialApp(

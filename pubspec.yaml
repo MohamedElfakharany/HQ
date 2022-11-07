@@ -41,6 +41,7 @@ dependencies:
   open_file: ^3.2.1
   advance_pdf_viewer: any
   flutter_app_name: ^0.1.1
+  syncfusion_flutter_datepicker: ^20.3.52
 
   #firebase
   firebase_auth: ^3.11.1
@@ -62,7 +63,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter_app_name:
-  name: "SULTAN MEDICA"
+  name: "HQ"
 
 flutter_icons:
   android: true

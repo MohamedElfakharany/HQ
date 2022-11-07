@@ -12,6 +12,7 @@ import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
+import 'package:hq/tech_lib/tech_home_layout.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Widget widget;
     token = CacheHelper.getData(key: 'token');
+    type = CacheHelper.getData(key: 'type');
     isFirst = CacheHelper.getData(key: 'isFirst');
     sharedLanguage = CacheHelper.getData(key: 'local');
     verified = CacheHelper.getData(key: 'verified');
@@ -35,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (kDebugMode) {
       printWrapped('from main the token is $token');
+      printWrapped('from main the token is $type');
       printWrapped('from main the isFirst is $isFirst');
       printWrapped('from main the verified is $verified');
       printWrapped('from main the sharedLanguage is $sharedLanguage');
@@ -47,8 +50,11 @@ class _SplashScreenState extends State<SplashScreen> {
     if (token != null) {
       if (verified != null){
       if (verified == 1) {
+        if (type == 'Technical'){
+          widget = const TechHomeLayoutScreen();
+        }else{
         AppCubit.get(context).isVisitor = false;
-        widget = const HomeLayoutScreen();
+        widget = const HomeLayoutScreen();}
       } else {
         widget = const LoginScreen();
       }

@@ -8,27 +8,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/models/auth_models/create_token_model.dart';
-import 'package:hq/models/auth_models/reset_password_model.dart';
-import 'package:hq/models/cores_models/branch_model.dart';
-import 'package:hq/models/cores_models/carousel_model.dart';
-import 'package:hq/models/cores_models/city_model.dart';
-import 'package:hq/models/cores_models/country_model.dart';
-import 'package:hq/models/cores_models/relations_model.dart';
-import 'package:hq/models/auth_models/verify_model.dart';
-import 'package:hq/models/auth_models/user_resource_model.dart';
-import 'package:hq/models/home_appointments_model/home_appointments_model.dart';
-import 'package:hq/models/home_appointments_model/home_reservation_model.dart';
-import 'package:hq/models/home_appointments_model/home_result_model.dart';
-import 'package:hq/models/lab_appointments_model/lab_appointment_model.dart';
-import 'package:hq/models/lab_appointments_model/lab_reservation_model.dart';
-import 'package:hq/models/lab_appointments_model/lab_result_model.dart';
-import 'package:hq/models/profile_models/address_model.dart';
-import 'package:hq/models/profile_models/families_model.dart';
-import 'package:hq/models/profile_models/medical-inquiries.dart';
-import 'package:hq/models/profile_models/terms_model.dart';
-import 'package:hq/models/test_models/categories_model.dart';
-import 'package:hq/models/test_models/offers_model.dart';
+import 'package:hq/models/patient_models/auth_models/create_token_model.dart';
+import 'package:hq/models/patient_models/auth_models/reset_password_model.dart';
+import 'package:hq/models/patient_models/cores_models/branch_model.dart';
+import 'package:hq/models/patient_models/cores_models/carousel_model.dart';
+import 'package:hq/models/patient_models/cores_models/city_model.dart';
+import 'package:hq/models/patient_models/cores_models/country_model.dart';
+import 'package:hq/models/patient_models/cores_models/relations_model.dart';
+import 'package:hq/models/patient_models/auth_models/verify_model.dart';
+import 'package:hq/models/patient_models/auth_models/user_resource_model.dart';
+import 'package:hq/models/patient_models/home_appointments_model/home_appointments_model.dart';
+import 'package:hq/models/patient_models/home_appointments_model/home_reservation_model.dart';
+import 'package:hq/models/patient_models/home_appointments_model/home_result_model.dart';
+import 'package:hq/models/patient_models/lab_appointments_model/lab_appointment_model.dart';
+import 'package:hq/models/patient_models/lab_appointments_model/lab_reservation_model.dart';
+import 'package:hq/models/patient_models/lab_appointments_model/lab_result_model.dart';
+import 'package:hq/models/patient_models/profile_models/address_model.dart';
+import 'package:hq/models/patient_models/profile_models/families_model.dart';
+import 'package:hq/models/patient_models/profile_models/medical-inquiries.dart';
+import 'package:hq/models/patient_models/profile_models/terms_model.dart';
+import 'package:hq/models/patient_models/test_models/categories_model.dart';
+import 'package:hq/models/patient_models/test_models/offers_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/home_screen.dart';
 import 'package:hq/screens/main_screens/profile/profile_screen.dart';
@@ -39,7 +39,7 @@ import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
-import 'package:hq/models/test_models/tests_model.dart';
+import 'package:hq/models/patient_models/test_models/tests_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:path_provider/path_provider.dart';
@@ -271,7 +271,7 @@ class AppCubit extends Cubit<AppStates> {
   }) async {
     var formData = {
       'phone': mobile,
-      'phoneCode': phoneCode,
+      'phoneCode': '+$phoneCode',
       'password': password,
     };
     try {
@@ -293,14 +293,12 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('formData : ${formData.entries}');
+        print('convertedResponse : $convertedResponse');
+        print('responseJson : $responseJson');
+      }
       userResourceModel = UserResourceModel.fromJson(responseJson);
-      // if (kDebugMode) {
-      //   print('response : $response');
-      //   print('responseJsonB : $responseJsonB');
-      //   print('convertedResponse : $convertedResponse');
-      //   print('responseJson : $responseJson');
-      //   print('userResourceModel : ${userResourceModel?.extra?.token}');
-      // }
       emit(AppLoginSuccessState(userResourceModel!));
     } catch (error) {
       if (kDebugMode) {
@@ -1872,12 +1870,14 @@ class AppCubit extends Cubit<AppStates> {
   dataSaving({
     required String extraTokenSave,
     required String extraBranchTitle1,
+    required String type,
     required int countryId,
     required int cityId,
     required int branchId,
     required int isVerifiedSave,
   }) async {
     (await SharedPreferences.getInstance()).setString('token', extraTokenSave);
+    (await SharedPreferences.getInstance()).setString('type', type);
     (await SharedPreferences.getInstance())
         .setString('extraBranchTitle', extraBranchTitle1);
     (await SharedPreferences.getInstance()).setInt('extraCountryId', countryId);

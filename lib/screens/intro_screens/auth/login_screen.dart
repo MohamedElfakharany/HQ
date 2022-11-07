@@ -14,6 +14,7 @@ import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
+import 'package:hq/tech_lib/tech_home_layout.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,15 +35,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final _focusNodes =
       Iterable<int>.generate(2).map((_) => FocusNode()).toList();
 
-  saveExtraToken({required String extraToken1, required int verified1}) async {
+  saveExtraToken(
+      {required String extraToken1,
+      required String type1,
+      required int verified1}) async {
     (await SharedPreferences.getInstance()).setString('token', extraToken1);
+    (await SharedPreferences.getInstance()).setString('type', type1);
     (await SharedPreferences.getInstance()).setInt('verified', verified1);
     token = extraToken1;
     verified = verified1;
+    type = type1;
     if (kDebugMode) {
       print('token: $token');
     }
   }
+
   bool isLoading = false;
 
   @override
@@ -54,8 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state.userResourceModel.status) {
             if (state.userResourceModel.data!.isVerified == 0) {
               saveExtraToken(
-                  extraToken1: state.userResourceModel.extra?.token,
-                  verified1: state.userResourceModel.data?.isVerified);
+                extraToken1: state.userResourceModel.extra?.token,
+                verified1: state.userResourceModel.data?.isVerified,
+                type1: state.userResourceModel.data?.type,
+              );
               await Navigator.push(
                 context,
                 FadeRoute(
@@ -68,45 +77,57 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               );
             } else if (state.userResourceModel.data!.isVerified == 1) {
-              saveExtraToken(
+              if (state.userResourceModel.data?.type == 'Technical') {
+                saveExtraToken(
                   extraToken1: state.userResourceModel.extra?.token,
-                  verified1: state.userResourceModel.data?.isVerified);
-              if (state.userResourceModel.data!.isCompleted == 0) {
-                AppCubit.get(context).getCountry();
-                Navigator.push(
-                  context,
-                  FadeRoute(
-                    page: const SelectCountryScreen(),
-                  ),
+                  verified1: state.userResourceModel.data?.isVerified,
+                  type1: state.userResourceModel.data?.type,
                 );
+                navigateAndFinish(context, const TechHomeLayoutScreen());
               } else {
-                AppCubit.get(context).dataSaving(
-                  extraTokenSave: state.userResourceModel.extra?.token,
-                  isVerifiedSave: state.userResourceModel.data?.isVerified,
-                  countryId: state.userResourceModel.data!.country!.id,
-                  cityId: state.userResourceModel.data!.city!.id,
-                  branchId: state.userResourceModel.data!.branch!.id,
-                  extraBranchTitle1:
-                      state.userResourceModel.data!.branch!.title,
+                saveExtraToken(
+                  extraToken1: state.userResourceModel.extra?.token,
+                  verified1: state.userResourceModel.data?.isVerified,
+                  type1: state.userResourceModel.data?.type,
                 );
-                navigateAndFinish(
-                  context,
-                  const HomeLayoutScreen(),
-                );
+                if (state.userResourceModel.data!.isCompleted == 0) {
+                  AppCubit.get(context).getCountry();
+                  Navigator.push(
+                    context,
+                    FadeRoute(
+                      page: const SelectCountryScreen(),
+                    ),
+                  );
+                } else {
+                  AppCubit.get(context).dataSaving(
+                    extraTokenSave: state.userResourceModel.extra?.token,
+                    isVerifiedSave: state.userResourceModel.data?.isVerified,
+                    countryId: state.userResourceModel.data!.country!.id,
+                    cityId: state.userResourceModel.data!.city!.id,
+                    branchId: state.userResourceModel.data!.branch!.id,
+                    extraBranchTitle1:
+                        state.userResourceModel.data!.branch!.title,
+                    type: state.userResourceModel.data!.type,
+                  );
+                  navigateAndFinish(
+                    context,
+                    const HomeLayoutScreen(),
+                  );
+                }
               }
+            } else {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    // title: Text(state.userResourceModel.message),
+                    content: Text(
+                      LocaleKeys.txtLoginError.tr(),
+                    ),
+                  );
+                },
+              );
             }
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  // title: Text(state.userResourceModel.message),
-                  content: Text(
-                    LocaleKeys.txtLoginError.tr(),
-                  ),
-                );
-              },
-            );
           }
         }
         if (state is AppLoginErrorState) {

@@ -32,13 +32,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>HQ want to accesses your Location</string>
+	<string>SULTAN MEDICA want to accesses your Location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>HQ want to accesses your Location</string>
+	<string>SULTAN MEDICA want to accesses your Location</string>
 	<key>NSCameraUsageDescription</key>
-    <string>HQ want to accesses your camera</string>
+    <string>SULTAN MEDICA want to accesses your camera</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>HQ want to accesses your photo library</string>
+    <string>SULTAN MEDICA want to accesses your photo library</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

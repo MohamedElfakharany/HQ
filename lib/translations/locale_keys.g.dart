@@ -39,6 +39,7 @@ abstract class  LocaleKeys {
   static const txtEditProfile = 'txtEditProfile';
   static const txtFamily = 'txtFamily';
   static const txtAddress = 'txtAddress';
+  static const txtSampling = 'txtSampling';
   static const txtRegionSettings = 'txtRegionSettings';
   static const txtTermsAndConditions = 'txtTermsAndConditions';
   static const txtPopUpMainCancelReservation = 'txtPopUpMainCancelReservation';
@@ -92,6 +93,7 @@ abstract class  LocaleKeys {
   static const txtReserved = 'txtReserved';
   static const txtTestDetails = 'txtTestDetails';
   static const txtAnalysisPreparations = 'txtAnalysisPreparations';
+  static const txtRequests = 'txtRequests';
   static const TxtPopUpReservationTypeSecond = 'TxtPopUpReservationTypeSecond';
   static const txtDetails = 'txtDetails';
   static const txtTotal = 'txtTotal';
