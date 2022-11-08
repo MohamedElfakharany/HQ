@@ -234,6 +234,7 @@ abstract class  LocaleKeys {
   static const txtDidntReseveCode = 'txtDidntReseveCode';
   static const resetTxtForth = 'resetTxtForth';
   static const txtTestCategories = 'txtTestCategories';
+  static const txtLastReservations = 'txtLastReservations';
   static const txtPleaseSignInFirst = 'txtPleaseSignInFirst';
 }
 

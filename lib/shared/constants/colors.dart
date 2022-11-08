@@ -14,6 +14,8 @@ const redColor = Color(0xFFBD3430);
 
 const pinkColor = Color(0xFFE397CC);
 
+const yellowColor = Color(0xFFF6C358);
+
 /// blue HQ
 const mainColor = Color(0xFF2685C7);
 const mainLightColor = Color(0xFF4099D3);

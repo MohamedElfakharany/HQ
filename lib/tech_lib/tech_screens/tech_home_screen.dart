@@ -26,12 +26,12 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+          var cubit = AppTechCubit.get(context);
     return BlocProvider(
       create: (BuildContext context) => AppTechCubit()..getProfile(),
       child: BlocConsumer<AppTechCubit ,AppTechStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          var cubit = AppTechCubit.get(context);
           return Scaffold(
             backgroundColor: greyExtraLightColor,
             appBar: const TechGeneralHomeLayoutAppBar(),
@@ -82,13 +82,13 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                     verticalMediumSpace,
                     Row(
                       children: [
-                        Text(LocaleKeys.txtTestCategories.tr(),
+                        Text(LocaleKeys.txtLastReservations.tr(),
                             style: titleStyle),
                         const Spacer(),
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              cubit.changeBottomScreen(1);
+                              cubit.changeBottomScreen(2);
                             });
                           },
                           child: Text(
@@ -107,7 +107,7 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) => InkWell(
                           onTap: () {},
-                          child: TechHomeReservationsCart(index: index),
+                          child: TechHomeReservationsCart(stateColor: mainColor,index: index),
                         ),
                         separatorBuilder: (context, index) =>
                         horizontalMiniSpace,

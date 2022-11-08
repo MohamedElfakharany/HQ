@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hq/models/model_test.dart';
 import 'package:hq/shared/components/general_components.dart';
@@ -8,9 +9,48 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/tech_lib/tech_components.dart';
 import 'package:hq/translations/locale_keys.g.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class TechReservedScreen extends StatelessWidget {
+class TechReservedScreen extends StatefulWidget {
   const TechReservedScreen({Key? key}) : super(key: key);
+
+  @override
+  State<TechReservedScreen> createState() => _TechReservedScreenState();
+}
+
+class _TechReservedScreenState extends State<TechReservedScreen> {
+  String selectedDate = '';
+  String dateCount = '';
+  String range = '';
+  String rangeCount = '';
+
+  void onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    /// The argument value will return the changed date as [DateTime] when the
+    /// widget [SfDateRangeSelectionMode] set as single.
+    ///
+    /// The argument value will return the changed dates as [List<DateTime>]
+    /// when the widget [SfDateRangeSelectionMode] set as multiple.
+    ///
+    /// The argument value will return the changed range as [PickerDateRange]
+    /// when the widget [SfDateRangeSelectionMode] set as range.
+    ///
+    /// The argument value will return the changed ranges as
+    /// [List<PickerDateRange] when the widget [SfDateRangeSelectionMode] set as
+    /// multi range.
+    setState(() {
+      if (args.value is PickerDateRange) {
+        range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
+        // ignore: lines_longer_than_80_chars
+            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+      } else if (args.value is DateTime) {
+        selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        dateCount = args.value.length.toString();
+      } else {
+        rangeCount = args.value.length.toString();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,10 +188,14 @@ class TechReservedScreen extends StatelessWidget {
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(start: 10.0),
+                            padding:
+                                const EdgeInsetsDirectional.only(start: 10.0),
                             child: Row(
                               children: [
-                                const Text('Tests List',style: titleSmallStyle,),
+                                const Text(
+                                  'Tests List',
+                                  style: titleSmallStyle,
+                                ),
                                 const Spacer(),
                                 GeneralUnfilledButton(
                                   width: 100,
@@ -160,21 +204,8 @@ class TechReservedScreen extends StatelessWidget {
                                   onPress: () {
                                     showCustomBottomSheet(
                                       context,
-                                      bottomSheetContent: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height * 0.5,
-                                        decoration: BoxDecoration(
-                                          color: whiteColor,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(radius),
-                                            topRight: Radius.circular(radius),
-                                          ),
-                                        ),
-                                        padding: const EdgeInsetsDirectional.only(
-                                            start: 20.0, end: 20.0),
-                                        child: SyncfusionFlutterDatePicker(),
-                                      ),
-                                      bottomSheetHeight: 0.5,
+                                      bottomSheetContent: SyncfusionFlutterDatePicker(),
+                                      bottomSheetHeight: 0.55,
                                     );
                                   },
                                 ),
@@ -193,6 +224,7 @@ class TechReservedScreen extends StatelessWidget {
                                       horizontal: 10.0),
                                   child: TechHomeReservationsCart(
                                     index: index,
+                                    stateColor: mainColor,
                                   ),
                                 ),
                                 separatorBuilder: (context, index) =>
@@ -220,6 +252,7 @@ class TechReservedScreen extends StatelessWidget {
                                       horizontal: 10.0),
                                   child: TechHomeReservationsCart(
                                     index: index,
+                                    stateColor: mainColor,
                                   ),
                                 ),
                                 separatorBuilder: (context, index) =>
@@ -247,6 +280,7 @@ class TechReservedScreen extends StatelessWidget {
                                       horizontal: 10.0),
                                   child: TechHomeReservationsCart(
                                     index: index,
+                                    stateColor: yellowColor,
                                   ),
                                 ),
                                 separatorBuilder: (context, index) =>
@@ -274,6 +308,7 @@ class TechReservedScreen extends StatelessWidget {
                                       horizontal: 10.0),
                                   child: TechHomeReservationsCart(
                                     index: index,
+                                    stateColor: redColor,
                                   ),
                                 ),
                                 separatorBuilder: (context, index) =>
@@ -301,6 +336,7 @@ class TechReservedScreen extends StatelessWidget {
                                       horizontal: 10.0),
                                   child: TechHomeReservationsCart(
                                     index: index,
+                                    stateColor: greenColor,
                                   ),
                                 ),
                                 separatorBuilder: (context, index) =>

@@ -11,6 +11,7 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
 import 'package:hq/tech_lib/tech_screens/reserved_screens/reservation_details_screen.dart';
+import 'package:hq/tech_lib/tech_screens/tech_map_screen.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class TechGeneralHomeLayoutAppBar extends StatelessWidget
@@ -203,10 +204,14 @@ class TechHomeRequestsCart extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Text(
-                            'Show Map',
-                            style: titleSmallStyle2.copyWith(decoration: TextDecoration.underline,color: mainColor),
-
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, FadeRoute(page: const TechMapScreen(),),);
+                            },
+                            child: Text(
+                              'Show Map',
+                              style: titleSmallStyle2.copyWith(decoration: TextDecoration.underline,color: mainColor),
+                            ),
                           ),
                         ],
                       ),
@@ -230,8 +235,9 @@ class TechHomeRequestsCart extends StatelessWidget {
 }
 
 class TechHomeReservationsCart extends StatelessWidget {
-  const TechHomeReservationsCart({Key? key, required this.index}) : super(key: key);
+  const TechHomeReservationsCart({Key? key, required this.index, required this.stateColor}) : super(key: key);
   final int index;
+  final Color stateColor;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +246,7 @@ class TechHomeReservationsCart extends StatelessWidget {
       builder: (context, state) {
         return InkWell(
           onTap: (){
-            Navigator.push(context, FadeRoute(page: const TechReservationsDetailsScreen()));
+            Navigator.push(context, FadeRoute(page: TechReservationsDetailsScreen(stateColor: stateColor,)));
           },
           child: Container(
             height: 250.0,
@@ -279,7 +285,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                   height: 36,
                   width: 130,
                   decoration: BoxDecoration(
-                    color: mainColor
+                    color: stateColor
                         .withOpacity(0.2),
                     borderRadius:
                     BorderRadius.circular(
@@ -293,7 +299,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                         'Upcoming',
                         style: titleStyle.copyWith(
                             fontSize: 15.0,
-                            color: mainColor,
+                            color: stateColor,
                             fontWeight:
                             FontWeight.normal),
                       )),
@@ -335,7 +341,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: (){
-                                showToast(msg: '7mada ${index+1}',state: ToastState.success);
+                                Navigator.push(context, FadeRoute(page: const TechMapScreen(),),);
                               },
                               child: Text(
                                 'Show Map',

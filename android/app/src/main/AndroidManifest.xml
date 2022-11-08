@@ -7,7 +7,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="SULTAN MEDICA">
+        android:label="HQ">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD2_OeF1fg8mpOTZwM1HMmx4MkJRD8PM1E" />

@@ -29,28 +29,28 @@ class HomeLayoutScreen extends StatelessWidget {
             currentIndex: cubit.currentIndex,
             items: [
               BottomNavigationBarItem(
-                icon: const Icon(Icons.home_outlined),
+                icon: const ImageIcon(AssetImage('assets/images/homeUnselected.png'),),
                 label: LocaleKeys.TxtHomeVisit.tr(),
+                activeIcon: const ImageIcon(AssetImage('assets/images/homeSelected.png'),),
               ),
               BottomNavigationBarItem(
                 icon: const ImageIcon(AssetImage('assets/images/tests.png'),),
                 label: LocaleKeys.homeTxtTestLibrary.tr(),
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.offline_bolt_outlined),
-              //   label: 'Offers',
-              // ),
               BottomNavigationBarItem(
-                icon: const ImageIcon(AssetImage('assets/images/reserved.png'),),
+                icon: const ImageIcon(AssetImage('assets/images/reservedUnSelected.png'),),
                 label: LocaleKeys.txtReserved.tr(),
+                activeIcon: const ImageIcon(AssetImage('assets/images/reservedSelected.png'),),
               ),
               BottomNavigationBarItem(
-                icon: const ImageIcon(AssetImage('assets/images/result.png'),),
+                icon: const ImageIcon(AssetImage('assets/images/requestsUnSelected.png'),),
                 label: LocaleKeys.BtnResult.tr(),
+                activeIcon: const ImageIcon(AssetImage('assets/images/requestsSelected.png'),),
               ),
               BottomNavigationBarItem(
-                icon: const Icon(Icons.perm_identity_outlined),
+                icon: const ImageIcon(AssetImage('assets/images/profileUnSelected.png'),),
                 label: LocaleKeys.drawerSettings.tr(),
+                activeIcon: const ImageIcon(AssetImage('assets/images/profileSelected.png'),),
               ),
             ],
           ),

@@ -253,6 +253,7 @@ class CodegenLoader extends AssetLoader {
     "txtSummary": "Summary",
     "txtLabReservation": "Lab Reservation",
     "txtAnalysisPreparations": "Analysis preparations",
+    "txtLastReservations": "Last Reservations",
     "txtPleaseSignInFirst": "Please Sign in First 😅 ",
   };
   static const Map<String, dynamic> ar = {
@@ -492,6 +493,7 @@ class CodegenLoader extends AssetLoader {
     "txtHomeReservation": "حجز  في المنزل",
     "txtPatient": "إسم المريض",
     "txtAnalysisPreparations": "تحضيرات التحاليل",
+    "txtLastReservations": "آخر الحجوزات",
     "txtPleaseSignInFirst": "الرجاء تسجيل الدخول أولاً 😅",
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {
