@@ -16,10 +16,13 @@ import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
 import 'package:hq/tech_lib/tech_screens/tech_map_screen.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class TechReservationsDetailsScreen extends StatefulWidget {
-  const TechReservationsDetailsScreen({Key? key, required this.stateColor}) : super(key: key);
-  final Color stateColor;
+  const TechReservationsDetailsScreen({Key? key, required this.index})
+      : super(key: key);
+  final int index;
+
   @override
   State<TechReservationsDetailsScreen> createState() =>
       _TechReservationsDetailsScreenState();
@@ -35,12 +38,44 @@ class _TechReservationsDetailsScreenState
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppTechCubit, AppTechStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppSamplingRequestsLoadingState){
+          isFinished = true;
+        }
+        if(state is AppSamplingRequestsSuccessState){
+          if(state.successModel.status){
+            setState((){
+              isFinished = false;
+            });
+          }else {
+            setState((){
+              isFinished = false;
+            });
+          }
+        }
+      },
       builder: (context, state) {
-        if (!isFinished) {
+        var techReservations = AppTechCubit.get(context)
+            .techReservationsModel
+            ?.data?[widget.index];
+        Color stateColor;
+        if (techReservations?.statusEn == 'Pending') {
+          stateColor = pendingColor;
+        } else if (techReservations?.statusEn == 'Accepted') {
+          stateColor = acceptedColor;
+        } else if (techReservations?.statusEn == 'Sampling') {
+          stateColor = samplingColor;
+        } else if (techReservations?.statusEn == 'Finished') {
+          stateColor = finishedColor;
+        } else if (techReservations?.statusEn == 'Canceled') {
+          stateColor = canceledColor;
+        } else {
+          stateColor = rejectedColor;
+        }
+        if (techReservations?.statusEn == 'Accepted') {
           swipeColor = mainColor;
           swipeText = 'Swap to Sampling';
-        } else {
+        } else if (techReservations?.statusEn == 'Sampling') {
           swipeColor = yellowColor;
           swipeText = 'Sampling';
         }
@@ -71,23 +106,24 @@ class _TechReservationsDetailsScreenState
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
-                          '# 123-123-123',
+                        Text(
+                          '# ${techReservations?.id}',
+                          style: titleStyle,
                         ),
                         const Spacer(),
                         Container(
                           height: 36,
                           decoration: BoxDecoration(
-                            color: widget.stateColor.withOpacity(0.2),
+                            color: stateColor.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(radius),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Center(
                             child: Text(
-                              LocaleKeys.txtUpcoming.tr(),
+                              '${techReservations?.status}',
                               style: titleStyle.copyWith(
                                   fontSize: 15.0,
-                                  color: widget.stateColor,
+                                  color: stateColor,
                                   fontWeight: FontWeight.normal),
                             ),
                           ),
@@ -106,7 +142,7 @@ class _TechReservationsDetailsScreenState
                     physics: const BouncingScrollPhysics(),
                     children: [
                       SizedBox(
-                        height: 120 * 4,
+                        height: 120.0 * (techReservations?.tests?.length ?? 0 + (techReservations?.offers?.length ?? 0)),
                         child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.vertical,
@@ -188,7 +224,7 @@ class _TechReservationsDetailsScreenState
                                     children: [
                                       horizontalMicroSpace,
                                       CachedNetworkImageNormal(
-                                        imageUrl: imageTest,
+                                        imageUrl: techReservations?.tests?[index].image ?? techReservations?.offers?[index].image,
                                         width: 80,
                                         height: 80,
                                       ),
@@ -200,20 +236,20 @@ class _TechReservationsDetailsScreenState
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text(
-                                              'Glaciated Hemoglobin HBA1C',
+                                            Text(
+                                              techReservations?.tests?[index].title ?? techReservations?.offers?[index].title,
                                               style: titleSmallStyle,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            const Text(
-                                              'Sugar Test category',
+                                            Text(
+                                              techReservations?.tests?[index].category ?? '',
                                               style: subTitleSmallStyle2,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             Text(
-                                              '80 ${LocaleKeys.salary.tr()}',
+                                              '${techReservations?.tests?[index].price ?? techReservations?.offers?[index].price} ${LocaleKeys.salary.tr()}',
                                               style: titleSmallStyle2,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -229,7 +265,7 @@ class _TechReservationsDetailsScreenState
                           ),
                           separatorBuilder: (context, index) =>
                               verticalMiniSpace,
-                          itemCount: 4,
+                          itemCount: (techReservations?.tests?.length ?? 0) + (techReservations?.offers?.length ?? 0),
                         ),
                       ),
                       Text(
@@ -271,8 +307,8 @@ class _TechReservationsDetailsScreenState
                                         style: titleStyle.copyWith(
                                             color: greyLightColor),
                                       ),
-                                      const Text(
-                                        'Mohammed',
+                                      Text(
+                                        techReservations?.patient?.name,
                                         textAlign: TextAlign.start,
                                         style: titleSmallStyle,
                                         maxLines: 1,
@@ -307,9 +343,9 @@ class _TechReservationsDetailsScreenState
                                         ),
                                         Row(
                                           children: [
-                                            const Expanded(
+                                            Expanded(
                                               child: Text(
-                                                'Riyadh , King St 7034',
+                                                '${techReservations?.address?.address}',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -319,7 +355,10 @@ class _TechReservationsDetailsScreenState
                                                 Navigator.push(
                                                   context,
                                                   FadeRoute(
-                                                    page: const TechMapScreen(),
+                                                    page: TechMapScreen(
+                                                      lat: techReservations?.address?.latitude,
+                                                      long: techReservations?.address?.longitude,
+                                                    ),
                                                   ),
                                                 );
                                               },
@@ -365,9 +404,9 @@ class _TechReservationsDetailsScreenState
                                         style: titleStyle.copyWith(
                                             color: greyLightColor),
                                       ),
-                                      const Text(
+                                      Text(
                                         textAlign: TextAlign.start,
-                                        '24 Feb 2022 - 5:30 PM',
+                                        '${techReservations?.createdAt?.date} - ${techReservations?.createdAt?.time}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -424,9 +463,9 @@ class _TechReservationsDetailsScreenState
                                             fontWeight: FontWeight.normal),
                                       ),
                                       const Spacer(),
-                                      const Text(
+                                      Text(
                                         textAlign: TextAlign.start,
-                                        '03',
+                                        '${techReservations?.tests?.length ?? 0 + (techReservations?.offers?.length ?? 0)}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -448,7 +487,7 @@ class _TechReservationsDetailsScreenState
                                       const Spacer(),
                                       Text(
                                         textAlign: TextAlign.start,
-                                        '330 ${LocaleKeys.salary.tr()}',
+                                        '${techReservations?.price} ${LocaleKeys.salary.tr()}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -468,9 +507,9 @@ class _TechReservationsDetailsScreenState
                                             fontWeight: FontWeight.normal),
                                       ),
                                       const Spacer(),
-                                      const Text(
+                                      Text(
                                         textAlign: TextAlign.start,
-                                        '15%',
+                                        '${techReservations?.tax} %',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -494,7 +533,7 @@ class _TechReservationsDetailsScreenState
                                       const Spacer(),
                                       Text(
                                         textAlign: TextAlign.start,
-                                        '379.5 ${LocaleKeys.salary.tr()}',
+                                        '${techReservations?.total} ${LocaleKeys.salary.tr()}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -530,37 +569,39 @@ class _TechReservationsDetailsScreenState
                     bottom: 40.0, left: 20.0, right: 20.0, top: 20.0),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: SwipeableButtonView(
-                        buttonColor: swipeColor,
-                        buttonText: swipeText,
-                        buttontextstyle: titleSmallStyle,
-                        buttonWidget: const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: whiteColor,
+                    if (techReservations?.statusEn == 'Accepted')
+                      Expanded(
+                        child: SwipeableButtonView(
+                          buttonColor: swipeColor,
+                          buttonText: swipeText,
+                          buttontextstyle: titleSmallStyle,
+                          buttonWidget: const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: whiteColor,
+                          ),
+                          activeColor: swipeColor.withOpacity(0.2),
+                          isFinished: isFinished,
+                          onWaitingProcess: () {
+                            if (kDebugMode) {
+                              print('onWaitingProcess');
+                            }
+                            AppTechCubit.get(context).sampling(requestId: techReservations?.id);
+                            // Future.delayed(const Duration(seconds: 1), () {
+                            //   setState(() {
+                            //     isFinished = true;
+                            //   });
+                            // });
+                          },
+                          onFinish: () {
+                            // if (kDebugMode) {
+                            //   print('onFinish');
+                            // }
+                            // setState(() {
+                            //   isFinished = false;
+                            // });
+                          },
                         ),
-                        activeColor: swipeColor.withOpacity(0.2),
-                        isFinished: isFinished,
-                        onWaitingProcess: () {
-                          if (kDebugMode) {
-                            print('onWaitingProcess');
-                          }
-                          Future.delayed(const Duration(seconds: 1), () {
-                            setState(() {
-                              isFinished = true;
-                            });
-                          });
-                        },
-                        onFinish: () {
-                          if (kDebugMode) {
-                            print('onFinish');
-                          }
-                          setState(() {
-                            isFinished = false;
-                          });
-                        },
                       ),
-                    ),
                     horizontalSmallSpace,
                     CircleAvatar(
                       backgroundColor: greenColor,
@@ -570,7 +611,10 @@ class _TechReservationsDetailsScreenState
                           Icons.call,
                           color: whiteColor,
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          await FlutterPhoneDirectCaller.callNumber(
+                              '${techReservations?.patient?.phoneCode}${techReservations?.patient?.phone}');
+                        },
                       ),
                     ),
                   ],

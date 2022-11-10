@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,30 +38,33 @@ class TechGeneralHomeLayoutAppBar extends StatelessWidget
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
                       child: CachedNetworkImage(
-                        imageUrl: AppTechCubit.get(context)
-                                .userResourceModel
-                                ?.data
-                                ?.profile ??
+                        imageUrl: AppTechCubit
+                            .get(context)
+                            .userResourceModel
+                            ?.data
+                            ?.profile ??
                             '',
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const SizedBox(
+                        placeholder: (context, url) =>
+                        const SizedBox(
                           width: 30,
                           height: 30,
                           child: Center(
                               child: CircularProgressIndicator(
-                            color: mainColor,
-                          )),
+                                color: mainColor,
+                              )),
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: whiteColor),
-                          child: const Icon(
-                            Icons.perm_identity,
-                            size: 100,
-                            color: mainColor,
-                          ),
-                        ),
+                        errorWidget: (context, url, error) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: whiteColor),
+                              child: const Icon(
+                                Icons.perm_identity,
+                                size: 100,
+                                color: mainColor,
+                              ),
+                            ),
                         width: 120,
                         height: 120,
                       ),
@@ -106,12 +110,15 @@ class TechGeneralHomeLayoutAppBar extends StatelessWidget
                   ),
                   horizontalMiniSpace,
                   Text(
-                    '${LocaleKeys.txtBranch.tr()} : ',
+                    '${LocaleKeys.txtBranch.tr()} :    ',
                     style: titleSmallStyle,
                   ),
-                  const Expanded(
-                    child:
-                    Text('Riyadh , King St 7034'),
+                  Expanded(
+                    child: Text(AppTechCubit.get(context)
+                        .userResourceModel
+                        ?.data
+                        ?.branch?.title ??
+                        ''),
                   ),
                 ],
               ),
@@ -136,9 +143,17 @@ class TechHomeRequestsCart extends StatelessWidget {
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var techRequests =
+        AppTechCubit
+            .get(context)
+            .techRequestsModel
+            ?.data?[index];
         return Container(
           height: 260.0,
-          width: MediaQuery.of(context).size.width * 0.7,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.7,
           decoration: BoxDecoration(
             color: whiteColor,
             borderRadius: BorderRadius.circular(radius),
@@ -148,26 +163,22 @@ class TechHomeRequestsCart extends StatelessWidget {
             ),
           ),
           alignment: AlignmentDirectional.center,
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Text('#150-450-600'),
+                  Text('#${techRequests?.id ?? 0}'),
                   const Spacer(),
                   Text(
-                    '600 ${LocaleKeys.salary.tr()}',
+                    '${techRequests?.price} ${LocaleKeys.salary.tr()}',
                     style: titleSmallStyle,
                   ),
                 ],
               ),
-              const Text(
-                'Liver Test',
-                style: titleSmallStyle,
-              ),
-              const Text('24 Feb 2022 - 5:30 PM'),
+              Text('${techRequests?.date}'),
               myHorizontalDivider(),
               Row(
                 children: [
@@ -177,7 +188,7 @@ class TechHomeRequestsCart extends StatelessWidget {
                   ),
                   horizontalMiniSpace,
                   Text(
-                    'Name ${index + 1}',
+                    '${techRequests?.patient?.name}',
                     textAlign: TextAlign.center,
                     style: titleSmallStyle2,
                     maxLines: 1,
@@ -197,20 +208,29 @@ class TechHomeRequestsCart extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Riyadh , King St 7034',
+                              '${techRequests?.address?.address}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           InkWell(
-                            onTap: (){
-                              Navigator.push(context, FadeRoute(page: const TechMapScreen(),),);
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                FadeRoute(
+                                  page: TechMapScreen(
+                                      lat: techRequests?.address?.latitude,
+                                      long: techRequests?.address?.longitude),
+                                ),
+                              );
                             },
                             child: Text(
                               'Show Map',
-                              style: titleSmallStyle2.copyWith(decoration: TextDecoration.underline,color: mainColor),
+                              style: titleSmallStyle2.copyWith(
+                                  decoration: TextDecoration.underline,
+                                  color: mainColor),
                             ),
                           ),
                         ],
@@ -221,10 +241,19 @@ class TechHomeRequestsCart extends StatelessWidget {
                 ),
               ),
               myHorizontalDivider(),
-              GeneralButton(
-                height: 40.0,
-                title: 'Accept',
-                onPress: () {},
+              ConditionalBuilder(
+                condition: state is! AppAcceptRequestsLoadingState,
+                builder: (context) =>
+                    GeneralButton(
+                      height: 40.0,
+                      title: 'Accept',
+                      onPress: () {
+                        AppTechCubit.get(context).acceptRequest(
+                            requestId: techRequests!.id);
+                      },
+                    ),
+                fallback: (context) =>
+                const Center(child: CircularProgressIndicator()),
               ),
             ],
           ),
@@ -235,22 +264,49 @@ class TechHomeRequestsCart extends StatelessWidget {
 }
 
 class TechHomeReservationsCart extends StatelessWidget {
-  const TechHomeReservationsCart({Key? key, required this.index, required this.stateColor}) : super(key: key);
+  const TechHomeReservationsCart(
+      {Key? key, required this.index})
+      : super(key: key);
   final int index;
-  final Color stateColor;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var techReservations = AppTechCubit
+            .get(context)
+            .techReservationsModel
+            ?.data?[index];
+        Color stateColor;
+        if (techReservations?.statusEn == 'Pending') {
+          stateColor = pendingColor;
+        } else if (techReservations?.statusEn == 'Accepted') {
+          stateColor = acceptedColor;
+        } else if (techReservations?.statusEn == 'Sampling') {
+          stateColor = samplingColor;
+        } else if (techReservations?.statusEn == 'Finished') {
+          stateColor = finishedColor;
+        } else if (techReservations?.statusEn == 'Canceled') {
+          stateColor = canceledColor;
+        } else {
+          stateColor = rejectedColor;
+        }
         return InkWell(
-          onTap: (){
-            Navigator.push(context, FadeRoute(page: TechReservationsDetailsScreen(stateColor: stateColor,)));
+          onTap: () {
+            Navigator.push(
+                context,
+                FadeRoute(
+                    page: TechReservationsDetailsScreen(
+                      index: index,
+                    )));
           },
           child: Container(
             height: 250.0,
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.7,
             decoration: BoxDecoration(
               color: whiteColor,
               borderRadius: BorderRadius.circular(radius),
@@ -267,41 +323,35 @@ class TechHomeReservationsCart extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Text('#150-450-600'),
+                    Text('#${techReservations?.id}'),
                     const Spacer(),
                     Text(
-                      '600 ${LocaleKeys.salary.tr()}',
+                      '${techReservations?.price} ${LocaleKeys.salary.tr()}',
                       style: titleSmallStyle,
                     ),
                   ],
                 ),
-                const Text(
-                  'Liver Test',
-                  style: titleSmallStyle,
-                ),
-                const Text('24 Feb 2022 - 5:30 PM'),
+                // const Text(
+                //   'name',
+                //   style: titleSmallStyle,
+                // ),
+                Text('${techReservations?.date}'),
                 verticalMicroSpace,
                 Container(
                   height: 36,
                   width: 130,
                   decoration: BoxDecoration(
-                    color: stateColor
-                        .withOpacity(0.2),
-                    borderRadius:
-                    BorderRadius.circular(
-                        radius),
+                    color: stateColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(radius),
                   ),
-                  padding:
-                  const EdgeInsets.symmetric(
-                      horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
                       child: Text(
-                        'Upcoming',
+                        '${techReservations?.status}',
                         style: titleStyle.copyWith(
                             fontSize: 15.0,
                             color: stateColor,
-                            fontWeight:
-                            FontWeight.normal),
+                            fontWeight: FontWeight.normal),
                       )),
                 ),
                 myHorizontalDivider(),
@@ -313,7 +363,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                     ),
                     horizontalMiniSpace,
                     Text(
-                      'Name ${index + 1}',
+                      '${techReservations?.patient?.name}',
                       textAlign: TextAlign.center,
                       style: titleSmallStyle2,
                       maxLines: 1,
@@ -332,20 +382,31 @@ class TechHomeReservationsCart extends StatelessWidget {
                       Expanded(
                         child: Row(
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'Riyadh , King St 7034',
+                                '${techReservations?.address?.address}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             InkWell(
-                              onTap: (){
-                                Navigator.push(context, FadeRoute(page: const TechMapScreen(),),);
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  FadeRoute(
+                                    page: TechMapScreen(
+                                        lat: techReservations?.address
+                                            ?.latitude,
+                                        long: techReservations?.address
+                                            ?.longitude),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Show Map',
-                                style: titleSmallStyle2.copyWith(decoration: TextDecoration.underline,color: mainColor),
+                                style: titleSmallStyle2.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    color: mainColor),
                               ),
                             ),
                           ],

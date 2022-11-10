@@ -6,7 +6,9 @@ import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
 
 class TechMapScreen extends StatefulWidget {
-  const TechMapScreen({Key? key}) : super(key: key);
+  TechMapScreen({Key? key, this.lat, this.long}) : super(key: key);
+  dynamic lat;
+  dynamic long;
 
   @override
   State<TechMapScreen> createState() => _TechMapScreenState();
@@ -19,6 +21,12 @@ class _TechMapScreenState extends State<TechMapScreen> {
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        final Set<Marker> markers = {
+          Marker(
+              markerId: const MarkerId('Home'),
+              position: LatLng(double.parse(widget.lat) ?? 31.168625,
+                  double.parse(widget.long) ?? 31.225432)),
+        };
         return Scaffold(
           appBar: AppBar(
             title: const Icon(
@@ -37,22 +45,22 @@ class _TechMapScreenState extends State<TechMapScreen> {
               },
             ),
           ),
-          // appBar: GeneralAppBar(title: '',),
           body: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: GoogleMap(
               zoomControlsEnabled: true,
               myLocationEnabled: true,
-
-              initialCameraPosition: const CameraPosition(
+              mapType: MapType.satellite,
+              initialCameraPosition: CameraPosition(
                 // target: LatLng(AppCubit.get(context).mLatitude,
                 //     AppCubit.get(context).mLongitude),
-                target: LatLng(31.168625, 31.225432),
+                target: LatLng(double.parse(widget.lat) ?? 31.168625,
+                    double.parse(widget.long) ?? 31.225432),
                 zoom: 18.0,
               ),
               onCameraMove: (camera) {},
-              markers: AppTechCubit.get(context).markers,
+              markers: markers,
             ),
           ),
         );

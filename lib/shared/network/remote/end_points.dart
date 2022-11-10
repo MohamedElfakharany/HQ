@@ -16,6 +16,8 @@
 
       const homeURL = '$mainURL/home';
 
+      const technicalURL = '$mainURL/technical';
+
 ///Auth
 
       const registerURL = '$authURL/register';
@@ -105,3 +107,9 @@
       const getHomeReservationsURL = '$homeURL/reservations';
 
       const getHomeResultsURL = '$homeURL/results';
+
+/// Technical
+
+      const technicalRequestsURL = '$technicalURL/requests';
+
+      const technicalReservationsURL = '$technicalURL/reservations';

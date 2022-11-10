@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (kDebugMode) {
       printWrapped('from main the token is $token');
-      printWrapped('from main the token is $type');
+      printWrapped('from main the type is $type');
       printWrapped('from main the isFirst is $isFirst');
       printWrapped('from main the verified is $verified');
       printWrapped('from main the sharedLanguage is $sharedLanguage');

@@ -1,5 +1,7 @@
 import 'package:hq/models/patient_models/auth_models/verify_model.dart';
 import 'package:hq/models/patient_models/auth_models/user_resource_model.dart';
+import 'package:hq/tech_lib/tech_models/requests_model.dart';
+import 'package:hq/tech_lib/tech_models/reservation_model.dart';
 
 abstract class AppTechStates {}
 
@@ -70,5 +72,54 @@ class AppTechGetProfileErrorState extends AppTechStates {
 class AppTechProfileImagePickedSuccessState extends AppTechStates {}
 
 class AppTechProfileImagePickedErrorState extends AppTechStates {}
+
+
+class AppGetTechRequestsLoadingState extends AppTechStates{}
+
+class AppGetTechRequestsSuccessState extends AppTechStates{
+  final TechRequestsModel techRequestsModel;
+  AppGetTechRequestsSuccessState(this.techRequestsModel);
+}
+
+class AppGetTechRequestsErrorState extends AppTechStates{
+  final String error;
+  AppGetTechRequestsErrorState(this.error);
+}
+
+class AppGetTechReservationsLoadingState extends AppTechStates{}
+
+class AppGetTechReservationsSuccessState extends AppTechStates{
+  final TechReservationsModel techReservationsModel;
+  AppGetTechReservationsSuccessState(this.techReservationsModel);
+}
+
+class AppGetTechReservationsErrorState extends AppTechStates{
+  final String error;
+  AppGetTechReservationsErrorState(this.error);
+}
+
+class AppAcceptRequestsLoadingState extends AppTechStates{}
+
+class AppAcceptRequestsSuccessState extends AppTechStates{
+  final SuccessModel successModel;
+  AppAcceptRequestsSuccessState(this.successModel);
+}
+
+class AppAcceptRequestsErrorState extends AppTechStates{
+  final String error;
+  AppAcceptRequestsErrorState(this.error);
+}
+
+class AppSamplingRequestsLoadingState extends AppTechStates{}
+
+class AppSamplingRequestsSuccessState extends AppTechStates{
+  final SuccessModel successModel;
+  AppSamplingRequestsSuccessState(this.successModel);
+}
+
+class AppSamplingRequestsErrorState extends AppTechStates{
+  final String error;
+  AppSamplingRequestsErrorState(this.error);
+}
 
 class AppTechLogoutSuccessState extends AppTechStates {}

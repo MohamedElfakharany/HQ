@@ -16,6 +16,13 @@ const pinkColor = Color(0xFFE397CC);
 
 const yellowColor = Color(0xFFF6C358);
 
+const pendingColor = Color(0xFFFFC700);
+const acceptedColor = Color(0xFF009EF7);
+const samplingColor = Color(0xFF7239EA);
+const finishedColor = Color(0xFF50CD89);
+const canceledColor = Color(0xFFF1416C);
+const rejectedColor = Color(0xFFF1416C);
+
 /// blue HQ
 const mainColor = Color(0xFF2685C7);
 const mainLightColor = Color(0xFF4099D3);

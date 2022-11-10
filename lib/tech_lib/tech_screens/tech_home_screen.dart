@@ -1,7 +1,9 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/tech_lib/tech_components.dart';
@@ -17,26 +19,39 @@ class TechHomeScreen extends StatefulWidget {
 }
 
 class _TechHomeScreenState extends State<TechHomeScreen> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     AppTechCubit.get(context).getProfile();
+    AppTechCubit.get(context).getRequests();
+    AppTechCubit.get(context).getReservations();
   }
 
   @override
   Widget build(BuildContext context) {
-          var cubit = AppTechCubit.get(context);
+    var cubit = AppTechCubit.get(context);
     return BlocProvider(
-      create: (BuildContext context) => AppTechCubit()..getProfile(),
-      child: BlocConsumer<AppTechCubit ,AppTechStates>(
-        listener: (context, state) {},
+      create: (BuildContext context) => AppTechCubit()
+        ..getProfile()
+        ..getRequests()
+        ..getReservations(),
+      child: BlocConsumer<AppTechCubit, AppTechStates>(
+        listener: (context, state) {
+          if (state is AppAcceptRequestsSuccessState) {
+            if (state.successModel.status) {
+              showToast(
+                  msg: state.successModel.message, state: ToastState.success);
+            } else {}
+          }
+        },
         builder: (context, state) {
           return Scaffold(
             backgroundColor: greyExtraLightColor,
             appBar: const TechGeneralHomeLayoutAppBar(),
             body: ConditionalBuilder(
-              condition: true,
+              condition: state is! AppTechGetProfileLoadingState &&
+                  state is! AppGetTechRequestsLoadingState &&
+                  state is! AppGetTechReservationsLoadingState,
               builder: (context) => Container(
                 color: greyExtraLightColor,
                 padding: const EdgeInsets.only(
@@ -53,7 +68,9 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              cubit.changeBottomScreen(1);
+                              if (cubit.techRequestsModel?.data?.isNotEmpty == true) {
+                                cubit.changeBottomScreen(1);
+                              }
                             });
                           },
                           child: Text(
@@ -64,19 +81,29 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                       ],
                     ),
                     verticalMiniSpace,
-                    SizedBox(
-                      height: 265.0,
-                      width: double.infinity,
-                      child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => InkWell(
-                          onTap: () {},
-                          child: TechHomeRequestsCart(index: index),
+                    ConditionalBuilder(
+                      condition: cubit.techRequestsModel?.data?.isEmpty == false,
+                      builder: (context) => SizedBox(
+                        height: 265.0,
+                        width: double.infinity,
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => InkWell(
+                            onTap: () {},
+                            child: TechHomeRequestsCart(index: index),
+                          ),
+                          separatorBuilder: (context, index) =>
+                              horizontalMiniSpace,
+                          itemCount: AppTechCubit.get(context)
+                                  .techRequestsModel
+                                  ?.data
+                                  ?.length ??
+                              0,
                         ),
-                        separatorBuilder: (context, index) =>
-                        horizontalMiniSpace,
-                        itemCount: 10,
+                      ),
+                      fallback: (context) => Center(
+                        child: ScreenHolder(msg: LocaleKeys.txtRequests2.tr()),
                       ),
                     ),
                     verticalMediumSpace,
@@ -99,19 +126,27 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                       ],
                     ),
                     verticalMiniSpace,
-                    SizedBox(
-                      height: 240.0,
-                      width: double.infinity,
-                      child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => InkWell(
-                          onTap: () {},
-                          child: TechHomeReservationsCart(stateColor: mainColor,index: index),
+                    ConditionalBuilder(
+                      condition: cubit.techReservationsModel?.data?.isEmpty == false,
+                      builder: (context) => SizedBox(
+                        height: 240.0,
+                        width: double.infinity,
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) =>
+                              TechHomeReservationsCart(index: index),
+                          separatorBuilder: (context, index) =>
+                              horizontalMiniSpace,
+                          itemCount: AppTechCubit.get(context)
+                                  .techReservationsModel
+                                  ?.data
+                                  ?.length ??
+                              0,
                         ),
-                        separatorBuilder: (context, index) =>
-                        horizontalMiniSpace,
-                        itemCount: 10,
+                      ),
+                      fallback: (context) => Center(
+                        child: ScreenHolder(msg: LocaleKeys.txtReservations.tr()),
                       ),
                     ),
                     verticalMediumSpace,
@@ -119,7 +154,7 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                 ),
               ),
               fallback: (context) =>
-              const Center(child: CircularProgressIndicator()),
+                  const Center(child: CircularProgressIndicator()),
             ),
           );
         },

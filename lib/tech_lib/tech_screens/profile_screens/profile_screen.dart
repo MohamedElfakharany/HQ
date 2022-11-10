@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/screens/main_screens/notification_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
@@ -16,7 +14,6 @@ import 'package:hq/tech_lib/tech_home_layout.dart';
 import 'package:hq/tech_lib/tech_screens/profile_screens/edit_tech_profile_screen.dart';
 import 'package:hq/tech_lib/tech_screens/profile_screens/tecg_change_password.dart';
 import 'package:hq/translations/locale_keys.g.dart';
-import 'package:flutter_svg/svg.dart';
 
 class TechProfileScreen extends StatefulWidget {
   const TechProfileScreen({Key? key}) : super(key: key);
@@ -37,7 +34,6 @@ class _TechProfileScreenState extends State<TechProfileScreen> {
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        bool isEnglish = AppTechCubit.get(context).isEnglish;
         return Scaffold(
           backgroundColor: whiteColor,
           body: ConditionalBuilder(
@@ -75,7 +71,7 @@ class _TechProfileScreenState extends State<TechProfileScreen> {
                                 color: whiteColor,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                         ClipRRect(

@@ -514,7 +514,7 @@ class _HomeReservationOverviewScreenState
                               branchId: widget.branchId,
                               coupon: couponController.text,
                               testId: [widget.testsDataModel?.id],
-                              addressId: '34');
+                              addressId: '73');
                           }else if (widget.testsDataModel?.id == null){
                             AppCubit.get(context).createHomeReservation(
                                 date: widget.date,
@@ -523,7 +523,7 @@ class _HomeReservationOverviewScreenState
                                 branchId: widget.branchId,
                                 coupon: couponController.text,
                                 offerId: [widget.offersDataModel?.id],
-                                addressId: '34');
+                                addressId: '73');
                           }
                         },
                         child: Container(

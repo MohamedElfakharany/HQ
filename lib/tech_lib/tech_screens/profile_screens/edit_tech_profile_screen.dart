@@ -288,7 +288,7 @@ class _EditTechProfileScreenState extends State<EditTechProfileScreen> {
                             }
 
                             birthdayController.text =
-                            '${value.year}-$month-$day';
+                            '${value.year}/$month/$day';
                             if (kDebugMode) {
                               print(birthdayController.text);
                             }
@@ -345,28 +345,28 @@ class _EditTechProfileScreenState extends State<EditTechProfileScreen> {
                       builder: (context) => GeneralButton(
                         title: LocaleKeys.BtnSaveChanges.tr(),
                         onPress: () {
-                          // if (emailController.text.isEmpty) {
-                          //   AppTechCubit.get(context).editProfile(
-                          //       birthday: birthdayController.text,
-                          //       email: emailController.text,
-                          //       gender: gender.name,
-                          //       name: userNameController.text,
-                          //       profile: profileImage == null
-                          //           ? ''
-                          //           : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
-                          // }
-                          // if (emailController.text.isNotEmpty) {
-                          //   if (formKey.currentState!.validate()) {
-                          //     AppTechCubit.get(context).editProfile(
-                          //         birthday: birthdayController.text,
-                          //         email: emailController.text,
-                          //         gender: gender.name,
-                          //         name: userNameController.text,
-                          //         profile: profileImage == null
-                          //             ? ''
-                          //             : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
-                          //   }
-                          // }
+                          if (emailController.text.isEmpty) {
+                            AppTechCubit.get(context).editProfile(
+                                birthday: birthdayController.text,
+                                email: emailController.text,
+                                gender: gender.name,
+                                name: userNameController.text,
+                                profile: profileImage == null
+                                    ? ''
+                                    : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
+                          }
+                          if (emailController.text.isNotEmpty) {
+                            if (formKey.currentState!.validate()) {
+                              AppTechCubit.get(context).editProfile(
+                                  birthday: birthdayController.text,
+                                  email: emailController.text,
+                                  gender: gender.name,
+                                  name: userNameController.text,
+                                  profile: profileImage == null
+                                      ? ''
+                                      : 'https://hq.orcav.com/assets/${Uri.file(profileImage.path).pathSegments.last}');
+                            }
+                          }
                         },
                       ),
                       fallback: (context) => const Center(

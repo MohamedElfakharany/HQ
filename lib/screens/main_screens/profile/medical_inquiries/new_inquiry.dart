@@ -66,7 +66,7 @@ class _NewInquiryScreenState extends State<NewInquiryScreen> {
                   children: [
                     Center(
                       child: Image.asset(
-                        'assets/images/appLogo.jpg',
+                        appLogo,
                         height: height * 0.2,
                         width: width * 0.3,
                       ),

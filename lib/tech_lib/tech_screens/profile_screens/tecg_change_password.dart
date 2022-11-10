@@ -287,12 +287,12 @@ class _TechChangePasswordScreenState extends State<TechChangePasswordScreen> {
                       builder: (context) => GeneralButton(
                         title: LocaleKeys.BtnReset.tr(),
                         onPress: () {
-                          // if (formKey.currentState!.validate()) {
-                          //   AppTechCubit.get(context).changePassword(
-                          //     oldPassword: oldPasswordController.text,
-                          //     newPassword: newPasswordController.text,
-                          //   );
-                          // }
+                          if (formKey.currentState!.validate()) {
+                            AppTechCubit.get(context).changePassword(
+                              oldPassword: oldPasswordController.text,
+                              newPassword: newPasswordController.text,
+                            );
+                          }
                         },
                       ),
                       fallback: (context) =>

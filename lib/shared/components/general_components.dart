@@ -890,7 +890,10 @@ void showCustomBottomSheet(
 }) {
   showModalBottomSheet(
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
       isScrollControlled: true,
       backgroundColor: Colors.white,
       context: context,

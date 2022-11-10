@@ -15,6 +15,8 @@ import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
+import 'package:hq/tech_lib/tech_models/requests_model.dart';
+import 'package:hq/tech_lib/tech_models/reservation_model.dart';
 import 'package:hq/tech_lib/tech_screens/profile_screens/profile_screen.dart';
 import 'package:hq/tech_lib/tech_screens/tech_home_screen.dart';
 import 'package:hq/tech_lib/tech_screens/tech_requests_screen.dart';
@@ -34,6 +36,8 @@ class AppTechCubit extends Cubit<AppTechStates> {
   UserResourceModel? userResourceModel;
   SuccessModel? successModel;
   ResetPasswordModel? resetPasswordModel;
+  TechRequestsModel? techRequestsModel;
+  TechReservationsModel? techReservationsModel;
 
   double mLatitude = 0;
   double mLongitude = 0;
@@ -50,9 +54,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
     mLongitude = pos.longitude!;
     lat = mLatitude;
     long = mLongitude;
-    if (kDebugMode) {
-      print('latitude inside get location $lat');
-    }
     var permission = await currentLocation.hasPermission();
     if (permission == PermissionStatus.denied) {
       permission = await currentLocation.requestPermission();
@@ -115,9 +116,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
     await _getLocation(lat: lat, long: long).then((value) async {
       var address = await geo.placemarkFromCoordinates(lat!, long!);
       userAddress = address.first;
-      if (kDebugMode) {
-        print('from getAddressBasedOnLocation userAddress : $userAddress');
-      }
       controller?.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -166,9 +164,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
       userResourceModel = UserResourceModel.fromJson(responseJson);
       emit(AppTechLoginSuccessState(userResourceModel!));
     } catch (error) {
-      if (kDebugMode) {
-        print(error);
-      }
       emit(AppTechLoginErrorState(error.toString()));
     }
   }
@@ -193,18 +188,9 @@ class AppTechCubit extends Cubit<AppTechStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      if (kDebugMode) {
-        print('responseJson : $responseJson');
-      }
       userResourceModel = UserResourceModel.fromJson(responseJson);
-      if (kDebugMode) {
-        print('userResourceModel : ${userResourceModel?.data?.profile}');
-      }
       emit(AppTechGetProfileSuccessState(userResourceModel!));
     } catch (error) {
-      if (kDebugMode) {
-        print(error);
-      }
       emit(AppTechGetProfileErrorState(error.toString()));
     }
   }
@@ -238,9 +224,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      if (kDebugMode) {
-        print('responseJson : $responseJson');
-      }
       successModel = SuccessModel.fromJson(responseJson);
       emit(AppTechChangePasswordSuccessState(successModel!));
     } catch (error) {
@@ -289,14 +272,129 @@ class AppTechCubit extends Cubit<AppTechStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      if (kDebugMode) {
-        print('responseJson : $responseJson');
-        print('formData : ${formData.fields}');
-      }
       successModel = SuccessModel.fromJson(responseJson);
       emit(AppTechEditProfileSuccessState(successModel!));
     } catch (error) {
       emit(AppTechEditProfileErrorState(error.toString()));
+    }
+  }
+
+  Future getRequests() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Accept-Language': sharedLanguage,
+        'Authorization': 'Bearer $token',
+      };
+      emit(AppGetTechRequestsLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        technicalRequestsURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      techRequestsModel = TechRequestsModel.fromJson(responseJson);
+      emit(AppGetTechRequestsSuccessState(techRequestsModel!));
+    } catch (error) {
+      emit(AppGetTechRequestsErrorState(error.toString()));
+    }
+  }
+
+  Future getReservations() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Accept-Language': sharedLanguage,
+        'Authorization': 'Bearer $token',
+      };
+      emit(AppGetTechReservationsLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        technicalReservationsURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      techReservationsModel = TechReservationsModel.fromJson(responseJson);
+      emit(AppGetTechReservationsSuccessState(techReservationsModel!));
+    } catch (error) {
+      emit(AppGetTechReservationsErrorState(error.toString()));
+    }
+  }
+
+  Future acceptRequest({
+    required var requestId,
+  }) async {
+    emit(AppAcceptRequestsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$technicalRequestsURL/$requestId/accepted',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getRequests();
+      getReservations();
+      emit(AppAcceptRequestsSuccessState(successModel!));
+    } catch (error) {
+      emit(AppAcceptRequestsErrorState(error.toString()));
+    }
+  }
+
+  Future sampling({
+    required var requestId,
+  }) async {
+    emit(AppSamplingRequestsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$technicalReservationsURL/$requestId/sampling',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getReservations();
+      emit(AppSamplingRequestsSuccessState(successModel!));
+    } catch (error) {
+      emit(AppSamplingRequestsErrorState(error.toString()));
     }
   }
 
@@ -338,7 +436,7 @@ class AppTechCubit extends Cubit<AppTechStates> {
   void resetConfirmChangePasswordVisibility() {
     resetConfirmIsPassword = !resetConfirmIsPassword;
     resetConfirmSufIcon =
-    resetConfirmIsPassword ? Icons.visibility : Icons.visibility_off;
+        resetConfirmIsPassword ? Icons.visibility : Icons.visibility_off;
     emit(AppTechResetConfirmChangePasswordVisibilityState());
   }
 
@@ -393,17 +491,9 @@ class AppTechCubit extends Cubit<AppTechStates> {
       XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         profileImage = File(pickedImage.path);
-        if (kDebugMode) {
-          print('profileImage : $profileImage');
-        }
         profileImage = await compressImage(path: pickedImage.path, quality: 35);
-
         emit(AppTechProfileImagePickedSuccessState());
       } else {
-        if (kDebugMode) {
-          print('no image selected');
-          print(profileImage);
-        }
         emit(AppTechProfileImagePickedErrorState());
       }
     } catch (e) {
@@ -412,7 +502,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
       }
     }
   }
-
 
   void signOut(context) async {
     CacheHelper.removeData(key: 'token').then((value) {

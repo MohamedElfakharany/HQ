@@ -1821,7 +1821,7 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
-        print('before medicalInquiriesModel : $responseJson');
+        print('before medicalInquiriesModel : $convertedResponse');
       }
       medicalInquiriesModel = MedicalInquiriesModel.fromJson(responseJson);
       emit(AppGetMedicalInquiriesSuccessState(medicalInquiriesModel!));

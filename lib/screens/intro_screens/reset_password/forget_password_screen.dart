@@ -90,6 +90,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child: GeneralNationalityCode(
+                        canSelect: true,
                         controller: nationalCodeController,
                       ),
                     ),
