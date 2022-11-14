@@ -38,6 +38,10 @@ class AppTechCubit extends Cubit<AppTechStates> {
   ResetPasswordModel? resetPasswordModel;
   TechRequestsModel? techRequestsModel;
   TechReservationsModel? techReservationsModel;
+  List<TechReservationsDataModel>? techReservationsAcceptedModel = [];
+  List<TechReservationsDataModel>? techReservationsSamplingModel = [];
+  List<TechReservationsDataModel>? techReservationsCanceledModel = [];
+  List<TechReservationsDataModel>? techReservationsFinishedModel = [];
 
   double mLatitude = 0;
   double mLongitude = 0;
@@ -307,7 +311,16 @@ class AppTechCubit extends Cubit<AppTechStates> {
     }
   }
 
-  Future getReservations() async {
+  Future getReservations({
+    String? dateFrom,
+    String? dateTo,
+  }) async {
+    String url;
+    if (dateFrom == null){
+      url = technicalReservationsURL;
+    }else {
+      url = '$technicalReservationsURL?dateFrom=$dateFrom&dateTo=$dateTo';
+    }
     try {
       var headers = {
         'Accept': 'application/json',
@@ -317,7 +330,7 @@ class AppTechCubit extends Cubit<AppTechStates> {
       emit(AppGetTechReservationsLoadingState());
       Dio dio = Dio();
       var response = await dio.get(
-        technicalReservationsURL,
+        url,
         options: Options(
           followRedirects: false,
           responseType: ResponseType.bytes,
@@ -328,7 +341,34 @@ class AppTechCubit extends Cubit<AppTechStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
+      print('responseJson : $responseJson');
+      print('url : $url');
       techReservationsModel = TechReservationsModel.fromJson(responseJson);
+      print('before${techReservationsModel!.data}');
+      techReservationsAcceptedModel = [];
+      techReservationsSamplingModel = [];
+      techReservationsFinishedModel = [];
+      techReservationsCanceledModel = [];
+      for (var i = 0; i < techReservationsModel!.data!.length; i++) {
+        if (techReservationsModel!.data?[i].statusEn == 'Accepted') {
+          techReservationsAcceptedModel!.add(techReservationsModel!.data![i]);
+          print(
+              'techReservationsAcceptedModel${techReservationsAcceptedModel?.first.price}');
+        } else if (techReservationsModel?.data?[i].statusEn == 'Sampling') {
+          techReservationsSamplingModel!.add(techReservationsModel!.data![i]);
+          print(
+              'techReservationsSamplingModel${techReservationsSamplingModel?.first.price}');
+        } else if (techReservationsModel?.data?[i].statusEn == 'Finished') {
+          techReservationsFinishedModel!.add(techReservationsModel!.data![i]);
+          print(
+              'techReservationsFinishedModel${techReservationsFinishedModel?.first.price}');
+        } else {
+          techReservationsCanceledModel?.add(techReservationsModel!.data![i]);
+          print(
+              'techReservationsCanceledModel${techReservationsCanceledModel?.first.price}');
+        }
+      }
+      print('after${techReservationsModel!.data}');
       emit(AppGetTechReservationsSuccessState(techReservationsModel!));
     } catch (error) {
       emit(AppGetTechReservationsErrorState(error.toString()));

@@ -13,14 +13,19 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
+import 'package:hq/tech_lib/tech_models/reservation_model.dart';
 import 'package:hq/tech_lib/tech_screens/tech_map_screen.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class TechReservationsDetailsScreen extends StatefulWidget {
-  const TechReservationsDetailsScreen({Key? key, required this.index})
-      : super(key: key);
+  const TechReservationsDetailsScreen({
+    Key? key,
+    required this.index,
+    required this.techReservationsDataModel,
+  }) : super(key: key);
+  final TechReservationsDataModel? techReservationsDataModel;
   final int index;
 
   @override
@@ -39,25 +44,23 @@ class _TechReservationsDetailsScreenState
   Widget build(BuildContext context) {
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {
-        if (state is AppSamplingRequestsLoadingState){
+        if (state is AppSamplingRequestsLoadingState) {
           isFinished = true;
         }
-        if(state is AppSamplingRequestsSuccessState){
-          if(state.successModel.status){
-            setState((){
+        if (state is AppSamplingRequestsSuccessState) {
+          if (state.successModel.status) {
+            setState(() {
               isFinished = false;
             });
-          }else {
-            setState((){
+          } else {
+            setState(() {
               isFinished = false;
             });
           }
         }
       },
       builder: (context, state) {
-        var techReservations = AppTechCubit.get(context)
-            .techReservationsModel
-            ?.data?[widget.index];
+        var techReservations = widget.techReservationsDataModel;
         Color stateColor;
         if (techReservations?.statusEn == 'Pending') {
           stateColor = pendingColor;
@@ -67,10 +70,8 @@ class _TechReservationsDetailsScreenState
           stateColor = samplingColor;
         } else if (techReservations?.statusEn == 'Finished') {
           stateColor = finishedColor;
-        } else if (techReservations?.statusEn == 'Canceled') {
-          stateColor = canceledColor;
         } else {
-          stateColor = rejectedColor;
+          stateColor = canceledColor;
         }
         if (techReservations?.statusEn == 'Accepted') {
           swipeColor = mainColor;
@@ -142,7 +143,9 @@ class _TechReservationsDetailsScreenState
                     physics: const BouncingScrollPhysics(),
                     children: [
                       SizedBox(
-                        height: 120.0 * (techReservations?.tests?.length ?? 0 + (techReservations?.offers?.length ?? 0)),
+                        height: 120.0 *
+                            (techReservations?.tests?.length ??
+                                0 + (techReservations?.offers?.length ?? 0)),
                         child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.vertical,
@@ -224,7 +227,10 @@ class _TechReservationsDetailsScreenState
                                     children: [
                                       horizontalMicroSpace,
                                       CachedNetworkImageNormal(
-                                        imageUrl: techReservations?.tests?[index].image ?? techReservations?.offers?[index].image,
+                                        imageUrl: techReservations
+                                                ?.tests?[index].image ??
+                                            techReservations
+                                                ?.offers?[index].image,
                                         width: 80,
                                         height: 80,
                                       ),
@@ -237,13 +243,18 @@ class _TechReservationsDetailsScreenState
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              techReservations?.tests?[index].title ?? techReservations?.offers?[index].title,
+                                              techReservations
+                                                      ?.tests?[index].title ??
+                                                  techReservations
+                                                      ?.offers?[index].title,
                                               style: titleSmallStyle,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             Text(
-                                              techReservations?.tests?[index].category ?? '',
+                                              techReservations?.tests?[index]
+                                                      .category ??
+                                                  '',
                                               style: subTitleSmallStyle2,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -265,7 +276,8 @@ class _TechReservationsDetailsScreenState
                           ),
                           separatorBuilder: (context, index) =>
                               verticalMiniSpace,
-                          itemCount: (techReservations?.tests?.length ?? 0) + (techReservations?.offers?.length ?? 0),
+                          itemCount: (techReservations?.tests?.length ?? 0) +
+                              (techReservations?.offers?.length ?? 0),
                         ),
                       ),
                       Text(
@@ -356,8 +368,10 @@ class _TechReservationsDetailsScreenState
                                                   context,
                                                   FadeRoute(
                                                     page: TechMapScreen(
-                                                      lat: techReservations?.address?.latitude,
-                                                      long: techReservations?.address?.longitude,
+                                                      lat: techReservations
+                                                          ?.address?.latitude,
+                                                      long: techReservations
+                                                          ?.address?.longitude,
                                                     ),
                                                   ),
                                                 );
@@ -585,7 +599,8 @@ class _TechReservationsDetailsScreenState
                             if (kDebugMode) {
                               print('onWaitingProcess');
                             }
-                            AppTechCubit.get(context).sampling(requestId: techReservations?.id);
+                            AppTechCubit.get(context)
+                                .sampling(requestId: techReservations?.id);
                             // Future.delayed(const Duration(seconds: 1), () {
                             //   setState(() {
                             //     isFinished = true;

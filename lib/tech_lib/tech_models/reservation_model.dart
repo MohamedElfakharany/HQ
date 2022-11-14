@@ -232,20 +232,12 @@ class Patient {
   dynamic phone;
 
   factory Patient.fromJson(Map<dynamic, dynamic> json) => Patient(
-    id: json["id"],
-    name: json["name"],
-    profile: json["profile"],
-    phoneCode: json["phoneCode"],
-    phone: json["phone"],
+    id: json["id"] ?? '',
+    name: json["name"] ?? '',
+    profile: json["profile"] ?? '',
+    phoneCode: json["phoneCode"] ?? '',
+    phone: json["phone"] ?? '',
   );
-
-  Map<dynamic, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "profile": profile,
-    "phoneCode": phoneCode,
-    "phone": phone,
-  };
 }
 
 class Errors {
@@ -253,9 +245,6 @@ class Errors {
 
   factory Errors.fromJson(Map<dynamic, dynamic> json) => Errors(
   );
-
-  Map<dynamic, dynamic> toJson() => {
-  };
 }
 
 class Extra {

@@ -29,21 +29,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-
   @override
   void initState() {
     super.initState();
     Timer(
       const Duration(milliseconds: 0),
-          () async {
-            AppCubit.get(context).getMedicalInquiries();
-        if (AppCubit.get(context).isVisitor == false){
-        AppCubit.get(context).getProfile();
+      () async {
+        if (AppCubit.get(context).isVisitor == false) {
+          AppCubit.get(context).getMedicalInquiries();
+          AppCubit.get(context).getProfile();
         }
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
@@ -52,8 +51,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Scaffold(
           backgroundColor: whiteColor,
           body: ConditionalBuilder(
-            condition: state is! AppGetProfileLoadingState && state is! AppGetMedicalInquiriesLoadingState,
-            builder: (context)=> Column(
+            condition: state is! AppGetProfileLoadingState &&
+                state is! AppGetMedicalInquiriesLoadingState,
+            builder: (context) => Column(
               children: [
                 Container(
                   width: double.infinity,
@@ -73,15 +73,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(70.0),
                             child: CachedNetworkImage(
-                              imageUrl: AppCubit.get(context).userResourceModel?.data?.profile ?? imageTest,
+                              imageUrl: AppCubit.get(context)
+                                      .userResourceModel
+                                      ?.data
+                                      ?.profile ??
+                                  imageTest,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => const SizedBox(
                                 width: 30,
                                 height: 30,
                                 child: Center(
                                     child: CircularProgressIndicator(
-                                      color: mainColor,
-                                    )),
+                                  color: mainColor,
+                                )),
                               ),
                               errorWidget: (context, url, error) => Container(
                                 decoration: BoxDecoration(
@@ -103,15 +107,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(70.0),
                             child: CachedNetworkImage(
-                              imageUrl: AppCubit.get(context).userResourceModel?.data?.profile ?? imageTest,
+                              imageUrl: AppCubit.get(context)
+                                      .userResourceModel
+                                      ?.data
+                                      ?.profile ??
+                                  imageTest,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => const SizedBox(
                                 width: 30,
                                 height: 30,
                                 child: Center(
                                     child: CircularProgressIndicator(
-                                      color: mainColor,
-                                    )),
+                                  color: mainColor,
+                                )),
                               ),
                               errorWidget: (context, url, error) => Container(
                                 decoration: BoxDecoration(
@@ -130,7 +138,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         horizontalSmallSpace,
                         if (AppCubit.get(context).isVisitor == false)
                           Text(
-                            AppCubit.get(context).userResourceModel?.data?.name ?? '',
+                            AppCubit.get(context)
+                                    .userResourceModel
+                                    ?.data
+                                    ?.name ??
+                                '',
                             style: titleStyle.copyWith(color: whiteColor),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
@@ -139,7 +151,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         verticalMiniSpace,
                         if (AppCubit.get(context).isVisitor == false)
                           Text(
-                            AppCubit.get(context).userResourceModel?.data?.phone ?? '',
+                            AppCubit.get(context)
+                                    .userResourceModel
+                                    ?.data
+                                    ?.phone ??
+                                '',
                             style: titleSmallStyle.copyWith(color: whiteColor),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
@@ -158,7 +174,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       physics: const BouncingScrollPhysics(),
                       child: Column(
                         children: [
-                          if (AppCubit.get(context).isVisitor == true || AppCubit.get(context).userResourceModel?.data?.isCompleted == 0)
+                          if (AppCubit.get(context).isVisitor == true ||
+                              AppCubit.get(context)
+                                      .userResourceModel
+                                      ?.data
+                                      ?.isCompleted ==
+                                  0)
                             Container(
                               height: 160,
                               decoration: BoxDecoration(
@@ -186,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                              BorderRadius.circular(5)),
+                                                  BorderRadius.circular(5)),
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 10),
                                           child: LinearProgressIndicator(
@@ -194,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             color: greenColor,
                                             value: 0.5,
                                             backgroundColor:
-                                            greyLightColor.withOpacity(0.4),
+                                                greyLightColor.withOpacity(0.4),
                                           ),
                                         ),
                                       ),
@@ -221,16 +242,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           decoration: BoxDecoration(
                                             color: mainColor,
                                             borderRadius:
-                                            BorderRadius.circular(radius),
+                                                BorderRadius.circular(radius),
                                           ),
                                           child: Center(
                                               child: Text(
-                                                LocaleKeys.txtCompleteProfileNow.tr(),
-                                                style: titleStyle.copyWith(
-                                                    fontSize: 16.0,
-                                                    color: whiteColor,
-                                                    fontWeight: FontWeight.normal),
-                                              )),
+                                            LocaleKeys.txtCompleteProfileNow
+                                                .tr(),
+                                            style: titleStyle.copyWith(
+                                                fontSize: 16.0,
+                                                color: whiteColor,
+                                                fontWeight: FontWeight.normal),
+                                          )),
                                         ),
                                       ),
                                       MaterialButton(
@@ -241,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           decoration: BoxDecoration(
                                             color: greyExtraLightColor,
                                             borderRadius:
-                                            BorderRadius.circular(radius),
+                                                BorderRadius.circular(radius),
                                           ),
                                           child: Center(
                                             child: Text(
@@ -260,9 +282,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               if (AppCubit.get(context).isVisitor == true) {
-                                showPopUp(context, const VisitorHoldingPopUp(),);
-                              }
-                              else{
+                                showPopUp(
+                                  context,
+                                  const VisitorHoldingPopUp(),
+                                );
+                              } else {
                                 Navigator.push(
                                   context,
                                   FadeRoute(
@@ -307,14 +331,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               if (AppCubit.get(context).isVisitor == true) {
-                                showPopUp(context, const VisitorHoldingPopUp(),);
-                              }else{
+                                showPopUp(
+                                  context,
+                                  const VisitorHoldingPopUp(),
+                                );
+                              } else {
                                 Navigator.push(
                                   context,
                                   FadeRoute(
                                     page: const EditProfileScreen(),
                                   ),
-                                );}
+                                );
+                              }
                             },
                             child: Row(
                               children: [
@@ -341,14 +369,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               if (AppCubit.get(context).isVisitor == true) {
-                                showPopUp(context, const VisitorHoldingPopUp(),);
-                              }else {
+                                showPopUp(
+                                  context,
+                                  const VisitorHoldingPopUp(),
+                                );
+                              } else {
                                 Navigator.push(
                                   context,
                                   FadeRoute(
                                     page: const FamilyScreen(),
                                   ),
-                                );}
+                                );
+                              }
                             },
                             child: Row(
                               children: [
@@ -375,14 +407,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InkWell(
                             onTap: () {
                               if (AppCubit.get(context).isVisitor == true) {
-                                showPopUp(context, const VisitorHoldingPopUp(),);
-                              }else {
+                                showPopUp(
+                                  context,
+                                  const VisitorHoldingPopUp(),
+                                );
+                              } else {
                                 Navigator.push(
                                   context,
                                   FadeRoute(
                                     page: const AddressScreen(),
                                   ),
-                                );}
+                                );
+                              }
                             },
                             child: Row(
                               children: [
@@ -508,7 +544,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 Container(
                                   height: 320,
-                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10.0, horizontal: 10.0),
                                   child: Column(
@@ -533,8 +570,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         btnBackgroundColor: redColor,
                                         title: LocaleKeys.drawerLogout.tr(),
                                         onPress: () {
-                                          AppCubit.get(context).currentIndex = 0;
-                                          AppCubit.get(context).signOut(context);
+                                          AppCubit.get(context).currentIndex =
+                                              0;
+                                          AppCubit.get(context)
+                                              .signOut(context);
                                         },
                                       ),
                                       verticalSmallSpace,
@@ -581,7 +620,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 )
               ],
             ),
-            fallback:  (context)=> const Center(child: CircularProgressIndicator()),
+            fallback: (context) =>
+                const Center(child: CircularProgressIndicator()),
           ),
         );
       },

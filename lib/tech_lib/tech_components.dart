@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -11,6 +13,7 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
+import 'package:hq/tech_lib/tech_models/reservation_model.dart';
 import 'package:hq/tech_lib/tech_screens/reserved_screens/reservation_details_screen.dart';
 import 'package:hq/tech_lib/tech_screens/tech_map_screen.dart';
 import 'package:hq/translations/locale_keys.g.dart';
@@ -38,33 +41,30 @@ class TechGeneralHomeLayoutAppBar extends StatelessWidget
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
                       child: CachedNetworkImage(
-                        imageUrl: AppTechCubit
-                            .get(context)
-                            .userResourceModel
-                            ?.data
-                            ?.profile ??
+                        imageUrl: AppTechCubit.get(context)
+                                .userResourceModel
+                                ?.data
+                                ?.profile ??
                             '',
                         fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                        const SizedBox(
+                        placeholder: (context, url) => const SizedBox(
                           width: 30,
                           height: 30,
                           child: Center(
                               child: CircularProgressIndicator(
-                                color: mainColor,
-                              )),
+                            color: mainColor,
+                          )),
                         ),
-                        errorWidget: (context, url, error) =>
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: whiteColor),
-                              child: const Icon(
-                                Icons.perm_identity,
-                                size: 100,
-                                color: mainColor,
-                              ),
-                            ),
+                        errorWidget: (context, url, error) => Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: whiteColor),
+                          child: const Icon(
+                            Icons.perm_identity,
+                            size: 100,
+                            color: mainColor,
+                          ),
+                        ),
                         width: 120,
                         height: 120,
                       ),
@@ -115,9 +115,10 @@ class TechGeneralHomeLayoutAppBar extends StatelessWidget
                   ),
                   Expanded(
                     child: Text(AppTechCubit.get(context)
-                        .userResourceModel
-                        ?.data
-                        ?.branch?.title ??
+                            .userResourceModel
+                            ?.data
+                            ?.branch
+                            ?.title ??
                         ''),
                   ),
                 ],
@@ -144,16 +145,10 @@ class TechHomeRequestsCart extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var techRequests =
-        AppTechCubit
-            .get(context)
-            .techRequestsModel
-            ?.data?[index];
+            AppTechCubit.get(context).techRequestsModel?.data?[index];
         return Container(
           height: 260.0,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.7,
+          width: MediaQuery.of(context).size.width * 0.7,
           decoration: BoxDecoration(
             color: whiteColor,
             borderRadius: BorderRadius.circular(radius),
@@ -243,17 +238,16 @@ class TechHomeRequestsCart extends StatelessWidget {
               myHorizontalDivider(),
               ConditionalBuilder(
                 condition: state is! AppAcceptRequestsLoadingState,
-                builder: (context) =>
-                    GeneralButton(
-                      height: 40.0,
-                      title: 'Accept',
-                      onPress: () {
-                        AppTechCubit.get(context).acceptRequest(
-                            requestId: techRequests!.id);
-                      },
-                    ),
+                builder: (context) => GeneralButton(
+                  height: 40.0,
+                  title: 'Accept',
+                  onPress: () {
+                    AppTechCubit.get(context)
+                        .acceptRequest(requestId: techRequests!.id);
+                  },
+                ),
                 fallback: (context) =>
-                const Center(child: CircularProgressIndicator()),
+                    const Center(child: CircularProgressIndicator()),
               ),
             ],
           ),
@@ -264,33 +258,30 @@ class TechHomeRequestsCart extends StatelessWidget {
 }
 
 class TechHomeReservationsCart extends StatelessWidget {
-  const TechHomeReservationsCart(
-      {Key? key, required this.index})
+  TechHomeReservationsCart(
+      {Key? key, required this.index, this.techReservationsDataModel})
       : super(key: key);
   final int index;
+  List<TechReservationsDataModel>? techReservationsDataModel;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var techReservations = AppTechCubit
-            .get(context)
-            .techReservationsModel
-            ?.data?[index];
+        var techReservations = techReservationsDataModel?[index] ??
+            techReservationsDataModel!.first;
         Color stateColor;
-        if (techReservations?.statusEn == 'Pending') {
+        if (techReservations.statusEn == 'Pending') {
           stateColor = pendingColor;
-        } else if (techReservations?.statusEn == 'Accepted') {
+        } else if (techReservations.statusEn == 'Accepted') {
           stateColor = acceptedColor;
-        } else if (techReservations?.statusEn == 'Sampling') {
+        } else if (techReservations.statusEn == 'Sampling') {
           stateColor = samplingColor;
-        } else if (techReservations?.statusEn == 'Finished') {
+        } else if (techReservations.statusEn == 'Finished') {
           stateColor = finishedColor;
-        } else if (techReservations?.statusEn == 'Canceled') {
-          stateColor = canceledColor;
         } else {
-          stateColor = rejectedColor;
+          stateColor = canceledColor;
         }
         return InkWell(
           onTap: () {
@@ -298,15 +289,13 @@ class TechHomeReservationsCart extends StatelessWidget {
                 context,
                 FadeRoute(
                     page: TechReservationsDetailsScreen(
-                      index: index,
-                    )));
+                      techReservationsDataModel: techReservations,
+                  index: index,
+                )));
           },
           child: Container(
-            height: 250.0,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.7,
+            height: 220.0,
+            width: MediaQuery.of(context).size.width * 0.7,
             decoration: BoxDecoration(
               color: whiteColor,
               borderRadius: BorderRadius.circular(radius),
@@ -323,10 +312,10 @@ class TechHomeReservationsCart extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text('#${techReservations?.id}'),
+                    Text('#${techReservations.id}'),
                     const Spacer(),
                     Text(
-                      '${techReservations?.price} ${LocaleKeys.salary.tr()}',
+                      '${techReservations.price} ${LocaleKeys.salary.tr()}',
                       style: titleSmallStyle,
                     ),
                   ],
@@ -335,7 +324,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                 //   'name',
                 //   style: titleSmallStyle,
                 // ),
-                Text('${techReservations?.date}'),
+                Text('${techReservations.date}'),
                 verticalMicroSpace,
                 Container(
                   height: 36,
@@ -347,12 +336,12 @@ class TechHomeReservationsCart extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
                       child: Text(
-                        '${techReservations?.status}',
-                        style: titleStyle.copyWith(
-                            fontSize: 15.0,
-                            color: stateColor,
-                            fontWeight: FontWeight.normal),
-                      )),
+                    '${techReservations.status}',
+                    style: titleStyle.copyWith(
+                        fontSize: 15.0,
+                        color: stateColor,
+                        fontWeight: FontWeight.normal),
+                  )),
                 ),
                 myHorizontalDivider(),
                 Row(
@@ -363,7 +352,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                     ),
                     horizontalMiniSpace,
                     Text(
-                      '${techReservations?.patient?.name}',
+                      '${techReservations.patient?.name}',
                       textAlign: TextAlign.center,
                       style: titleSmallStyle2,
                       maxLines: 1,
@@ -384,7 +373,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                '${techReservations?.address?.address}',
+                                '${techReservations.address?.address}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -395,10 +384,9 @@ class TechHomeReservationsCart extends StatelessWidget {
                                   context,
                                   FadeRoute(
                                     page: TechMapScreen(
-                                        lat: techReservations?.address
-                                            ?.latitude,
-                                        long: techReservations?.address
-                                            ?.longitude),
+                                        lat: techReservations.address?.latitude,
+                                        long: techReservations
+                                            .address?.longitude),
                                   ),
                                 );
                               },
@@ -419,6 +407,146 @@ class TechHomeReservationsCart extends StatelessWidget {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+class ReservedAcceptedSubScreen extends StatelessWidget {
+  const ReservedAcceptedSubScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppTechCubit, AppTechStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return ConditionalBuilder(
+          condition:
+              true,
+          builder: (context) => ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: TechHomeReservationsCart(
+                index: index,
+                techReservationsDataModel:
+                    AppTechCubit.get(context).techReservationsAcceptedModel!,
+              ),
+            ),
+            separatorBuilder: (context, index) => verticalMiniSpace,
+            itemCount: AppTechCubit.get(context)
+                    .techReservationsAcceptedModel
+                    ?.length ??
+                0,
+          ),
+          fallback: (context) => ScreenHolder(msg: LocaleKeys.txtUpcoming.tr()),
+        );
+      },
+    );
+  }
+}
+
+class ReservedSamplingSubScreen extends StatelessWidget {
+  const ReservedSamplingSubScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppTechCubit, AppTechStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return ConditionalBuilder(
+          condition:
+              AppTechCubit.get(context).techReservationsSamplingModel != null,
+          builder: (context) => ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: TechHomeReservationsCart(
+                index: index,
+                techReservationsDataModel:
+                    AppTechCubit.get(context).techReservationsSamplingModel!,
+              ),
+            ),
+            separatorBuilder: (context, index) => verticalMiniSpace,
+            itemCount: AppTechCubit.get(context)
+                    .techReservationsSamplingModel
+                    ?.length ??
+                0,
+          ),
+          fallback: (context) => ScreenHolder(msg: LocaleKeys.txtSampling.tr()),
+        );
+      },
+    );
+  }
+}
+
+class ReservedCanceledSubScreen extends StatelessWidget {
+  const ReservedCanceledSubScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppTechCubit, AppTechStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return ConditionalBuilder(
+          condition:
+              AppTechCubit.get(context).techReservationsCanceledModel != null,
+          builder: (context) => ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: TechHomeReservationsCart(
+                index: index,
+                techReservationsDataModel:
+                    AppTechCubit.get(context).techReservationsCanceledModel!,
+              ),
+            ),
+            separatorBuilder: (context, index) => verticalMiniSpace,
+            itemCount: AppTechCubit.get(context)
+                    .techReservationsCanceledModel
+                    ?.length ??
+                0,
+          ),
+          fallback: (context) => ScreenHolder(msg: LocaleKeys.txtCanceled.tr()),
+        );
+      },
+    );
+  }
+}
+
+class ReservedFinishingSubScreen extends StatelessWidget {
+  const ReservedFinishingSubScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppTechCubit, AppTechStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return ConditionalBuilder(
+          condition:
+              AppTechCubit.get(context).techReservationsFinishedModel != null,
+          builder: (context) => ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: TechHomeReservationsCart(
+                index: index,
+                techReservationsDataModel:
+                    AppTechCubit.get(context).techReservationsFinishedModel!,
+              ),
+            ),
+            separatorBuilder: (context, index) => verticalMiniSpace,
+            itemCount: AppTechCubit.get(context)
+                    .techReservationsFinishedModel
+                    ?.length ??
+                0,
+          ),
+          fallback: (context) => ScreenHolder(msg: LocaleKeys.txtFinished.tr()),
         );
       },
     );

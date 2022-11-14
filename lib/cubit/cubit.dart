@@ -619,7 +619,9 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print ('AppCreateAddressSuccessState : $responseJson');
+      if (kDebugMode) {
+        print ('AppCreateAddressSuccessState : $responseJson');
+      }
       successModel = SuccessModel.fromJson(responseJson);
       getAddress();
       emit(AppCreateAddressSuccessState(successModel!));

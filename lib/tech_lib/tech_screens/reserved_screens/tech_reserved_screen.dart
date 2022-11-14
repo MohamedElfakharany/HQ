@@ -58,8 +58,18 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppTechCubit, AppTechStates>(
-      listener: (context, state){},
-      builder: (context, state){
+      listener: (context, state) {
+        if (state is AppGetTechReservationsSuccessState) {
+          if (state.techReservationsModel.status) {
+            Navigator.pop(context);
+          } else {
+            Navigator.pop(context);
+          }
+        } else if (state is AppGetTechReservationsErrorState) {
+          Navigator.pop(context);
+        }
+      },
+      builder: (context, state) {
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: const TechGeneralHomeLayoutAppBar(),
@@ -91,7 +101,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                               decoration: BoxDecoration(
                                 color: whiteColor,
                                 borderRadius: BorderRadius.circular(radius),
-                                border: Border.all(width: 1, color: greyLightColor),
+                                border:
+                                    Border.all(width: 1, color: greyLightColor),
                               ),
                               child: Center(
                                 child: Text(
@@ -110,7 +121,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                               decoration: BoxDecoration(
                                 color: whiteColor,
                                 borderRadius: BorderRadius.circular(radius),
-                                border: Border.all(width: 1, color: greyLightColor),
+                                border:
+                                    Border.all(width: 1, color: greyLightColor),
                               ),
                               child: Center(
                                 child: Text(
@@ -129,7 +141,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                               decoration: BoxDecoration(
                                 color: whiteColor,
                                 borderRadius: BorderRadius.circular(radius),
-                                border: Border.all(width: 1, color: greyLightColor),
+                                border:
+                                    Border.all(width: 1, color: greyLightColor),
                               ),
                               child: Center(
                                 child: Text(
@@ -148,7 +161,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                               decoration: BoxDecoration(
                                 color: whiteColor,
                                 borderRadius: BorderRadius.circular(radius),
-                                border: Border.all(width: 1, color: greyLightColor),
+                                border:
+                                    Border.all(width: 1, color: greyLightColor),
                               ),
                               child: Center(
                                 child: Text(
@@ -167,7 +181,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                               decoration: BoxDecoration(
                                 color: whiteColor,
                                 borderRadius: BorderRadius.circular(radius),
-                                border: Border.all(width: 1, color: greyLightColor),
+                                border:
+                                    Border.all(width: 1, color: greyLightColor),
                               ),
                               child: Center(
                                 child: Text(
@@ -194,8 +209,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                           Column(
                             children: [
                               Padding(
-                                padding:
-                                const EdgeInsetsDirectional.only(start: 10.0),
+                                padding: const EdgeInsetsDirectional.only(
+                                    start: 10.0),
                                 child: Row(
                                   children: [
                                     const Text(
@@ -211,8 +226,8 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                                         showCustomBottomSheet(
                                           context,
                                           bottomSheetContent:
-                                          const SyncfusionFlutterDatePicker(),
-                                          bottomSheetHeight: 0.55,
+                                              const SyncfusionFlutterDatePicker(),
+                                          bottomSheetHeight: 0.65,
                                         );
                                       },
                                     ),
@@ -221,9 +236,14 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                               ),
                               verticalMiniSpace,
                               ConditionalBuilder(
-                                condition: AppTechCubit.get(context).techReservationsModel?.data?.isEmpty == false,
+                                condition: AppTechCubit.get(context)
+                                        .techReservationsModel
+                                        ?.data
+                                        ?.isEmpty ==
+                                    false,
                                 builder: (context) => ConditionalBuilder(
-                                  condition: true,
+                                  condition: state
+                                      is! AppGetTechReservationsLoadingState,
                                   builder: (context) => Expanded(
                                     child: ListView.separated(
                                       physics: const BouncingScrollPhysics(),
@@ -233,133 +253,40 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                                             horizontal: 10.0),
                                         child: TechHomeReservationsCart(
                                           index: index,
+                                          techReservationsDataModel:
+                                              AppTechCubit.get(context)
+                                                  .techReservationsModel!
+                                                  .data!,
                                         ),
                                       ),
                                       separatorBuilder: (context, index) =>
-                                      verticalMiniSpace,
-                                      itemCount: AppTechCubit.get(context).techReservationsModel?.data?.length ?? 0,
+                                          verticalMiniSpace,
+                                      itemCount: AppTechCubit.get(context)
+                                              .techReservationsModel
+                                              ?.data
+                                              ?.length ??
+                                          0,
                                     ),
                                   ),
                                   fallback: (context) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),
                                 ),
-                                fallback: (context) => Center(child: ScreenHolder(msg: LocaleKeys.txtReservations.tr(),)),
+                                fallback: (context) => Center(
+                                    child: ScreenHolder(
+                                  msg: LocaleKeys.txtReservations.tr(),
+                                )),
                               ),
                             ],
                           ),
                           // second tab bar view widget
-                          Column(
-                            children: [
-                              ConditionalBuilder(
-                                condition: true,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: TechHomeReservationsCart(
-                                        index: index,
-                                      ),
-                                    ),
-                                    separatorBuilder: (context, index) =>
-                                    verticalMiniSpace,
-                                    itemCount: 4,
-                                  ),
-                                ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          ),
+                          const ReservedAcceptedSubScreen(),
                           // third tab bar view widget
-                          Column(
-                            children: [
-                              ConditionalBuilder(
-                                condition: true,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: TechHomeReservationsCart(
-                                        index: index,
-                                      ),
-                                    ),
-                                    separatorBuilder: (context, index) =>
-                                    verticalMiniSpace,
-                                    itemCount: 4,
-                                  ),
-                                ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          ),
+                          const ReservedSamplingSubScreen(),
                           // fourth tab bar view widget
-                          Column(
-                            children: [
-                              ConditionalBuilder(
-                                condition: true,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: TechHomeReservationsCart(
-                                        index: index,
-                                      ),
-                                    ),
-                                    separatorBuilder: (context, index) =>
-                                    verticalMiniSpace,
-                                    itemCount: 4,
-                                  ),
-                                ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          ),
+                          const ReservedCanceledSubScreen(),
                           // fifth tab bar view widget
-                          Column(
-                            children: [
-                              ConditionalBuilder(
-                                condition: true,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: TechHomeReservationsCart(
-                                        index: index,
-                                      ),
-                                    ),
-                                    separatorBuilder: (context, index) =>
-                                    verticalMiniSpace,
-                                    itemCount: AppTechCubit.get(context)
-                                        .techReservationsModel
-                                        ?.data
-                                        ?.length ??
-                                        0,
-                                  ),
-                                ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          ),
+                          const ReservedFinishingSubScreen(),
                         ],
                       ),
                     ),
