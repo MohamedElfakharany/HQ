@@ -114,7 +114,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) async {
         if (state is AppRegisterSuccessState) {
           if (state.userResourceModel.status) {
-            extraToken = state.userResourceModel.extra!.token;
             token = state.userResourceModel.extra!.token;
             fetchOtp(number: mobileController.text.toString());
             await Navigator.push(
@@ -604,7 +603,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     fallback: (context) =>
-                        const Center(child: CircularProgressIndicator()),
+                        const Center(child: CircularProgressIndicator.adaptive()),
                   ),
                   verticalMediumSpace,
                   Row(

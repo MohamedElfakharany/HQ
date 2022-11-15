@@ -16,6 +16,7 @@ import 'package:hq/models/patient_models/lab_appointments_model/lab_result_model
 import 'package:hq/models/patient_models/profile_models/address_model.dart';
 import 'package:hq/models/patient_models/profile_models/families_model.dart';
 import 'package:hq/models/patient_models/profile_models/medical-inquiries.dart';
+import 'package:hq/models/patient_models/profile_models/notifications_model.dart';
 import 'package:hq/models/patient_models/profile_models/terms_model.dart';
 import 'package:hq/models/patient_models/test_models/categories_model.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
@@ -76,6 +77,18 @@ class AppCreateLabReservationErrorState extends AppStates{
   AppCreateLabReservationErrorState(this.error);
 }
 
+class AppCreateTechnicalRequestsLoadingState extends AppStates{}
+
+class AppCreateTechnicalRequestsSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCreateTechnicalRequestsSuccessState(this.successModel);
+}
+
+class AppCreateTechnicalRequestsErrorState extends AppStates{
+  final String error;
+  AppCreateTechnicalRequestsErrorState(this.error);
+}
+
 class AppCreateHomeReservationLoadingState extends AppStates{}
 
 class AppCreateHomeReservationSuccessState extends AppStates{
@@ -122,6 +135,18 @@ class AppGetProfileSuccessState extends AppStates{
 class AppGetProfileErrorState extends AppStates{
   final String error;
   AppGetProfileErrorState(this.error);
+}
+
+class AppGetNotificationsLoadingState extends AppStates{}
+
+class AppGetNotificationsSuccessState extends AppStates{
+  final NotificationsModel notificationsModel;
+  AppGetNotificationsSuccessState(this.notificationsModel);
+}
+
+class AppGetNotificationsErrorState extends AppStates{
+  final String error;
+  AppGetNotificationsErrorState(this.error);
 }
 
 class AppGetFamiliesLoadingState extends AppStates{}

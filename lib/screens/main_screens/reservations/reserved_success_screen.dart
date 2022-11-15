@@ -9,6 +9,7 @@ import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
+import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class ReservedSuccessScreen extends StatelessWidget {
@@ -30,74 +31,66 @@ class ReservedSuccessScreen extends StatelessWidget {
         }
         return Scaffold(
           backgroundColor: whiteColor,
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/success.jpg',
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.width * 0.6,
-                  // color: blueColor,
-                ),
-                Text(
-                  LocaleKeys.txtReservationSuccess.tr(),
-                  style: titleStyle.copyWith(fontSize: 24),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
-                    '$where,\n $branchName ,\n $date,\n at $time',
-                    style: titleSmallStyle.copyWith(
-                      color: greyDarkColor,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    textAlign: TextAlign.center,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/success.jpg',
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.width * 0.6,
+                // color: blueColor,
+              ),
+              Text(
+                LocaleKeys.txtReservationSuccess.tr(),
+                style: titleStyle.copyWith(fontSize: 24),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  '$where,\n $branchName ,\n $date,\n at $time',
+                  style: titleSmallStyle.copyWith(
+                    color: greyDarkColor,
+                    fontWeight: FontWeight.normal,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                verticalSmallSpace,
-                // MaterialButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       FadeRoute(
-                //         page: ReservationDetailsUpcomingScreen(index: 1,),
-                //       ),
-                //     );
-                //   },
-                //   child: Container(
-                //     height: 50,
-                //     decoration: BoxDecoration(
-                //       color: blueColor,
-                //       borderRadius: BorderRadius.circular(radius),
-                //     ),
-                //     child: Center(
-                //       child: Text(
-                //         LocaleKeys.txtViewReservation.tr(),
-                //         style: titleStyle.copyWith(
-                //             fontSize: 15.0,
-                //             color: whiteColor,
-                //             fontWeight: FontWeight.normal),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                TextButton(
-                  onPressed: () {
-                    AppCubit.get(context).changeBottomScreen(0);
-                    navigateAndFinish(context, const HomeLayoutScreen());
-                  },
-                  child: Text(
-                    LocaleKeys.txtBackToHome.tr(),
-                    style: titleSmallStyle.copyWith(
-                      color: greyDarkColor,
-                      fontWeight: FontWeight.normal,
+              ),
+              verticalSmallSpace,
+              MaterialButton(
+                onPressed: () {
+                  AppCubit.get(context).changeBottomScreen(0);
+                  navigateAndFinish(context, const HomeLayoutScreen());
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: mainColor,
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+                  child: Center(
+                    child: Text(
+                      LocaleKeys.txtBackToHome.tr(),
+                      style: titleStyle.copyWith(
+                          fontSize: 15.0,
+                          color: whiteColor,
+                          fontWeight: FontWeight.normal),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              // TextButton(
+              //   onPressed: () {
+              //   },
+              //   child: Text(
+              //
+              //     style: titleSmallStyle.copyWith(
+              //       color: greyDarkColor,
+              //       fontWeight: FontWeight.normal,
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
         );
       },

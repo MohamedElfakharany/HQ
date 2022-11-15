@@ -77,7 +77,7 @@ class _TestItemsScreenState extends State<TestItemsScreen> {
                   itemCount: AppCubit.get(context).testsModel?.data?.length ?? 0,
                 ),
                 fallback: (context) =>
-                    const Center(child: CircularProgressIndicator()),
+                    const Center(child: CircularProgressIndicator.adaptive()),
               ),
             ),
           );

@@ -104,7 +104,7 @@ class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
                                     ),
                                   ),
                                   fallback: (context) => const Center(
-                                      child: CircularProgressIndicator()),
+                                      child: CircularProgressIndicator.adaptive()),
                                 ),
                               ),
                               /// you should set the default  bg color to transparent
@@ -155,7 +155,7 @@ class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
                         ScreenHolder(msg: LocaleKeys.txtMedicalInquiries.tr()),
                   ),
                   fallback: (context) =>
-                      const Center(child: CircularProgressIndicator()),
+                      const Center(child: CircularProgressIndicator.adaptive()),
                 ),
               ],
             ),

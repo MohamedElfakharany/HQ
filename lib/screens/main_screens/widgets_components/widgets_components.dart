@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/models/patient_models/profile_models/notifications_model.dart';
 import 'package:hq/models/patient_models/test_models/categories_model.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
 import 'package:hq/models/patient_models/test_models/tests_model.dart';
@@ -779,7 +780,7 @@ class TestItemCard extends StatelessWidget {
                             'plus entered',
                           );
                         }
-                        if (AppCubit.get(context).isVisitor == false) {
+                        if (AppCubit.get(context).isVisitor == true) {
                           showPopUp(
                             context,
                             const VisitorHoldingPopUp(),
@@ -1086,6 +1087,92 @@ class VisitorHoldingPopUp extends StatelessWidget {
           verticalLargeSpace,
         ],
       ),
+    );
+  }
+}
+
+class NotificationsCard extends StatelessWidget {
+  const NotificationsCard({Key? key, required this.notificationsDataModel}) : super(key: key);
+  final NotificationsDataModel notificationsDataModel;
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppCubit,AppStates>(
+      listener: (context, state){},
+      builder: (context, state){
+        return Container(
+          width: double.infinity,
+          height: 100.0,
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(
+              radius,
+            ),
+            border: Border.all(
+              width: 1,
+              color: greyLightColor,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    color: mainLightColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(
+                      radius,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.notifications_rounded,
+                    size: 35.0,
+                    color: mainColor,
+                  ),
+                ),
+                horizontalSmallSpace,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        notificationsDataModel.body,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '${notificationsDataModel.date?.date} - ${notificationsDataModel.date?.time}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: subTitleSmallStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                // horizontalSmallSpace,
+                //   Container(
+                //     width: 60.0,
+                //     height: 30.0,
+                //     decoration: BoxDecoration(
+                //       color: greenColor.withOpacity(0.2),
+                //       borderRadius: BorderRadius.circular(
+                //         radius,
+                //       ),
+                //     ),
+                //     child: const Center(
+                //       child: Text(
+                //         'New',
+                //         style: titleSmallStyleGreen,
+                //       ),
+                //     ),
+                //   ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

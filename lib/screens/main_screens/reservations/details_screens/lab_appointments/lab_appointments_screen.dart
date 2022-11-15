@@ -89,7 +89,7 @@ class LabAppointmentsScreen extends StatelessWidget {
                         msg: LocaleKeys.AppointmentScreenTxtTitle.tr()),
                   ),
                   fallback: (context) =>
-                      const Center(child: CircularProgressIndicator()),
+                      const Center(child: CircularProgressIndicator.adaptive()),
                 ),
               ],
             ),

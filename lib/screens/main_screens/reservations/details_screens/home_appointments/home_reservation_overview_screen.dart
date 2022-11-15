@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -426,7 +428,7 @@ class _HomeReservationOverviewScreenState
                                       const Spacer(),
                                       Text(
                                         textAlign: TextAlign.start,
-                                        '${widget.offersDataModel?.price ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                        '${widget.offersDataModel?.discount ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -446,13 +448,13 @@ class _HomeReservationOverviewScreenState
                                             fontWeight: FontWeight.normal),
                                       ),
                                       const Spacer(),
-                                      const Text(
-                                        textAlign: TextAlign.start,
-                                        '15%',
-                                        style: titleSmallStyle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                      // Text(
+                                      //   textAlign: TextAlign.start,
+                                      //   '${widget.offersDataModel?.price ?? widget.testsDataModel?.price} %',
+                                      //   style: titleSmallStyle,
+                                      //   maxLines: 1,
+                                      //   overflow: TextOverflow.ellipsis,
+                                      // ),
                                     ],
                                   ),
                                   verticalMicroSpace,
@@ -472,7 +474,7 @@ class _HomeReservationOverviewScreenState
                                       const Spacer(),
                                       Text(
                                         textAlign: TextAlign.start,
-                                        '379.5 ${LocaleKeys.salary.tr()}',
+                                        '${widget.offersDataModel?.total ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -499,7 +501,7 @@ class _HomeReservationOverviewScreenState
                         ),
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
@@ -507,15 +509,15 @@ class _HomeReservationOverviewScreenState
                       builder: (context) => MaterialButton(
                         onPressed: () {
                           if (widget.offersDataModel?.id == null) {
-                          AppCubit.get(context).createHomeReservation(
-                              date: widget.date,
-                              time: widget.time,
-                              familyId: widget.familyId,
-                              branchId: widget.branchId,
-                              coupon: couponController.text,
-                              testId: [widget.testsDataModel?.id],
-                              addressId: '74');
-                          }else if (widget.testsDataModel?.id == null){
+                            AppCubit.get(context).createHomeReservation(
+                                date: widget.date,
+                                time: widget.time,
+                                familyId: widget.familyId,
+                                branchId: widget.branchId,
+                                coupon: couponController.text,
+                                testId: [widget.testsDataModel?.id],
+                                addressId: '70');
+                          } else if (widget.testsDataModel?.id == null) {
                             AppCubit.get(context).createHomeReservation(
                                 date: widget.date,
                                 time: widget.time,
@@ -523,7 +525,7 @@ class _HomeReservationOverviewScreenState
                                 branchId: widget.branchId,
                                 coupon: couponController.text,
                                 offerId: [widget.offersDataModel?.id],
-                                addressId: '74');
+                                addressId: '70');
                           }
                         },
                         child: Container(
@@ -545,33 +547,8 @@ class _HomeReservationOverviewScreenState
                         ),
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
-                    // MaterialButton(
-                    //   onPressed: () {
-                    //     // navigateAndFinish(
-                    //     //   context,
-                    //     //   ReservedSuccessScreen(),
-                    //     // );
-                    //   },
-                    //   child: Container(
-                    //     height: 50,
-                    //     decoration: BoxDecoration(
-                    //       color: blueColor,
-                    //       borderRadius: BorderRadius.circular(radius),
-                    //     ),
-                    //     child: Center(
-                    //       child: Text(
-                    //         LocaleKeys.BtnConfirm.tr(),
-                    //         style: titleStyle.copyWith(
-                    //           fontSize: 20.0,
-                    //           color: whiteColor,
-                    //           fontWeight: FontWeight.normal,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

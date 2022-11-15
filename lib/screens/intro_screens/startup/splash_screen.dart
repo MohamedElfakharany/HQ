@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Image.asset(appLogo, width: 150, height: 150,),
             verticalLargeSpace,
             verticalLargeSpace,
-            const CircularProgressIndicator(),
+            const CircularProgressIndicator.adaptive(),
           ],
         ),
       ),

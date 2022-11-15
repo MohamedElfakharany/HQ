@@ -344,7 +344,7 @@ class _TechProfileScreenState extends State<TechProfileScreen> {
               ],
             ),
             fallback: (context) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/screens/main_screens/tech_support_screens/tech_support_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_details_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_items_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       AppCubit.get(context).getCarouselData();
       AppCubit.get(context).getTerms();
       AppCubit.get(context).getProfile();
+      AppCubit.get(context).getNotifications();
     }
     if (AppCubit.get(context).isVisitor == true) {
       Timer(
@@ -64,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ..getCity(countryId: extraCountryId!)
         ..getBranch(cityID: extraCityId!)
         ..getCategories()
-        ..getOffers(),
+        ..getOffers()
+        ..getNotifications(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -191,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    verticalSmallSpace,
+                    verticalMiniSpace,
                     ConditionalBuilder(
                       condition: cubit.carouselModel?.data != null,
                       builder: (context) => CarouselSlider(
@@ -245,16 +248,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              // Image.asset(e.image)
-                              //         CachedNetworkImage(
-                              //   imageUrl: e.image,
-                              //   placeholder: (context, url) => SizedBox(
-                              //     child: Center(child: CircularProgressIndicator()),
-                              //     width: 60,
-                              //     height: 60,
-                              //   ),
-                              //   errorWidget: (context, url, error) => Icon(Icons.error),
-                              // ),
                             )
                             .toList(),
                         options: CarouselOptions(
@@ -274,10 +267,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       fallback: (context) => const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator.adaptive(),
                       ),
                     ),
-                    verticalMediumSpace,
+                    verticalMiniSpace,
                     Row(
                       children: [
                         Text(LocaleKeys.txtTestCategories.tr(),
@@ -332,7 +325,63 @@ class _HomeScreenState extends State<HomeScreen> {
                             0,
                       ),
                     ),
-                    verticalMediumSpace,
+                    verticalMiniSpace,
+                    Container(
+                      height: 150.0,
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(radius),
+                        color: whiteColor,
+                        border: Border.all(color: greyLightColor),
+                        // image: DecorationImage(
+                        //     image: AssetImage('assets/images/homeImageReserv.png'),
+                        //     fit: BoxFit.contain),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                verticalMicroSpace,
+                                Text(
+                                  LocaleKeys.txtHomeReservation.tr(),
+                                  style: titleSmallStyle.copyWith(
+                                      color: mainColor, fontSize: 20),
+                                ),
+                                verticalMicroSpace,
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    LocaleKeys.onboardingBody.tr(),
+                                    textAlign: TextAlign.start,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: titleSmallStyle2,
+                                  ),
+                                ),
+                                GeneralButton(
+                                  title:
+                                      '${LocaleKeys.TxtReservationScreenTitle.tr()} ${LocaleKeys.txtNow.tr()}',
+                                  onPress: () {
+                                    Navigator.push(context,FadeRoute(page: const TechSupportScreen(),),);
+                                  },
+                                  height: 40,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                                top: 10.0, start: 10.0, bottom: 10.0),
+                            child: Image.asset(
+                                'assets/images/homeImageReserv.png'),
+                          )),
+                        ],
+                      ),
+                    ),
                     Row(
                       children: [
                         Text(LocaleKeys.homeTxtOffers.tr(), style: titleStyle),
@@ -385,14 +434,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                     verticalMiniSpace,
                   ],
                 ),
               ),
               fallback: (context) =>
-                  const Center(child: CircularProgressIndicator()),
+                  const Center(child: CircularProgressIndicator.adaptive()),
             ),
           );
         },

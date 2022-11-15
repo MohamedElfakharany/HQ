@@ -169,7 +169,7 @@ class _MapScreenState extends State<MapScreen> {
                               },
                             ),
                             fallback: (context) => const Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator.adaptive(),
                             ),
                           ),
                           verticalLargeSpace

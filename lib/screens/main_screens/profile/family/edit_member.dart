@@ -126,7 +126,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                                       width: 30,
                                       height: 30,
                                       child: Center(
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator.adaptive()),
                                     ),
                                     errorWidget: (context, url, error) =>
                                         const Icon(Icons.error),
@@ -219,7 +219,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                         },
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
@@ -268,7 +268,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                                       },
                                     ),
                                     fallback: (context) => const Center(
-                                        child: CircularProgressIndicator()),
+                                        child: CircularProgressIndicator.adaptive()),
                                   ),
                                   verticalSmallSpace,
                                   GeneralButton(
@@ -287,7 +287,7 @@ class _EditMemberScreenState extends State<EditMemberScreen> {
                         },
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                   ],
                 ),

@@ -163,7 +163,7 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
               ),
             ),
             fallback: (context) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

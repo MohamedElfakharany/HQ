@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -295,36 +296,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               }
                             },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/inquiries.jpg',
-                                  width: 25,
-                                  height: 25,
-                                ),
-                                horizontalSmallSpace,
-                                Text(
-                                  LocaleKeys.txtMedicalInquiries.tr(),
-                                  style: titleSmallStyle.copyWith(
-                                      fontWeight: FontWeight.normal),
-                                ),
-                                const Spacer(),
-                                CircleAvatar(
-                                  radius: 15,
-                                  backgroundColor: redColor,
-                                  child: Text(
-                                    '02',
-                                    style: subTitleSmallStyle.copyWith(
-                                      color: whiteColor,
-                                    ),
+                            child: Badge(
+                              position: BadgePosition.topEnd(end: 40.0),
+                              alignment: AlignmentDirectional.centerEnd,
+                              animationType: BadgeAnimationType.fade,
+                              badgeContent: Text('${AppCubit.get(context).medicalInquiriesModel?.data?.length}',style: titleSmallStyle2.copyWith(color: whiteColor),),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/inquiries.jpg',
+                                    width: 25,
+                                    height: 25,
                                   ),
-                                ),
-                                horizontalSmallSpace,
-                                const Icon(
-                                  Icons.arrow_forward_ios_sharp,
-                                  color: greyLightColor,
-                                ),
-                              ],
+                                  horizontalSmallSpace,
+                                  Text(
+                                    LocaleKeys.txtMedicalInquiries.tr(),
+                                    style: titleSmallStyle.copyWith(
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  const Spacer(),
+                                  // CircleAvatar(
+                                  //   radius: 15,
+                                  //   backgroundColor: redColor,
+                                  //   child: Text(
+                                  //     '02',
+                                  //     style: subTitleSmallStyle.copyWith(
+                                  //       color: whiteColor,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  horizontalSmallSpace,
+                                  const Icon(
+                                    Icons.arrow_forward_ios_sharp,
+                                    color: greyLightColor,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           verticalMediumSpace,
@@ -621,7 +628,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             fallback: (context) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

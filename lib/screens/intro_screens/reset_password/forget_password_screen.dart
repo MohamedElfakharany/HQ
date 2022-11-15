@@ -135,32 +135,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                   },
                 ),
                 fallback: (context) => const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 ),
               ),
-              // verticalMediumSpace,
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Text(
-              //       LocaleKeys.txtHaveProblem.tr(),
-              //       style: subTitleSmallStyle,
-              //     ),
-              //     ConditionalBuilder(
-              //       condition: true,
-              //       builder: (context) => TextButton(
-              //         onPressed: () {},
-              //         child: Text(
-              //           LocaleKeys.BtnContact.tr(),
-              //           style: titleSmallStyle.copyWith(color: blueColor),
-              //         ),
-              //       ),
-              //       fallback: (context) => const Center(
-              //         child: CircularProgressIndicator(),
-              //       ),
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ),

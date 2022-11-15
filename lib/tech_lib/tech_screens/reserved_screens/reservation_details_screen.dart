@@ -186,7 +186,7 @@ class _TechReservationsDetailsScreenState
                                       ),
                                     ),
                                     fallback: (context) => const Center(
-                                        child: CircularProgressIndicator()),
+                                        child: CircularProgressIndicator.adaptive()),
                                   ),
                                 ),
 

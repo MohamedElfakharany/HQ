@@ -276,6 +276,14 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = AppCubit.get(context);
+        String notifications;
+        if(AppCubit.get(context).notificationsModel != null){
+          if(AppCubit.get(context).notificationsModel!.data!.length > 9 ){notifications = '+9';}else{
+            notifications = AppCubit.get(context).notificationsModel!.data!.length.toString();
+          }
+        }else{
+          notifications = '';
+        }
         return AppBar(
           backgroundColor: greyExtraLightColor,
           elevation: 0.0,
@@ -376,7 +384,10 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 position: BadgePosition.topEnd(top: 0),
                 alignment: AlignmentDirectional.centerEnd,
                 animationType: BadgeAnimationType.slide,
-                badgeContent: const Text('3'),
+                badgeContent: Text(
+                  '${AppCubit.get(context).medicalInquiriesModel?.data?.length ?? 0}',
+                  style: titleSmallStyle2.copyWith(color: whiteColor),
+                ),
                 child: const ImageIcon(
                   AssetImage(
                     'assets/images/lab.png',
@@ -385,8 +396,9 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () {
+            horizontalSmallSpace,
+            InkWell(
+              onTap: () {
                 Navigator.push(
                   context,
                   FadeRoute(
@@ -394,12 +406,25 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                   ),
                 );
               },
-              icon: const ImageIcon(
-                AssetImage('assets/images/notification.png'),
-                color: mainColor,
+              child: Badge(
+                position: BadgePosition.topEnd(top: 0),
+                alignment: AlignmentDirectional.centerEnd,
+                animationType: BadgeAnimationType.slide,
+                badgeContent: Text(
+                  notifications,
+                  style: titleSmallStyle2.copyWith(
+                    color: whiteColor,
+                  ),
+                ),
+                child: const ImageIcon(
+                  AssetImage(
+                    'assets/images/notification.png',
+                  ),
+                  color: mainColor,
+                ),
               ),
             ),
-            horizontalMicroSpace
+            horizontalSmallSpace,
           ],
         );
       },

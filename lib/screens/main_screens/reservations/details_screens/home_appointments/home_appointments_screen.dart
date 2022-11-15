@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +21,7 @@ class HomeAppointmentsScreen extends StatelessWidget {
       : super(key: key);
   TestsDataModel? testsDataModel;
   OffersDataModel? offersDataModel;
-  //
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   AppCubit.get(context).getHomeAppointments(date: DateTime.now().toString());
-  // }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -52,6 +49,7 @@ class HomeAppointmentsScreen extends StatelessWidget {
                     builder: (context) => ListView.separated(
                       itemBuilder: (context, index) => InkWell(
                         onTap: () {
+                          if (AppCubit.get(context).homeAppointmentsModel?.data?[index].isUsed){
                           Navigator.push(
                             context,
                             FadeRoute(
@@ -63,13 +61,14 @@ class HomeAppointmentsScreen extends StatelessWidget {
                               ),
                             ),
                           );
+                          }
                         },
                         child: HomeAppointmentsCard(homeAppointmentsModel: AppCubit.get(context).homeAppointmentsModel,index: index),
                       ),
                       separatorBuilder: (context, index) => verticalSmallSpace,
                       itemCount: AppCubit.get(context).homeAppointmentsModel?.data?.length ?? 0,
                     ),
-                    fallback: (context) => const Center (child: CircularProgressIndicator(),) ,
+                    fallback: (context) => const Center (child: CircularProgressIndicator.adaptive(),) ,
                   ),
                 ),
               ],

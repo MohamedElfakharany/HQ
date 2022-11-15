@@ -396,11 +396,19 @@ class TestDetailsScreen extends StatelessWidget {
                 ),
                 MaterialButton(
                   onPressed: () {
-                    if (AppCubit.get(context).isVisitor == false) {
+                    if (AppCubit.get(context).isVisitor == true) {
+                      showPopUp(
+                        context,
+                        const VisitorHoldingPopUp(),
+                      );
+                    }else {
                       showCustomBottomSheet(
                         context,
                         bottomSheetContent: Container(
-                          height: MediaQuery.of(context).size.height * 0.55,
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.55,
                           decoration: BoxDecoration(
                             color: whiteColor,
                             borderRadius: BorderRadius.only(
@@ -465,9 +473,9 @@ class TestDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           verticalMiniSpace,
                                           Text(
@@ -490,20 +498,26 @@ class TestDetailsScreen extends StatelessWidget {
                                           Row(
                                             children: [
                                               Text(
-                                                '${testsDataModel?.price ?? offersDataModel?.discount} ${LocaleKeys.salary.tr()}',
+                                                '${testsDataModel?.price ??
+                                                    offersDataModel
+                                                        ?.discount} ${LocaleKeys
+                                                    .salary.tr()}',
                                                 style: titleStyle.copyWith(
                                                     fontSize: 15),
                                               ),
                                               horizontalMiniSpace,
-                                              if (offersDataModel?.price !=  null)
-                                              Text(
-                                                '${offersDataModel?.price} ${LocaleKeys.salary.tr()}',
-                                                style:
-                                                    subTitleSmallStyle.copyWith(
-                                                  decoration: TextDecoration
-                                                      .lineThrough,
+                                              if (offersDataModel?.price !=
+                                                  null)
+                                                Text(
+                                                  '${offersDataModel
+                                                      ?.price} ${LocaleKeys
+                                                      .salary.tr()}',
+                                                  style:
+                                                  subTitleSmallStyle.copyWith(
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                  ),
                                                 ),
-                                              ),
                                             ],
                                           ),
                                         ],
@@ -515,7 +529,10 @@ class TestDetailsScreen extends StatelessWidget {
                               verticalMicroSpace,
                               Container(
                                 height: 50,
-                                width: MediaQuery.of(context).size.width * 0.9,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.9,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(radius),
                                   color: greyExtraLightColor,
@@ -530,7 +547,10 @@ class TestDetailsScreen extends StatelessWidget {
                                     ),
                                     const Spacer(),
                                     Text(
-                                      '${testsDataModel?.price ?? offersDataModel?.discount} ${LocaleKeys.salary.tr()}',
+                                      '${testsDataModel?.price ??
+                                          offersDataModel
+                                              ?.discount} ${LocaleKeys.salary
+                                          .tr()}',
                                       style: titleStyle.copyWith(fontSize: 18),
                                     ),
                                     horizontalSmallSpace,
@@ -539,27 +559,31 @@ class TestDetailsScreen extends StatelessWidget {
                               ),
                               SizedBox(
                                 height: 80.0,
-                                width: MediaQuery.of(context).size.width,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width,
                                 child: Center(
                                   child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Expanded(
                                         child: MaterialButton(
                                           onPressed: () {
-                                            if (AppCubit.get(context)
-                                                    .isVisitor ==
+                                            if (AppCubit
+                                                .get(context)
+                                                .isVisitor ==
                                                 false) {
                                               Navigator.push(
                                                 context,
                                                 FadeRoute(
                                                   page: CardScreen(
                                                       testsDataModel:
-                                                          testsDataModel,
+                                                      testsDataModel,
                                                       offersDataModel:
-                                                          offersDataModel),
+                                                      offersDataModel),
                                                 ),
                                               );
                                             } else {
@@ -574,7 +598,7 @@ class TestDetailsScreen extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: mainColor,
                                               borderRadius:
-                                                  BorderRadius.circular(radius),
+                                              BorderRadius.circular(radius),
                                             ),
                                             height: 50.0,
                                             width: double.infinity,
@@ -611,11 +635,6 @@ class TestDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         bottomSheetHeight: 0.55,
-                      );
-                    } else {
-                      showPopUp(
-                        context,
-                        const VisitorHoldingPopUp(),
                       );
                     }
                   },

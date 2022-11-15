@@ -118,7 +118,7 @@ class _EditTechProfileScreenState extends State<EditTechProfileScreen> {
                                 width: 30,
                                 height: 30,
                                 child: Center(
-                                    child: CircularProgressIndicator()),
+                                    child: CircularProgressIndicator.adaptive()),
                               ),
                               errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
@@ -370,7 +370,7 @@ class _EditTechProfileScreenState extends State<EditTechProfileScreen> {
                         },
                       ),
                       fallback: (context) => const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator.adaptive(),
                       ),
                     ),
                   ],

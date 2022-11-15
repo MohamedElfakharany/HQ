@@ -545,7 +545,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
 
   void signOut(context) async {
     CacheHelper.removeData(key: 'token').then((value) {
-      extraToken = null;
       token = null;
       currentIndex = 0;
       if (value) {

@@ -270,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     fallback: (context) =>
-                        const Center(child: CircularProgressIndicator()),
+                        const Center(child: CircularProgressIndicator.adaptive()),
                   ),
                   verticalMediumSpace,
                   Row(

@@ -121,7 +121,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                                         width: 30,
                                         height: 30,
                                         child: Center(
-                                            child: CircularProgressIndicator()),
+                                            child: CircularProgressIndicator.adaptive()),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           const Icon(Icons.error),
@@ -373,7 +373,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                           },
                         ),
                         fallback: (context) => const Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator.adaptive(),
                         ),
                       ),
                       verticalSmallSpace,
@@ -383,7 +383,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
               ),
             ),
             fallback: (context) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

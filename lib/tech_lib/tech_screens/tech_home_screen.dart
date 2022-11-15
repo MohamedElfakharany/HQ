@@ -132,33 +132,6 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                         ),
                       ],
                     ),
-                    // verticalMiniSpace,
-                    // ConditionalBuilder(
-                    //   condition: AppTechCubit.get(context).techReservationsModel?.data?.isEmpty == false,
-                    //   builder: (context) => ConditionalBuilder(
-                    //     condition: state is! AppGetTechReservationsLoadingState,
-                    //     builder: (context) => Expanded(
-                    //       child: ListView.separated(
-                    //         physics: const BouncingScrollPhysics(),
-                    //         scrollDirection: Axis.horizontal,
-                    //         itemBuilder: (context, index) => Padding(
-                    //           padding: const EdgeInsets.symmetric(
-                    //               horizontal: 10.0),
-                    //           child: TechHomeReservationsCart(
-                    //             index: index, techReservationsDataModel: AppTechCubit.get(context).techReservationsModel!.data!,
-                    //           ),
-                    //         ),
-                    //         separatorBuilder: (context, index) =>
-                    //         verticalMiniSpace,
-                    //         itemCount: AppTechCubit.get(context).techReservationsModel?.data?.length ?? 0,
-                    //       ),
-                    //     ),
-                    //     fallback: (context) => const Center(
-                    //       child: CircularProgressIndicator(),
-                    //     ),
-                    //   ),
-                    //   fallback: (context) => Center(child: ScreenHolder(msg: LocaleKeys.txtReservations.tr(),)),
-                    // ),
                     verticalMiniSpace,
                     ConditionalBuilder(
                       condition:
@@ -195,7 +168,7 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                 ),
               ),
               fallback: (context) =>
-                  const Center(child: CircularProgressIndicator()),
+                  const Center(child: CircularProgressIndicator.adaptive()),
             ),
           );
         },

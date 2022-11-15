@@ -8,7 +8,7 @@ class ScreenLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: greyExtraLightColor,
-      body: Center(child: CircularProgressIndicator(),),
+      body: Center(child: CircularProgressIndicator.adaptive(),),
     );
   }
 }

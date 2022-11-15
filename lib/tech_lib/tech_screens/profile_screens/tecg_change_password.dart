@@ -296,7 +296,7 @@ class _TechChangePasswordScreenState extends State<TechChangePasswordScreen> {
                         },
                       ),
                       fallback: (context) =>
-                      const Center(child: CircularProgressIndicator()),
+                      const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                   ],
                 ),

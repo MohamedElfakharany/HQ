@@ -5,6 +5,7 @@
 abstract class  LocaleKeys {
   static const onboardingTitle = 'onboardingTitle';
   static const onboardingBody = 'onboardingBody';
+  static const txtNow = 'txtNow';
   static const txtFieldNationality = 'txtFieldNationality';
   static const loginTxtMain = 'loginTxtMain';
   static const loginTxtSecondary = 'loginTxtSecondary';
@@ -12,6 +13,8 @@ abstract class  LocaleKeys {
   static const txtFieldPassword = 'txtFieldPassword';
   static const BtnForgetPassword = 'BtnForgetPassword';
   static const forgetTxtMain = 'forgetTxtMain';
+  static const TxtFieldMemberOfVisit = 'TxtFieldMemberOfVisit';
+  static const TxtFieldAddressOfVisit = 'TxtFieldAddressOfVisit';
   static const BtnRememberMe = 'BtnRememberMe';
   static const BtnSignIn = 'BtnSignIn';
   static const txtSayYourExperience = 'txtSayYourExperience';

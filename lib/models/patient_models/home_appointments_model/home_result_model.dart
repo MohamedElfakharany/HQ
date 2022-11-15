@@ -17,21 +17,21 @@ class HomeResultsModel {
 
   dynamic status;
   dynamic message;
-  List<HomeResultsModelData>? data;
+  List<HomeResultsDataModel>? data;
   Extra? extra;
   Errors? errors;
 
   factory HomeResultsModel.fromJson(Map<dynamic, dynamic> json) => HomeResultsModel(
     status: json["status"],
     message: json["message"],
-    data: List<HomeResultsModelData>.from(json["data"].map((x) => HomeResultsModelData.fromJson(x))),
+    data: List<HomeResultsDataModel>.from(json["data"].map((x) => HomeResultsDataModel.fromJson(x))),
     extra: Extra.fromJson(json["extra"]),
     errors: Errors.fromJson(json["errors"]),
   );
 }
 
-class HomeResultsModelData {
-  HomeResultsModelData({
+class HomeResultsDataModel {
+  HomeResultsDataModel({
     this.id,
     this.countResult,
     this.date,
@@ -43,7 +43,7 @@ class HomeResultsModelData {
   HomeResultsDataDateModel? date;
   List<HomeResultsDataFileModel>? results;
 
-  factory HomeResultsModelData.fromJson(Map<dynamic, dynamic> json) => HomeResultsModelData(
+  factory HomeResultsDataModel.fromJson(Map<dynamic, dynamic> json) => HomeResultsDataModel(
     id: json["id"],
     countResult: json["countResult"],
     date: HomeResultsDataDateModel.fromJson(json["date"]),

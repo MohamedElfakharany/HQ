@@ -253,7 +253,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       },
                     ),
                     fallback: (context) => const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator.adaptive(),
                     ),
                   ),
                   verticalMediumSpace,
@@ -283,7 +283,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 ],
               ),
               fallback: (context) => const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator.adaptive(),
               ),
             ),
           ),

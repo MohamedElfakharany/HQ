@@ -298,7 +298,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                   ],
                 ),

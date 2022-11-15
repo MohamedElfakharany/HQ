@@ -36,7 +36,7 @@ class LabReservationDetailsScreen extends StatefulWidget {
 class _LabReservationDetailsScreenState
     extends State<LabReservationDetailsScreen> {
   String? locationValue;
-  String? memberValue ;
+  String? memberValue;
 
   @override
   void initState() {
@@ -52,7 +52,9 @@ class _LabReservationDetailsScreenState
       builder: (context, state) {
         locationValue = extraBranchTitle;
         if (kDebugMode) {
-          print('ghany 2 ${AppCubit.get(context).branchName}');
+          print('ghany 2 ${AppCubit
+              .get(context)
+              .branchName}');
           print('ghany 2 $locationValue');
           print('ghany 2 $extraBranchTitle');
           print('ghany 2 ${widget.date}');
@@ -79,7 +81,9 @@ class _LabReservationDetailsScreenState
                         style: titleStyle.copyWith(fontWeight: FontWeight.w500),
                       ),
                       verticalMiniSpace,
-                      if (AppCubit.get(context).isVisitor == true)
+                      if (AppCubit
+                          .get(context)
+                          .isVisitor == true)
                         Container(
                           height: 50.0,
                           width: double.infinity,
@@ -110,7 +114,9 @@ class _LabReservationDetailsScreenState
                             ),
                           ),
                         ),
-                      if (AppCubit.get(context).isVisitor == false)
+                      if (AppCubit
+                          .get(context)
+                          .isVisitor == false)
                         Container(
                           height: 50.0,
                           width: double.infinity,
@@ -248,7 +254,9 @@ class _LabReservationDetailsScreenState
                                   onChanged: (value) =>
                                       setState(() {
                                         locationValue = value;
-                                        AppCubit.get(context).selectBranchForReservation(name: locationValue!);
+                                        AppCubit.get(context)
+                                            .selectBranchForReservation(
+                                            name: locationValue!);
                                       }),
                                   onSaved: (v) {
                                     FocusScope.of(context).unfocus();
@@ -262,11 +270,22 @@ class _LabReservationDetailsScreenState
                       const Spacer(),
                       MaterialButton(
                         onPressed: () {
+                          if (widget.testsDataModel == null) {
+                            AppCubit.get(context).getInvoices(offerId: widget
+                                .offersDataModel?.id);
+                          } else if (widget.offersDataModel == null) {
+                            AppCubit.get(context).getInvoices(testId: widget.testsDataModel?.id);
+                          }
                           Navigator.push(
                             context,
                             FadeRoute(
                               page: LabReservationOverviewScreen(
-                                branchName: locationValue ?? AppCubit.get(context).userResourceModel?.data?.branch?.title,
+                                branchName: locationValue ?? AppCubit
+                                    .get(context)
+                                    .userResourceModel
+                                    ?.data
+                                    ?.branch
+                                    ?.title,
                                 testsDataModel: widget.testsDataModel,
                                 offersDataModel: widget.offersDataModel,
                                 date: widget.date,
@@ -274,8 +293,15 @@ class _LabReservationDetailsScreenState
                                 familyId: AppCubit
                                     .get(context)
                                     .relationIdList,
-                                branchId: AppCubit.get(context).branchIdForReservationList ?? extraBranchId!,
-                                familyName: memberValue ?? AppCubit.get(context).userResourceModel?.data?.name,
+                                branchId: AppCubit
+                                    .get(context)
+                                    .branchIdForReservationList ??
+                                    extraBranchId!,
+                                familyName: memberValue ?? AppCubit
+                                    .get(context)
+                                    .userResourceModel
+                                    ?.data
+                                    ?.name,
                               ),
                             ),
                           );
@@ -301,7 +327,7 @@ class _LabReservationDetailsScreenState
                   ),
                 ),
             fallback: (context) =>
-            const Center(child: CircularProgressIndicator()),
+            const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

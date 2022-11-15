@@ -106,7 +106,7 @@ class _ProfileChangeBranchScreenState extends State<ProfileChangeBranchScreen> {
                       ),
                     ),
                     fallback: (context) => const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator.adaptive(),
                     ),
                   ),
                 ],

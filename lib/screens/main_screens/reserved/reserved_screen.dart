@@ -25,13 +25,9 @@ class _ReservedScreenState extends State<ReservedScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-      const Duration(microseconds: 0),
-      () {
-        AppCubit.get(context).getLabReservations();
-        AppCubit.get(context).getHomeReservations();
-      },
-    );
+    AppCubit.get(context).getLabReservations().then((v){
+    AppCubit.get(context).getHomeReservations();
+    });
   }
 
   @override
@@ -211,215 +207,124 @@ class _ReservedScreenState extends State<ReservedScreen> {
                         physics: const BouncingScrollPhysics(),
                         children: [
                           // first tab bar view widget
-                          Column(
-                            children: [
-                              verticalSmallSpace,
-                              ConditionalBuilder(
-                                condition:
-                                    state is! AppGetLabReservationsLoadingState,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          FadeRoute(
-                                            page:
-                                                ReservationDetailsUpcomingScreen(
-                                              index: index,
-                                              labReservationsModel:
-                                                  AppCubit.get(context)
-                                                      .labReservationsModel,
+                          ConditionalBuilder(
+                            condition: AppCubit.get(context)
+                                    .labReservationsModel
+                                    ?.data
+                                    ?.isEmpty ==
+                                false,
+                            builder: (context) => Column(
+                              children: [
+                                verticalSmallSpace,
+                                ConditionalBuilder(
+                                  condition: state
+                                      is! AppGetLabReservationsLoadingState,
+                                  builder: (context) => Expanded(
+                                    child: ListView.separated(
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) => InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            FadeRoute(
+                                              page:
+                                                  ReservationDetailsUpcomingScreen(
+                                                index: index,
+                                                labReservationsModel:
+                                                    AppCubit.get(context)
+                                                        .labReservationsModel,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      child: ReservedCard(
-                                        labReservationsDataModel:
-                                            AppCubit.get(context)
-                                                .labReservationsModel!
-                                                .data![index],
+                                          );
+                                        },
+                                        child: ReservedCard(
+                                          labReservationsDataModel:
+                                              AppCubit.get(context)
+                                                  .labReservationsModel!
+                                                  .data![index],
+                                        ),
                                       ),
+                                      separatorBuilder: (context, index) =>
+                                          verticalMiniSpace,
+                                      itemCount: AppCubit.get(context)
+                                              .labReservationsModel
+                                              ?.data
+                                              ?.length ??
+                                          0,
                                     ),
-                                    separatorBuilder: (context, index) =>
-                                        verticalMiniSpace,
-                                    itemCount: AppCubit.get(context)
-                                            .labReservationsModel
-                                            ?.data
-                                            ?.length ??
-                                        0,
+                                  ),
+                                  fallback: (context) => const Center(
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                                 ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            fallback: (context) => ScreenHolder(
+                                msg:
+                                    '${LocaleKeys.txtReservations.tr()} ${LocaleKeys.BtnAtLab.tr()}'),
                           ),
                           // second tab bar view widget
-                          Column(
-                            children: [
-                              verticalSmallSpace,
-                              ConditionalBuilder(
-                                condition: state
-                                        is! AppGetHomeReservationsLoadingState ||
-                                    state is! AppGetLabReservationsLoadingState,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          FadeRoute(
-                                            page:
-                                                ReservationDetailsUpcomingScreen(
-                                              index: index,
-                                              homeReservationsModel:
-                                                  AppCubit.get(context)
-                                                      .homeReservationsModel,
+                          ConditionalBuilder(
+                            condition: AppCubit.get(context)
+                                    .homeReservationsModel
+                                    ?.data
+                                    ?.isEmpty ==
+                                false,
+                            builder: (context) => Column(
+                              children: [
+                                verticalSmallSpace,
+                                ConditionalBuilder(
+                                  condition: state
+                                          is! AppGetHomeReservationsLoadingState,
+                                  builder: (context) => Expanded(
+                                    child: ListView.separated(
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) => InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            FadeRoute(
+                                              page:
+                                                  ReservationDetailsUpcomingScreen(
+                                                index: index,
+                                                homeReservationsModel:
+                                                    AppCubit.get(context)
+                                                        .homeReservationsModel,
+                                              ),
                                             ),
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                          child: ReservedCard(
+                                            homeReservationsDataModel:
+                                                AppCubit.get(context)
+                                                    .homeReservationsModel!
+                                                    .data![index],
                                           ),
-                                        );
-                                      },
-                                      child: ReservedCard(
-                                        homeReservationsDataModel:
-                                            AppCubit.get(context)
-                                                .homeReservationsModel!
-                                                .data![index],
+                                        ),
                                       ),
+                                      separatorBuilder: (context, index) =>
+                                          verticalMiniSpace,
+                                      itemCount: AppCubit.get(context)
+                                              .homeReservationsModel
+                                              ?.data
+                                              ?.length ??
+                                          0,
                                     ),
-                                    separatorBuilder: (context, index) =>
-                                        verticalMiniSpace,
-                                    itemCount: AppCubit.get(context)
-                                            .homeReservationsModel
-                                            ?.data
-                                            ?.length ??
-                                        0,
+                                  ),
+                                  fallback: (context) => const Center(
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                                 ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            fallback: (context) => ScreenHolder(
+                                msg:
+                                    '${LocaleKeys.txtReservations.tr()} ${LocaleKeys.BtnAtHome.tr()}'),
                           ),
-                          // third tab bar view widget
-                          // Column(
-                          //   children: [
-                          //     verticalSmallSpace,
-                          //     Expanded(
-                          //       child: ListView.separated(
-                          //         physics: const BouncingScrollPhysics(),
-                          //         scrollDirection: Axis.vertical,
-                          //         itemBuilder: (context, index) => InkWell(
-                          //           onTap: () {
-                          //             Navigator.push(
-                          //               context,
-                          //               FadeRoute(
-                          //                 page:
-                          //                     const ReservationDetailsUpcomingScreen(),
-                          //               ),
-                          //             );
-                          //           },
-                          //           child: SizedBox(
-                          //             height: 150,
-                          //             child: Container(
-                          //               height: 110.0,
-                          //               width: 110.0,
-                          //               decoration: BoxDecoration(
-                          //                 color: whiteColor,
-                          //                 borderRadius:
-                          //                     BorderRadius.circular(radius),
-                          //                 border: Border.all(
-                          //                   width: 1,
-                          //                   color: greyLightColor,
-                          //                 ),
-                          //               ),
-                          //               alignment: AlignmentDirectional.center,
-                          //               padding: const EdgeInsets.symmetric(
-                          //                   vertical: 0, horizontal: 4),
-                          //               child: Padding(
-                          //                 padding: const EdgeInsets.all(10.0),
-                          //                 child: Column(
-                          //                   crossAxisAlignment:
-                          //                       CrossAxisAlignment.start,
-                          //                   mainAxisAlignment:
-                          //                       MainAxisAlignment.spaceEvenly,
-                          //                   children: [
-                          //                     Row(
-                          //                       children: [
-                          //                         Text(
-                          //                           '#150-450-600',
-                          //                           style: titleSmallStyle
-                          //                               .copyWith(
-                          //                                   fontSize: 15.0),
-                          //                           maxLines: 1,
-                          //                           overflow:
-                          //                               TextOverflow.ellipsis,
-                          //                         ),
-                          //                         const Spacer(),
-                          //                         Text(
-                          //                           '80 SAR',
-                          //                           style: titleStyle.copyWith(
-                          //                               fontSize: 18.0),
-                          //                           maxLines: 1,
-                          //                           overflow:
-                          //                               TextOverflow.ellipsis,
-                          //                         ),
-                          //                       ],
-                          //                     ),
-                          //                     const Text(
-                          //                       'Glaciated Hemoglobin HBA1C',
-                          //                       style: titleSmallStyle,
-                          //                       maxLines: 1,
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                     ),
-                          //                     const Text(
-                          //                       '24 Feb 2022 - 5:30 PM',
-                          //                       style: titleSmallStyle2,
-                          //                       maxLines: 1,
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                     ),
-                          //                     Container(
-                          //                       height: 36,
-                          //                       width: 130,
-                          //                       decoration: BoxDecoration(
-                          //                         color:
-                          //                             redColor.withOpacity(0.2),
-                          //                         borderRadius:
-                          //                             BorderRadius.circular(
-                          //                                 radius),
-                          //                       ),
-                          //                       padding:
-                          //                           const EdgeInsets.symmetric(
-                          //                               horizontal: 8.0),
-                          //                       child: Center(
-                          //                           child: Text(
-                          //                         'Canceled',
-                          //                         style: titleStyle.copyWith(
-                          //                             fontSize: 15.0,
-                          //                             color: redColor,
-                          //                             fontWeight:
-                          //                                 FontWeight.normal),
-                          //                       )),
-                          //                     ),
-                          //                   ],
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //         separatorBuilder: (context, index) =>
-                          //             verticalMiniSpace,
-                          //         itemCount: 10,
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                         ],
                       ),
                     ),

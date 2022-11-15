@@ -269,7 +269,7 @@ class _TechReservedScreenState extends State<TechReservedScreen> {
                                     ),
                                   ),
                                   fallback: (context) => const Center(
-                                    child: CircularProgressIndicator(),
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                                 ),
                                 fallback: (context) => Center(

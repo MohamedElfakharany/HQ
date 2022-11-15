@@ -205,202 +205,105 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         physics: const BouncingScrollPhysics(),
                         children: [
                           // first tab bar view widget
-                          Column(
-                            children: [
-                              verticalSmallSpace,
-                              ConditionalBuilder(
-                                condition:
-                                    state is! AppGetLabResultsLoadingState || state is! AppGetHomeResultsLoadingState,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          FadeRoute(
-                                            page: ResultDetailsScreen(labResultsDataFileModel: AppCubit.get(context)
-                                                .labResultsModel!.data![index].results?.first, index: index,),
-                                          ),
-                                        );
-                                      },
-                                      child: ResultsScreenCard(
-                                        labResultsModel: AppCubit.get(context)
-                                            .labResultsModel!,
-                                        index: index,
+                          ConditionalBuilder(
+                            condition:
+                            AppCubit.get(context).labResultsModel?.data?.isEmpty ==
+                                false,
+                            builder: (context)=> Column(
+                              children: [
+                                verticalSmallSpace,
+                                ConditionalBuilder(
+                                  condition:
+                                  state is! AppGetLabResultsLoadingState || state is! AppGetHomeResultsLoadingState,
+                                  builder: (context) => Expanded(
+                                    child: ListView.separated(
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) => InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            FadeRoute(
+                                              page: ResultDetailsScreen(labResultsDataModel: AppCubit.get(context)
+                                                  .labResultsModel!.data![index], index: index,),
+                                            ),
+                                          );
+                                        },
+                                        child: ResultsScreenCard(
+                                          labResultsModel: AppCubit.get(context)
+                                              .labResultsModel!,
+                                          index: index,
+                                        ),
                                       ),
+                                      separatorBuilder: (context, index) =>
+                                      verticalMiniSpace,
+                                      itemCount: AppCubit.get(context)
+                                          .labResultsModel
+                                          ?.data
+                                          ?.length ??
+                                          0,
                                     ),
-                                    separatorBuilder: (context, index) =>
-                                        verticalMiniSpace,
-                                    itemCount: AppCubit.get(context)
-                                            .labResultsModel
-                                            ?.data
-                                            ?.length ??
-                                        0,
+                                  ),
+                                  fallback: (context) => const Center(
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                                 ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            fallback: (context)=> ScreenHolder(
+                                msg:
+                                '${LocaleKeys.txtNoResults.tr()} ${LocaleKeys.BtnAtHome.tr()}'),
                           ),
                           // second tab bar view widget
-                          Column(
-                            children: [
-                              verticalSmallSpace,
-                              ConditionalBuilder(
-                                condition:
-                                state is! AppGetLabResultsLoadingState || state is! AppGetHomeResultsLoadingState,
-                                builder: (context) => Expanded(
-                                  child: ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) => InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          FadeRoute(
-                                            page: ResultDetailsScreen(homeResultsDataFileModel: AppCubit.get(context)
-                                                .homeResultsModel!.data![index].results?.first, index: index,),
-                                          ),
-                                        );
-                                      },
-                                      child: ResultsScreenCard(
-                                        homeResultsModel: AppCubit.get(context)
-                                            .homeResultsModel!,
-                                        index: index,
+                          ConditionalBuilder(
+                            condition:
+                            AppCubit.get(context).homeResultsModel?.data?.isEmpty ==
+                                false,
+                            builder: (context)=> Column(
+                              children: [
+                                verticalSmallSpace,
+                                ConditionalBuilder(
+                                  condition:
+                                  state is! AppGetLabResultsLoadingState || state is! AppGetHomeResultsLoadingState,
+                                  builder: (context) => Expanded(
+                                    child: ListView.separated(
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) => InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            FadeRoute(
+                                              page: ResultDetailsScreen(homeResultsDataModel: AppCubit.get(context)
+                                                  .homeResultsModel!.data![index], index: index,),
+                                            ),
+                                          );
+                                        },
+                                        child: ResultsScreenCard(
+                                          homeResultsModel: AppCubit.get(context)
+                                              .homeResultsModel!,
+                                          index: index,
+                                        ),
                                       ),
+                                      separatorBuilder: (context, index) =>
+                                      verticalMiniSpace,
+                                      itemCount: AppCubit.get(context)
+                                          .homeResultsModel
+                                          ?.data
+                                          ?.length ??
+                                          0,
                                     ),
-                                    separatorBuilder: (context, index) =>
-                                        verticalMiniSpace,
-                                    itemCount: AppCubit.get(context)
-                                        .homeResultsModel
-                                        ?.data
-                                        ?.length ??
-                                        0,
+                                  ),
+                                  fallback: (context) => const Center(
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                                 ),
-                                fallback: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            fallback: (context)=> ScreenHolder(
+                                msg:
+                                '${LocaleKeys.txtNoResults.tr()} ${LocaleKeys.BtnAtHome.tr()}'),
                           ),
-                          // third tab bar view widget
-                          // Column(
-                          //   children: [
-                          //     verticalSmallSpace,
-                          //     Expanded(
-                          //       child: ListView.separated(
-                          //         physics: const BouncingScrollPhysics(),
-                          //         scrollDirection: Axis.vertical,
-                          //         itemBuilder: (context, index) => InkWell(
-                          //           onTap: () {
-                          //             Navigator.push(
-                          //               context,
-                          //               FadeRoute(
-                          //                 page:
-                          //                     const ReservationDetailsUpcomingScreen(),
-                          //               ),
-                          //             );
-                          //           },
-                          //           child: SizedBox(
-                          //             height: 150,
-                          //             child: Container(
-                          //               height: 110.0,
-                          //               width: 110.0,
-                          //               decoration: BoxDecoration(
-                          //                 color: whiteColor,
-                          //                 borderRadius:
-                          //                     BorderRadius.circular(radius),
-                          //                 border: Border.all(
-                          //                   width: 1,
-                          //                   color: greyLightColor,
-                          //                 ),
-                          //               ),
-                          //               alignment: AlignmentDirectional.center,
-                          //               padding: const EdgeInsets.symmetric(
-                          //                   vertical: 0, horizontal: 4),
-                          //               child: Padding(
-                          //                 padding: const EdgeInsets.all(10.0),
-                          //                 child: Column(
-                          //                   crossAxisAlignment:
-                          //                       CrossAxisAlignment.start,
-                          //                   mainAxisAlignment:
-                          //                       MainAxisAlignment.spaceEvenly,
-                          //                   children: [
-                          //                     Row(
-                          //                       children: [
-                          //                         Text(
-                          //                           '#150-450-600',
-                          //                           style: titleSmallStyle
-                          //                               .copyWith(
-                          //                                   fontSize: 15.0),
-                          //                           maxLines: 1,
-                          //                           overflow:
-                          //                               TextOverflow.ellipsis,
-                          //                         ),
-                          //                         const Spacer(),
-                          //                         Text(
-                          //                           '80 SAR',
-                          //                           style: titleStyle.copyWith(
-                          //                               fontSize: 18.0),
-                          //                           maxLines: 1,
-                          //                           overflow:
-                          //                               TextOverflow.ellipsis,
-                          //                         ),
-                          //                       ],
-                          //                     ),
-                          //                     const Text(
-                          //                       'Glaciated Hemoglobin HBA1C',
-                          //                       style: titleSmallStyle,
-                          //                       maxLines: 1,
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                     ),
-                          //                     const Text(
-                          //                       '24 Feb 2022 - 5:30 PM',
-                          //                       style: titleSmallStyle2,
-                          //                       maxLines: 1,
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                     ),
-                          //                     Container(
-                          //                       height: 36,
-                          //                       width: 130,
-                          //                       decoration: BoxDecoration(
-                          //                         color:
-                          //                             redColor.withOpacity(0.2),
-                          //                         borderRadius:
-                          //                             BorderRadius.circular(
-                          //                                 radius),
-                          //                       ),
-                          //                       padding:
-                          //                           const EdgeInsets.symmetric(
-                          //                               horizontal: 8.0),
-                          //                       child: Center(
-                          //                           child: Text(
-                          //                         'Canceled',
-                          //                         style: titleStyle.copyWith(
-                          //                             fontSize: 15.0,
-                          //                             color: redColor,
-                          //                             fontWeight:
-                          //                                 FontWeight.normal),
-                          //                       )),
-                          //                     ),
-                          //                   ],
-                          //                 ),
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //         separatorBuilder: (context, index) =>
-                          //             verticalMiniSpace,
-                          //         itemCount: 10,
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                         ],
                       ),
                     ),

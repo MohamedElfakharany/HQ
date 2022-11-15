@@ -100,7 +100,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
               ),
             ),
             fallback: (context) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

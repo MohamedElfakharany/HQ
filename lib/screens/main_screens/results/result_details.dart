@@ -25,11 +25,11 @@ class ResultDetailsScreen extends StatefulWidget {
   ResultDetailsScreen(
       {Key? key,
       required this.index,
-      this.labResultsDataFileModel,
-      this.homeResultsDataFileModel})
+      this.labResultsDataModel,
+      this.homeResultsDataModel})
       : super(key: key);
-  LabResultsDataFileModel? labResultsDataFileModel;
-  HomeResultsDataFileModel? homeResultsDataFileModel;
+  LabResultsDataModel? labResultsDataModel;
+  HomeResultsDataModel? homeResultsDataModel;
   final int index;
   double progress = 0;
   bool loading = false;
@@ -43,23 +43,11 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
   PDFDocument document = PDFDocument();
 
   @override
-  void initState() {
-    super.initState();
-    loadDocument();
-  }
-
-  loadDocument() async {
-    document = await PDFDocument.fromURL(widget.labResultsDataFileModel?.file ??
-        widget.homeResultsDataFileModel?.file);
-    // setState(() => _isLoading = false);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var result = AppCubit.get(context).labResultsModel?.data?.first;
+        var result = AppCubit.get(context).labResultsModel?.data?[widget.index];
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -118,15 +106,15 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        if (widget.labResultsDataFileModel?.file == '') {
-                          if (widget.homeResultsDataFileModel?.file == null) {
+                      onTap: () async {
+                        if (widget.labResultsDataModel?.results?[index].file == '') {
+                          if (widget.homeResultsDataModel?.results?[index].file == null) {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
                                       content: Text(LocaleKeys.txtDownloadFailed.tr()),
                                     ));
-                          } else if (widget.homeResultsDataFileModel?.file ==
+                          } else if (widget.homeResultsDataModel?.results?[index].file ==
                               '') {
                             showDialog(
                                 context: context,
@@ -134,22 +122,23 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
                                       content: Text(LocaleKeys.txtDownloadFailed.tr()),
                                     ));
                           } else {
+                            document = await PDFDocument.fromURL(widget.homeResultsDataModel?.results?[index].file);
                             openFile(
-                                url: widget.homeResultsDataFileModel?.file,
+                                url: widget.homeResultsDataModel?.results?[index].file,
                                 name: 'file.pdf');
                             PDFViewer(
                               document: document,
                             );
                           }
-                        } else if (widget.labResultsDataFileModel?.file ==
+                        } else if (widget.labResultsDataModel?.results?[index].file ==
                             null) {
-                          if (widget.homeResultsDataFileModel?.file == null) {
+                          if (widget.homeResultsDataModel?.results?[index].file == null) {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
                                       content: Text(LocaleKeys.txtDownloadFailed.tr()),
                                     ));
-                          } else if (widget.homeResultsDataFileModel?.file ==
+                          } else if (widget.homeResultsDataModel?.results?[index].file ==
                               '') {
                             showDialog(
                                 context: context,
@@ -157,16 +146,18 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
                                       content: Text(LocaleKeys.txtDownloadFailed.tr()),
                                     ));
                           } else {
+                            document = await PDFDocument.fromURL(widget.homeResultsDataModel?.results?[index].file);
                             openFile(
-                                url: widget.homeResultsDataFileModel?.file,
+                                url: widget.homeResultsDataModel?.results?[index].file,
                                 name: 'file.pdf');
                             PDFViewer(
                               document: document,
                             );
                           }
                         } else {
+                          document = await PDFDocument.fromURL(widget.labResultsDataModel?.results?[index].file);
                           openFile(
-                              url: widget.labResultsDataFileModel?.file,
+                              url: widget.labResultsDataModel?.results?[index].file,
                               name: 'file.pdf');
                           PDFViewer(
                             document: document,

@@ -247,7 +247,7 @@ class TechHomeRequestsCart extends StatelessWidget {
                   },
                 ),
                 fallback: (context) =>
-                    const Center(child: CircularProgressIndicator()),
+                    const Center(child: CircularProgressIndicator.adaptive()),
               ),
             ],
           ),

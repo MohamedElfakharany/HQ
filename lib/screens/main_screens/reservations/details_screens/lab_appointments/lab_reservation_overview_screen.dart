@@ -18,7 +18,7 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
-class LabReservationOverviewScreen extends StatefulWidget {
+class LabReservationOverviewScreen extends StatelessWidget {
   LabReservationOverviewScreen(
       {Key? key,
       this.offersDataModel,
@@ -39,13 +39,6 @@ class LabReservationOverviewScreen extends StatefulWidget {
   TestsDataModel? testsDataModel;
   OffersDataModel? offersDataModel;
 
-  @override
-  State<LabReservationOverviewScreen> createState() =>
-      _LabReservationOverviewScreenState();
-}
-
-class _LabReservationOverviewScreenState
-    extends State<LabReservationOverviewScreen> {
   var couponController = TextEditingController();
 
   var formKey = GlobalKey<FormState>();
@@ -60,7 +53,7 @@ class _LabReservationOverviewScreenState
         if (state is AppCheckCouponSuccessState) {
           if (state.successModel.status) {
             AppCubit.get(context).getInvoices(testId: [
-              widget.testsDataModel?.id ?? widget.offersDataModel?.id
+              testsDataModel?.id ?? offersDataModel?.id
             ]);
           } else {
             showDialog(
@@ -90,10 +83,10 @@ class _LabReservationOverviewScreenState
             navigateAndFinish(
               context,
               ReservedSuccessScreen(
-                  date: widget.date,
-                  time: widget.time,
+                  date: date,
+                  time: time,
                   isLab: true,
-                  branchName: widget.branchName),
+                  branchName: branchName),
             );
           } else {
             showDialog(
@@ -142,12 +135,12 @@ class _LabReservationOverviewScreenState
       },
       builder: (context, state) {
         if (kDebugMode) {
-          print('date ya ro7 omak ${widget.date}');
-          print('familyId ya ro7 omak ${widget.familyId}');
-          print('time ya ro7 omak ${widget.time}');
-          print('branchId ya ro7 omak ${widget.branchId}');
-          print('familyName ya ro7 omak ${widget.familyName}');
-          print('test image ya ro7 omak ${widget.testsDataModel?.image}');
+          print('date ya ro7 omak $date');
+          print('familyId ya ro7 omak $familyId');
+          print('time ya ro7 omak $time');
+          print('branchId ya ro7 omak $branchId');
+          print('familyName ya ro7 omak $familyName');
+          print('test image ya ro7 omak ${testsDataModel?.image}');
         }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
@@ -192,8 +185,8 @@ class _LabReservationOverviewScreenState
                         children: [
                           horizontalMicroSpace,
                           CachedNetworkImageNormal(
-                            imageUrl: widget.offersDataModel?.image ??
-                                widget.testsDataModel?.image ?? '',
+                            imageUrl: offersDataModel?.image ??
+                                testsDataModel?.image ?? '',
                             width: 80,
                             height: 80,
                           ),
@@ -204,20 +197,20 @@ class _LabReservationOverviewScreenState
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  widget.offersDataModel?.title ??
-                                      widget.testsDataModel?.title,
+                                  offersDataModel?.title ??
+                                      testsDataModel?.title,
                                   style: titleSmallStyle,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  widget.testsDataModel?.category?.name ?? '',
+                                  testsDataModel?.category?.name ?? '',
                                   style: subTitleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  '${widget.offersDataModel?.discount ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                  '${offersDataModel?.discount ?? testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                   style: titleSmallStyle2,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -270,7 +263,7 @@ class _LabReservationOverviewScreenState
                                     if (AppCubit.get(context).isVisitor ==
                                         false)
                                       Text(
-                                        widget.familyName ??
+                                        familyName ??
                                             AppCubit.get(context)
                                                 .userResourceModel
                                                 ?.data
@@ -308,7 +301,7 @@ class _LabReservationOverviewScreenState
                                     ),
                                     Text(
                                       textAlign: TextAlign.start,
-                                      '${widget.date} - ${widget.time}',
+                                      '$date - $time',
                                       style: titleSmallStyle,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -384,7 +377,7 @@ class _LabReservationOverviewScreenState
                       condition: state is! AppCheckCouponLoadingState &&
                           state is! AppGetInvoicesLoadingState,
                       builder: (context) => Container(
-                        height: 250.0,
+                        height: 150.0,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: whiteColor,
@@ -428,7 +421,7 @@ class _LabReservationOverviewScreenState
                                       const Spacer(),
                                       Text(
                                         textAlign: TextAlign.start,
-                                        '${widget.offersDataModel?.price ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                        '${offersDataModel?.discount ?? testsDataModel?.price} ${LocaleKeys.salary.tr()}',
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -436,51 +429,52 @@ class _LabReservationOverviewScreenState
                                     ],
                                   ),
                                   verticalMicroSpace,
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        LocaleKeys.txtVAT.tr(),
-                                        style: titleSmallStyle.copyWith(
-                                            color: greyDarkColor,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                      const Spacer(),
-                                      const Text(
-                                        textAlign: TextAlign.start,
-                                        '15%',
-                                        style: titleSmallStyle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   crossAxisAlignment:
+                                  //       CrossAxisAlignment.center,
+                                  //   mainAxisAlignment: MainAxisAlignment.start,
+                                  //   children: [
+                                  //     Text(
+                                  //       LocaleKeys.txtVAT.tr(),
+                                  //       style: titleSmallStyle.copyWith(
+                                  //           color: greyDarkColor,
+                                  //           fontWeight: FontWeight.normal),
+                                  //     ),
+                                  //     const Spacer(),
+                                  //     Text(
+                                  //       textAlign: TextAlign.start,
+                                  //       '${offersDataModel?.discount ?? testsDataModel?.price}%',
+                                  //       style: titleSmallStyle,
+                                  //       maxLines: 1,
+                                  //       overflow: TextOverflow.ellipsis,
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   verticalMicroSpace,
                                   const MySeparator(),
                                   verticalMicroSpace,
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        LocaleKeys.txtTotal.tr(),
-                                        style: titleSmallStyle.copyWith(
-                                            color: greyDarkColor,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        textAlign: TextAlign.start,
-                                        '379.5 ${LocaleKeys.salary.tr()}',
-                                        style: titleSmallStyle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
+                                  // verticalMicroSpace,
+                                  // Row(
+                                  //   crossAxisAlignment:
+                                  //       CrossAxisAlignment.center,
+                                  //   mainAxisAlignment: MainAxisAlignment.start,
+                                  //   children: [
+                                  //     Text(
+                                  //       LocaleKeys.txtTotal.tr(),
+                                  //       style: titleSmallStyle.copyWith(
+                                  //           color: greyDarkColor,
+                                  //           fontWeight: FontWeight.bold),
+                                  //     ),
+                                  //     const Spacer(),
+                                  //     Text(
+                                  //       textAlign: TextAlign.start,
+                                  //       '${offersDataModel?.discount ?? testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                  //       style: titleSmallStyle,
+                                  //       maxLines: 1,
+                                  //       overflow: TextOverflow.ellipsis,
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   Row(
                                     children: [
                                       Text(
@@ -501,30 +495,30 @@ class _LabReservationOverviewScreenState
                         ),
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
                       condition: state is! AppCreateLabReservationLoadingState,
                       builder: (context) => MaterialButton(
                         onPressed: () {
-                          if (widget.testsDataModel?.id == null) {
+                          if (testsDataModel?.id == null) {
                             AppCubit.get(context).createLabReservation(
-                              date: widget.date,
-                              time: widget.time,
-                              familyId: widget.familyId,
-                              branchId: widget.branchId,
+                              date: date,
+                              time: time,
+                              familyId: familyId,
+                              branchId: branchId,
                               coupon: couponController.text,
-                              offerId: [widget.offersDataModel?.id],
+                              offerId: [offersDataModel?.id],
                             );
-                          } else if (widget.offersDataModel?.id == null){
+                          } else if (offersDataModel?.id == null){
                             AppCubit.get(context).createLabReservation(
-                                date: widget.date,
-                                time: widget.time,
-                                familyId: widget.familyId,
-                                branchId: widget.branchId,
+                                date: date,
+                                time: time,
+                                familyId: familyId,
+                                branchId: branchId,
                                 coupon: couponController.text,
-                                testId: [widget.testsDataModel?.id]);
+                                testId: [testsDataModel?.id]);
                           }
                         },
                         child: Container(
@@ -546,7 +540,7 @@ class _LabReservationOverviewScreenState
                         ),
                       ),
                       fallback: (context) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                   ],
                 ),

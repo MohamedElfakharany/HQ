@@ -18,6 +18,12 @@
 
       const technicalURL = '$mainURL/technical';
 
+      const patientTechnicalRequestsURL = '$mainURL/technical-requests';
+
+/// Technical Requests
+
+      const patientTechnicalRequestsCreateURL = '$patientTechnicalRequestsURL/create';
+
 ///Auth
 
       const registerURL = '$authURL/register';
@@ -55,6 +61,8 @@
 ///Profile
 
       const getProfileURL = '$profileURL/get-profile';
+
+      const getNotificationsURL = '$profileURL/notifications';
 
       const editProfileURL = '$profileURL/edit-profile';
 

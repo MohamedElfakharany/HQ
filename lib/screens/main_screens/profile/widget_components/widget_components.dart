@@ -212,22 +212,23 @@ class MedicalInquiriesCard extends StatelessWidget {
                   ),
                 ),
                 horizontalSmallSpace,
-                Container(
-                  width: 60.0,
-                  height: 30.0,
-                  decoration: BoxDecoration(
-                    color: greenColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(
-                      radius,
+                if (medicalInquiriesDataModel.answer?.user == null)
+                  Container(
+                    width: 60.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: greenColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(
+                        radius,
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'New',
+                        style: titleSmallStyleGreen,
+                      ),
                     ),
                   ),
-                  child: const Center(
-                    child: Text(
-                      'New',
-                      style: titleSmallStyleGreen,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

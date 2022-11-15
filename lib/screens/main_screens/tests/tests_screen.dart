@@ -254,7 +254,7 @@ class _TestsScreenState extends State<TestsScreen> {
                                     ),
                                   ),
                                   fallback: (context) => const Center(
-                                    child: CircularProgressIndicator(),
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
                                 ),
                               ),
@@ -295,7 +295,7 @@ class _TestsScreenState extends State<TestsScreen> {
                                   ),
                                 ),
                               ),
-                              fallback: (context) => const Center(child: CircularProgressIndicator()),
+                              fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                             ),
                           ],
                         ),

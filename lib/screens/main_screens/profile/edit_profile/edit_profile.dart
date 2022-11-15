@@ -115,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       width: 30,
                                       height: 30,
                                       child: Center(
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator.adaptive()),
                                     ),
                                     errorWidget: (context, url, error) =>
                                         const Icon(Icons.error),
@@ -367,7 +367,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         },
                       ),
                       fallback: (context) => const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator.adaptive(),
                       ),
                     ),
                     verticalSmallSpace,

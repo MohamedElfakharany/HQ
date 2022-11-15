@@ -71,7 +71,7 @@ class SelectCountryScreen extends StatelessWidget {
                         separatorBuilder: (context, index) => verticalSmallSpace,
                         itemCount: cubit.countryModel?.data?.length ?? 0,
                       ),
-                      fallback: (context) => const Center(child: CircularProgressIndicator()),
+                      fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                   ),
                 ],

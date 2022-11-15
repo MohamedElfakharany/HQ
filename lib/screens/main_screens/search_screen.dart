@@ -92,7 +92,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       separatorBuilder: (context, index) => verticalMiniSpace,
                       itemCount: AppCubit.get(context).testsModel?.data?.length ?? 0,
                     ),
-                    fallback: (context) => const Center(child: CircularProgressIndicator(),),
+                    fallback: (context) => const Center(child: CircularProgressIndicator.adaptive(),),
                   ),
                 ),
               ],

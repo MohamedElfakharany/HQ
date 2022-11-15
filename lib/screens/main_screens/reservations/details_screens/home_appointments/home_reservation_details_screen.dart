@@ -333,7 +333,7 @@ class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScr
                   ),
                 ),
             fallback: (context) =>
-            const Center(child: CircularProgressIndicator()),
+            const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

@@ -79,7 +79,7 @@ class SelectCityScreen extends StatelessWidget {
                         itemCount: cubit.cityModel!.data!.length,
                       ),
                       fallback: (context) => const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator.adaptive(),
                       ),
                     ),
                   ),

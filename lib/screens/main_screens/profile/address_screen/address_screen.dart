@@ -112,7 +112,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                     ),
                                   ),
                                   fallback: (context) => const Center(
-                                      child: CircularProgressIndicator()),
+                                      child: CircularProgressIndicator.adaptive()),
                                 ),
                               ),
                               /// you should set the default  bg color to transparent
@@ -146,7 +146,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           AppCubit.get(context).addressModel?.data?.length ?? 0,
                     ),
                     fallback: (context) => const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator.adaptive(),
                     ),
                   ),
                 ),

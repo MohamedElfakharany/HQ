@@ -92,7 +92,7 @@ class _CardScreenState extends State<CardScreen> {
                                 ),
                               ),
                               fallback: (context) => const Center(
-                                  child: CircularProgressIndicator()),
+                                  child: CircularProgressIndicator.adaptive()),
                             ),
                           ),
 

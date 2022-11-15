@@ -26,6 +26,7 @@ import 'package:hq/models/patient_models/lab_appointments_model/lab_result_model
 import 'package:hq/models/patient_models/profile_models/address_model.dart';
 import 'package:hq/models/patient_models/profile_models/families_model.dart';
 import 'package:hq/models/patient_models/profile_models/medical-inquiries.dart';
+import 'package:hq/models/patient_models/profile_models/notifications_model.dart';
 import 'package:hq/models/patient_models/profile_models/terms_model.dart';
 import 'package:hq/models/patient_models/test_models/categories_model.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
@@ -74,9 +75,13 @@ class AppCubit extends Cubit<AppStates> {
   LabResultsModel? labResultsModel;
   HomeResultsModel? homeResultsModel;
   AddressModel? addressModel;
+  NotificationsModel? notificationsModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
+
+  List<AddressDataModel>? addressNames = [];
+  List<String> addressName = [];
 
   List<RelationsDataModel>? relationsNames = [];
   List<String> relationsName = [];
@@ -87,6 +92,8 @@ class AppCubit extends Cubit<AppStates> {
   int? branchIdList;
 
   int? relationIdList;
+
+  int? addressIdList;
 
   int? branchIdForReservationList;
 
@@ -189,6 +196,15 @@ class AppCubit extends Cubit<AppStates> {
       addressLocation =
       '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
     });
+  }
+
+  void selectAddressId({required String address}) {
+    for (int i = 0; i < addressNames!.length; i++) {
+      if (addressNames![i].address == address) {
+        addressIdList = addressNames![i].id;
+
+      }
+    }
   }
 
   void selectBranch({required String name}) {
@@ -341,7 +357,6 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
-        print('extraToken: $extraToken');
         print('headers: ${formData.entries}');
         print('response: $response');
         print('responseJsonB: $responseJsonB');
@@ -396,7 +411,6 @@ class AppCubit extends Cubit<AppStates> {
       var responseJson = json.decode(convertedResponse);
       successModel = SuccessModel.fromJson(responseJson);
       if (kDebugMode) {
-        print('extraToken: $extraToken');
         print('headers: ${formData.entries}');
         print('response: $response');
         print('responseJsonB: $responseJsonB');
@@ -472,6 +486,42 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future getNotifications() async {
+    try {
+      emit(AppGetNotificationsLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        getNotificationsURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: {
+            'Accept': 'application/json',
+            'Accept-Language': sharedLanguage,
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+      }
+      notificationsModel = NotificationsModel.fromJson(responseJson);
+      if (kDebugMode) {
+        print('notificationsModel : ${notificationsModel?.data?.first.body}');
+      }
+      emit(AppGetNotificationsSuccessState(notificationsModel!));
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+      emit(AppGetNotificationsErrorState(error.toString()));
+    }
+  }
+
   File? memberImage;
 
   File? editMemberImage;
@@ -542,6 +592,11 @@ class AppCubit extends Cubit<AppStates> {
         print('responseJson : $responseJson');
       }
       addressModel = AddressModel.fromJson(responseJson);
+      addressName = [];
+      addressNames = addressModel?.data;
+      for (var i = 0; i < addressNames!.length; i++) {
+        addressName.add(addressNames?[i].address);
+      }
       emit(AppGetAddressSuccessState(addressModel!));
     } catch (error) {
       if (kDebugMode) {
@@ -654,6 +709,7 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       successModel = SuccessModel.fromJson(responseJson);
+      extraAddressId = addressId;
       getAddress();
       emit(AppSelectAddressSuccessState(successModel!));
     } catch (error) {
@@ -1437,7 +1493,8 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future getInvoices({
-    required List<int> testId,
+    List<int>? testId,
+    List<int>? offerId,
   }) async {
     emit(AppGetInvoicesLoadingState());
     var headers = {
@@ -1446,7 +1503,8 @@ class AppCubit extends Cubit<AppStates> {
       'Authorization': 'Bearer $token',
     };
     var formData = {
-      'testId[]': testId,
+      if (offerId != null) 'offerId[]': offerId,
+      if (testId != null) 'testId[]': testId,
     };
     try {
       Dio dio = Dio();
@@ -1525,6 +1583,52 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+
+  Future createTechnicalRequests({
+    required String date,
+    required String time,
+    required int? addressId,
+  }) async {
+    emit(AppCreateTechnicalRequestsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap(
+      {
+        'date': date,
+        'time': time,
+        'addressId': addressId,
+      },
+    );
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        patientTechnicalRequestsCreateURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+        print('formData : ${formData.fields}');
+        print('patientTechnicalRequestsCreateURL : $patientTechnicalRequestsCreateURL');
+      }
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCreateTechnicalRequestsSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCreateTechnicalRequestsErrorState(error.toString()));
+    }
+  }
+
   Future getLabReservations() async {
     emit(AppGetLabReservationsLoadingState());
     var headers = {
@@ -1546,7 +1650,11 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
+      // printWrapped('labReservationsModel responseJson : $responseJson');
+      print('before');
       labReservationsModel = LabReservationsModel.fromJson(responseJson);
+      print('after');
+      // printWrapped('labReservationsModel : $labReservationsModel');
       emit(AppGetLabReservationsSuccessState(labReservationsModel!));
     } catch (error) {
       emit(AppGetLabReservationsErrorState(error.toString()));
@@ -2049,7 +2157,6 @@ class AppCubit extends Cubit<AppStates> {
 
   void signOut(context) async {
     CacheHelper.removeData(key: 'token').then((value) {
-      extraToken = null;
       token = null;
       currentIndex = 0;
       if (value) {
