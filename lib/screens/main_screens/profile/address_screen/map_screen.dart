@@ -5,18 +5,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart' as geo;
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
-import 'package:hq/shared/constants/general_constants.dart';
-import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
 
+import '../../../../shared/constants/general_constants.dart';
+import '../../../../translations/locale_keys.g.dart';
+
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  Position position;
+  MapScreen({
+    Key? key,
+    required this.position,
+  }) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -26,16 +32,20 @@ class _MapScreenState extends State<MapScreen> {
   var formKey = GlobalKey<FormState>();
   final focusNodes = Iterable<int>.generate(4).map((_) => FocusNode()).toList();
   GoogleMapController? controller;
+  double mLatitude = 0;
+  double mLongitude = 0;
+  late bool isInit;
 
   @override
   void initState() {
-    getAddressBasedOnLocation();
-    // addMarkers();
+    mLatitude = widget.position.latitude;
+    mLongitude = widget.position.longitude;
+
+    getAddressBasedOnLocation(lat: mLatitude, long: mLongitude);
+
     super.initState();
   }
 
-  double mLatitude = 0;
-  double mLongitude = 0;
   Location currentLocation = Location();
   final Set<Marker> markers = {};
   geo.Placemark? userAddress;
@@ -244,15 +254,19 @@ class _MapScreenState extends State<MapScreen> {
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: LatLng(lat, long),
-            zoom: 17.0,
+            zoom: 14.0,
           ),
         ),
       );
       markers.add(
         Marker(markerId: const MarkerId('Home'), position: LatLng(lat, long)),
       );
+
       addressLocation =
           '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
+    });
+    setState(() {
+      addressController.text = addressLocation ?? '';
     });
   }
 }
