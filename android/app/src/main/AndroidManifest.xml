@@ -10,7 +10,7 @@
         android:label="HQ">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDlNA3ovqzr3XolsRkw0lS44lQEL-w3bS8E" />
+            android:value="AIzaSyB_eYodO40DmGH8PoGhmhYtV__0DDjGhZo" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
