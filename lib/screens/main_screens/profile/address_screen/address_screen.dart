@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/main_screens/profile/address_screen/map_screen.dart';
@@ -44,11 +45,16 @@ class _AddressScreenState extends State<AddressScreen> {
             child: Column(
               children: [
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    Position position = await Geolocator.getCurrentPosition(
+                        desiredAccuracy: LocationAccuracy.high);
+
                     Navigator.push(
                       context,
                       FadeRoute(
-                        page: const MapScreen(),
+                        page: MapScreen(
+                          position: position,
+                        ),
                       ),
                     );
                   },
@@ -73,19 +79,20 @@ class _AddressScreenState extends State<AddressScreen> {
                 verticalMediumSpace,
                 Expanded(
                   child: ConditionalBuilder(
-                    condition: state is! AppGetAddressLoadingState && state is! AppDeleteAddressLoadingState && state is! AppSelectAddressLoadingState,
+                    condition: state is! AppGetAddressLoadingState &&
+                        state is! AppDeleteAddressLoadingState &&
+                        state is! AppSelectAddressLoadingState,
                     builder: (context) => ListView.separated(
                       itemBuilder: (context, index) => SwipeActionCell(
-                          key: ValueKey(AppCubit.get(context)
-                              .addressModel!
-                              .data![index]),
+                          key: ValueKey(
+                              AppCubit.get(context).addressModel!.data![index]),
                           trailingActions: [
                             SwipeAction(
                               nestedAction: SwipeNestedAction(
                                 /// customize your nested action content
                                 content: ConditionalBuilder(
                                   condition:
-                                  state is! AppDeleteAddressLoadingState,
+                                      state is! AppDeleteAddressLoadingState,
                                   builder: (context) => Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
@@ -97,7 +104,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                       maxWidth: double.infinity,
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: [
                                           const Icon(
                                             Icons.delete,
@@ -112,11 +119,14 @@ class _AddressScreenState extends State<AddressScreen> {
                                     ),
                                   ),
                                   fallback: (context) => const Center(
-                                      child: CircularProgressIndicator.adaptive()),
+                                      child:
+                                          CircularProgressIndicator.adaptive()),
                                 ),
                               ),
+
                               /// you should set the default  bg color to transparent
                               color: Colors.transparent,
+
                               /// set content instead of title of icon
                               content: _getIconButton(Colors.red, Icons.delete),
                               onTap: (handler) async {
@@ -130,16 +140,19 @@ class _AddressScreenState extends State<AddressScreen> {
                             ),
                           ],
                           child: InkWell(
-                            onTap: (){
-                              AppCubit.get(context).selectAddress(addressId: AppCubit.get(context)
-                                  .addressModel!
-                                  .data![index]
-                                  .id);
+                            onTap: () {
+                              AppCubit.get(context).selectAddress(
+                                  addressId: AppCubit.get(context)
+                                      .addressModel!
+                                      .data![index]
+                                      .id);
                             },
                             child: AddressCard(
-                        addressDataModel:
-                              AppCubit.get(context).addressModel!.data![index], index: index,
-                      ),
+                              addressDataModel: AppCubit.get(context)
+                                  .addressModel!
+                                  .data![index],
+                              index: index,
+                            ),
                           )),
                       separatorBuilder: (context, index) => verticalMediumSpace,
                       itemCount:
@@ -174,5 +187,4 @@ class _AddressScreenState extends State<AddressScreen> {
       ),
     );
   }
-
 }
