@@ -15,6 +15,7 @@ import 'package:hq/screens/main_screens/profile/medical_inquiries/medical_inquir
 import 'package:hq/screens/main_screens/profile/privacy_screen.dart';
 import 'package:hq/screens/main_screens/profile/region_settings/region_settings.dart';
 import 'package:hq/screens/main_screens/profile/terms_conditions_screen.dart';
+import 'package:hq/screens/main_screens/tech_support_screens/technical_support_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -315,16 +316,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontWeight: FontWeight.normal),
                                   ),
                                   const Spacer(),
-                                  // CircleAvatar(
-                                  //   radius: 15,
-                                  //   backgroundColor: redColor,
-                                  //   child: Text(
-                                  //     '02',
-                                  //     style: subTitleSmallStyle.copyWith(
-                                  //       color: whiteColor,
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   horizontalSmallSpace,
                                   const Icon(
                                     Icons.arrow_forward_ios_sharp,
@@ -332,6 +323,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
+                            ),
+                          ),
+                          verticalMediumSpace,
+                          InkWell(
+                            onTap: () {
+                              if (AppCubit.get(context).isVisitor == true) {
+                                showPopUp(
+                                  context,
+                                  const VisitorHoldingPopUp(),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  FadeRoute(
+                                    page: const TechnicalSupportScreen(),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/reservedSelected.png',
+                                  width: 25,
+                                  height: 25,
+                                ),
+                                horizontalSmallSpace,
+                                Text(
+                                  LocaleKeys.TxtReservationScreenTitle.tr(),
+                                  style: titleSmallStyle.copyWith(
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                const Spacer(),
+                                horizontalSmallSpace,
+                                const Icon(
+                                  Icons.arrow_forward_ios_sharp,
+                                  color: greyLightColor,
+                                ),
+                              ],
                             ),
                           ),
                           verticalMediumSpace,

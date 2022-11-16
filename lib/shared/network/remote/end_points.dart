@@ -121,3 +121,5 @@
       const technicalRequestsURL = '$technicalURL/requests';
 
       const technicalReservationsURL = '$technicalURL/reservations';
+
+      const userRequestURL = '$technicalURL/technical-requests';

@@ -44,15 +44,6 @@ class _MapScreenState extends State<MapScreen> {
         AppCubit.get(context).getAddressBasedOnLocation();
         return Scaffold(
           appBar: AppBar(
-            // flexibleSpace: Container(
-            //   decoration: const BoxDecoration(
-            //     image: DecorationImage(
-            //       image: AssetImage('assets/images/homeAppbarImage.png'),
-            //       fit: BoxFit.cover,
-            //     ),
-            //   ),
-            //   width: double.infinity,
-            // ),
             title: const Icon(
               Icons.gps_fixed_outlined,
               color: mainColor,

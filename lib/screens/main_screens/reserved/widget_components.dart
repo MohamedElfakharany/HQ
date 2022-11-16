@@ -25,6 +25,18 @@ class ReservedCard extends StatelessWidget {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        Color stateColor;
+        if (labReservationsDataModel?.statusEn == 'Pending' || homeReservationsDataModel?.statusEn == 'Pending') {
+          stateColor = pendingColor;
+        } else if (labReservationsDataModel?.statusEn == 'Accepted' || homeReservationsDataModel?.statusEn == 'Accepted') {
+          stateColor = acceptedColor;
+        } else if (labReservationsDataModel?.statusEn == 'Sampling' || homeReservationsDataModel?.statusEn == 'Sampling') {
+          stateColor = samplingColor;
+        } else if (labReservationsDataModel?.statusEn == 'Finished' || homeReservationsDataModel?.statusEn == 'Finished') {
+          stateColor = finishedColor;
+        } else {
+          stateColor = canceledColor;
+        }
         if (labReservationsDataModel?.tests?.isEmpty ??
             homeReservationsDataModel!.tests!.isEmpty) {
           title = labReservationsDataModel?.offers?.first.title ??
@@ -112,7 +124,7 @@ class ReservedCard extends StatelessWidget {
                       height: 36,
                       width: 130,
                       decoration: BoxDecoration(
-                        color: greenColor.withOpacity(0.2),
+                        color: stateColor.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(radius),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -122,7 +134,7 @@ class ReservedCard extends StatelessWidget {
                             homeReservationsDataModel?.status,
                         style: titleStyle.copyWith(
                             fontSize: 15.0,
-                            color: greenColor,
+                            color: stateColor,
                             fontWeight: FontWeight.normal),
                       )),
                     ),

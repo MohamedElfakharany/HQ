@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/main_screens/tech_support_screens/tech_support_screen.dart';
+import 'package:hq/screens/main_screens/tech_support_screens/create_tech_support_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_details_screen.dart';
 import 'package:hq/screens/main_screens/test_items_screen/test_items_screen.dart';
 import 'package:hq/screens/main_screens/widgets_components/widgets_components.dart';
@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   title:
                                       '${LocaleKeys.TxtReservationScreenTitle.tr()} ${LocaleKeys.txtNow.tr()}',
                                   onPress: () {
-                                    Navigator.push(context,FadeRoute(page: const TechSupportScreen(),),);
+                                    Navigator.push(context,FadeRoute(page: const CreateTechSupportScreen(),),);
                                   },
                                   height: 40,
                                 ),

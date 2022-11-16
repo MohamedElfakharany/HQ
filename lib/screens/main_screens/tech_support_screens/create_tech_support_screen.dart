@@ -2,7 +2,6 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -15,16 +14,16 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class TechSupportScreen extends StatefulWidget {
-  const TechSupportScreen({
+class CreateTechSupportScreen extends StatefulWidget {
+  const CreateTechSupportScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<TechSupportScreen> createState() => _TechSupportScreenState();
+  State<CreateTechSupportScreen> createState() => _CreateTechSupportScreenState();
 }
 
-class _TechSupportScreenState extends State<TechSupportScreen> {
+class _CreateTechSupportScreenState extends State<CreateTechSupportScreen> {
   String? locationValue;
   String? memberValue;
   String? dateValue;

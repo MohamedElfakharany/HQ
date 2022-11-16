@@ -164,6 +164,7 @@ class _MedicalInquiriesScreenState extends State<MedicalInquiriesScreen> {
       },
     );
   }
+
   Widget _getIconButton(color, icon) {
     return Container(
       width: 50,

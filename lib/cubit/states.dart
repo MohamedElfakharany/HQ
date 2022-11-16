@@ -18,6 +18,7 @@ import 'package:hq/models/patient_models/profile_models/families_model.dart';
 import 'package:hq/models/patient_models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/patient_models/profile_models/notifications_model.dart';
 import 'package:hq/models/patient_models/profile_models/terms_model.dart';
+import 'package:hq/models/patient_models/patient_tech_request_model.dart';
 import 'package:hq/models/patient_models/test_models/categories_model.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
 import 'package:hq/models/patient_models/test_models/tests_model.dart';
@@ -75,6 +76,30 @@ class AppCreateLabReservationSuccessState extends AppStates{
 class AppCreateLabReservationErrorState extends AppStates{
   final String error;
   AppCreateLabReservationErrorState(this.error);
+}
+
+class AppCancelLabReservationLoadingState extends AppStates{}
+
+class AppCancelLabReservationSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCancelLabReservationSuccessState(this.successModel);
+}
+
+class AppCancelLabReservationErrorState extends AppStates{
+  final String error;
+  AppCancelLabReservationErrorState(this.error);
+}
+
+class AppCancelTechRequestsLoadingState extends AppStates{}
+
+class AppCancelTechRequestsSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCancelTechRequestsSuccessState(this.successModel);
+}
+
+class AppCancelTechRequestsErrorState extends AppStates{
+  final String error;
+  AppCancelTechRequestsErrorState(this.error);
 }
 
 class AppCreateTechnicalRequestsLoadingState extends AppStates{}
@@ -184,6 +209,18 @@ class AppChangeLocationSuccessState extends AppStates{
 class AppChangeLocationErrorState extends AppStates{
   final String error;
   AppChangeLocationErrorState(this.error);
+}
+
+class AppGetTechRequestLoadingState extends AppStates{}
+
+class AppGetTechRequestSuccessState extends AppStates{
+  final PatientTechnicalSupportModel patientTechnicalSupportModel;
+  AppGetTechRequestSuccessState(this.patientTechnicalSupportModel);
+}
+
+class AppGetTechRequestErrorState extends AppStates{
+  final String error;
+  AppGetTechRequestErrorState(this.error);
 }
 
 

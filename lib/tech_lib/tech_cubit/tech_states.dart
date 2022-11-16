@@ -2,6 +2,7 @@ import 'package:hq/models/patient_models/auth_models/verify_model.dart';
 import 'package:hq/models/patient_models/auth_models/user_resource_model.dart';
 import 'package:hq/tech_lib/tech_models/requests_model.dart';
 import 'package:hq/tech_lib/tech_models/reservation_model.dart';
+import 'package:hq/tech_lib/tech_models/tech_tech_support_model.dart';
 
 abstract class AppTechStates {}
 
@@ -84,6 +85,18 @@ class AppGetTechRequestsSuccessState extends AppTechStates{
 class AppGetTechRequestsErrorState extends AppTechStates{
   final String error;
   AppGetTechRequestsErrorState(this.error);
+}
+
+class AppGetTechUserRequestLoadingState extends AppTechStates{}
+
+class AppGetTechUserRequestSuccessState extends AppTechStates{
+  final TechUserRequestModel techUserRequestModel;
+  AppGetTechUserRequestSuccessState(this.techUserRequestModel);
+}
+
+class AppGetTechUserRequestErrorState extends AppTechStates{
+  final String error;
+  AppGetTechUserRequestErrorState(this.error);
 }
 
 class AppGetTechReservationsLoadingState extends AppTechStates{}

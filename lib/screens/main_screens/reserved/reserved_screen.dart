@@ -158,44 +158,6 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                 ],
                               ),
                             ),
-                            // Tab(
-                            //   child: Column(
-                            //     children: [
-                            //       Expanded(
-                            //         child: Container(
-                            //           height: 60,
-                            //           width: double.infinity,
-                            //           decoration: BoxDecoration(
-                            //             borderRadius: BorderRadius.circular(8),
-                            //             border: Border.all(
-                            //                 color: blueLightColor, width: 2),
-                            //             boxShadow: [
-                            //               BoxShadow(
-                            //                 color:
-                            //                     Colors.grey.withOpacity(0.15),
-                            //                 spreadRadius: 2,
-                            //                 blurRadius: 2,
-                            //                 offset: const Offset(0, 2),
-                            //               ),
-                            //             ],
-                            //             color: whiteColor,
-                            //           ),
-                            //           child: Center(
-                            //             child: Text(
-                            //               LocaleKeys.txtCanceled.tr(),
-                            //               textAlign: TextAlign.start,
-                            //               style: const TextStyle(
-                            //                 fontSize: 14,
-                            //                 color: darkColor,
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       verticalMicroSpace,
-                            //     ],
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -315,15 +277,11 @@ class _ReservedScreenState extends State<ReservedScreen> {
                                           0,
                                     ),
                                   ),
-                                  fallback: (context) => const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  ),
+                                  fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                                 ),
                               ],
                             ),
-                            fallback: (context) => ScreenHolder(
-                                msg:
-                                    '${LocaleKeys.txtReservations.tr()} ${LocaleKeys.BtnAtHome.tr()}'),
+                            fallback: (context) => ScreenHolder(msg: '${LocaleKeys.txtReservations.tr()} ${LocaleKeys.BtnAtHome.tr()}'),
                           ),
                         ],
                       ),

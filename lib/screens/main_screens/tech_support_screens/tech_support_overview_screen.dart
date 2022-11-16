@@ -92,7 +92,7 @@ class _TechSupportOverviewScreenState extends State<TechSupportOverviewScreen> {
                 ),
                 verticalMiniSpace,
                 Container(
-                  height: 210.0,
+                  height: 220.0,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: whiteColor,

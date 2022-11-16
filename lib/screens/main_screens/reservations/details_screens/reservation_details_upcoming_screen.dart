@@ -13,7 +13,6 @@ import 'package:hq/cubit/states.dart';
 import 'package:hq/models/patient_models/home_appointments_model/home_reservation_model.dart';
 import 'package:hq/models/patient_models/lab_appointments_model/lab_reservation_model.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
-import 'package:hq/screens/main_screens/reservations/details_screens/rate_screens/experience_rate_screen.dart';
 import 'package:hq/shared/components/cached_network_image.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -62,12 +61,39 @@ class _ReservationDetailsUpcomingScreenState
     String image;
     int price;
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is AppCancelLabReservationSuccessState){
+          if(state.successModel.status){
+            showToast(msg: state.successModel.message,state: ToastState.success);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }else {
+            showToast(msg: state.successModel.message,state: ToastState.error);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
+        }else if(state is AppCancelLabReservationErrorState) {
+          showToast(msg: state.error,state: ToastState.error);
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state) {
         var labReservationsDataModel =
             widget.labReservationsModel?.data?[widget.index];
         var homeReservationsDataModel =
             widget.homeReservationsModel?.data?[widget.index];
+        Color stateColor;
+        if (labReservationsDataModel?.statusEn == 'Pending' || homeReservationsDataModel?.statusEn == 'Pending') {
+          stateColor = pendingColor;
+        } else if (labReservationsDataModel?.statusEn == 'Accepted' || homeReservationsDataModel?.statusEn == 'Accepted') {
+          stateColor = acceptedColor;
+        } else if (labReservationsDataModel?.statusEn == 'Sampling' || homeReservationsDataModel?.statusEn == 'Sampling') {
+          stateColor = samplingColor;
+        } else if (labReservationsDataModel?.statusEn == 'Finished' || homeReservationsDataModel?.statusEn == 'Finished') {
+          stateColor = finishedColor;
+        } else {
+          stateColor = canceledColor;
+        }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -118,7 +144,7 @@ class _ReservationDetailsUpcomingScreenState
                           Container(
                             height: 36,
                             decoration: BoxDecoration(
-                              color: mainLightColor.withOpacity(0.2),
+                              color: stateColor.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(radius),
                             ),
                             padding:
@@ -130,7 +156,7 @@ class _ReservationDetailsUpcomingScreenState
                                     labReservationsDataModel?.status,
                                 style: titleStyle.copyWith(
                                     fontSize: 15.0,
-                                    color: mainColor,
+                                    color: stateColor,
                                     fontWeight: FontWeight.normal),
                               ),
                             ),
@@ -149,7 +175,8 @@ class _ReservationDetailsUpcomingScreenState
                     SizedBox(
                       height: 120.0 *
                           ((widget.homeReservationsModel?.data?[widget.index]
-                                  .offers?.length ?? 0) +
+                                      .offers?.length ??
+                                  0) +
                               (widget.homeReservationsModel?.data?[widget.index]
                                       .tests?.length ??
                                   0)),
@@ -157,37 +184,53 @@ class _ReservationDetailsUpcomingScreenState
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
-                          if (widget.homeReservationsModel != null){
-                          if (widget.homeReservationsModel!.data![widget.index].tests!.isEmpty) {
-                            title = widget.homeReservationsModel?.data?[widget.index].offers?[index].title;
-                            price = widget.homeReservationsModel?.data?[widget.index].offers?[index].price;
-                            image = imageTest;
-                          } else if (widget.homeReservationsModel!.data![widget.index].offers!.isEmpty) {
-                            title = widget.homeReservationsModel?.data?[widget.index].tests?[index].title;
-                            price = widget.homeReservationsModel?.data?[widget.index].tests?[index].price;
-                            image = imageTest;
-                          } else {
-                            title = '';
-                            image = '';
-                            price = 0;
-                          }
-                          }else if (widget.labReservationsModel != null){
-                            if (widget.labReservationsModel!.data![widget.index].tests!.isEmpty) {
-                              title = widget.labReservationsModel?.data?[widget.index].offers?[index].title;
-                              price = widget.labReservationsModel?.data?[widget.index].offers?[index].price;
-                              image = imageTest;
-                            } else if (widget.labReservationsModel!.data![widget.index].offers!.isEmpty) {
-                              title = widget.labReservationsModel?.data?[widget.index].tests?[index].title;
-                              price = widget.labReservationsModel?.data?[widget.index].tests?[index].price;
-                              image = imageTest;
+                          if (widget.homeReservationsModel != null) {
+                            if (widget.homeReservationsModel!
+                                .data![widget.index].tests!.isEmpty) {
+                              title = widget.homeReservationsModel
+                                  ?.data?[widget.index].offers?[index].title;
+                              price = widget.homeReservationsModel
+                                  ?.data?[widget.index].offers?[index].price;
+                              image = widget.homeReservationsModel
+                                  ?.data?[widget.index].offers?[index].image;
+                            } else if (widget.homeReservationsModel!
+                                .data![widget.index].offers!.isEmpty) {
+                              title = widget.homeReservationsModel
+                                  ?.data?[widget.index].tests?[index].title;
+                              price = widget.homeReservationsModel
+                                  ?.data?[widget.index].tests?[index].price;
+                              image = widget.homeReservationsModel
+                                  ?.data?[widget.index].tests?[index].image;
                             } else {
                               title = '';
-                              image = '';
+                              image = imageTest;
+                              price = 0;
+                            }
+                          } else if (widget.labReservationsModel != null) {
+                            if (widget.labReservationsModel!.data![widget.index]
+                                .tests!.isEmpty) {
+                              title = widget.labReservationsModel
+                                  ?.data?[widget.index].offers?[index].title;
+                              price = widget.labReservationsModel
+                                  ?.data?[widget.index].offers?[index].price;
+                              image = widget.labReservationsModel
+                                  ?.data?[widget.index].offers?[index].image;
+                            } else if (widget.labReservationsModel!
+                                .data![widget.index].offers!.isEmpty) {
+                              title = widget.labReservationsModel
+                                  ?.data?[widget.index].tests?[index].title;
+                              price = widget.labReservationsModel
+                                  ?.data?[widget.index].tests?[index].price;
+                              image = widget.labReservationsModel
+                                  ?.data?[widget.index].tests?[index].image;
+                            } else {
+                              title = '';
+                              image = imageTest;
                               price = 0;
                             }
                           } else {
                             title = '';
-                            image = '';
+                            image = imageTest;
                             price = 0;
                           }
                           return Container(
@@ -263,71 +306,77 @@ class _ReservationDetailsUpcomingScreenState
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
                           if (labReservationsDataModel.tests!.isEmpty) {
-                            title = labReservationsDataModel.offers?[index].title;
-                            price = labReservationsDataModel.offers?[index].price;
-                            image = imageTest;
+                            title =
+                                labReservationsDataModel.offers?[index].title;
+                            price =
+                                labReservationsDataModel.offers?[index].price;
+                            image =
+                                labReservationsDataModel.offers?[index].image;
                           } else if (labReservationsDataModel.offers!.isEmpty) {
-                            title = labReservationsDataModel.tests?[index].title;
-                            price = labReservationsDataModel.tests?[index].price;
-                            image = imageTest;
+                            title =
+                                labReservationsDataModel.tests?[index].title;
+                            price =
+                                labReservationsDataModel.tests?[index].price;
+                            image =
+                                labReservationsDataModel.tests?[index].image;
                           } else {
                             title = '';
                             image = '';
                             price = 0;
                           }
                           return Container(
-                          height: 110.0,
-                          width: 110.0,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(radius),
-                            border: Border.all(
-                              width: 1,
-                              color: greyLightColor,
-                            ),
-                          ),
-                          alignment: AlignmentDirectional.center,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 4),
-                          child: Stack(
-                            alignment: AlignmentDirectional.topEnd,
-                            children: [
-                              Row(
-                                children: [
-                                  horizontalMicroSpace,
-                                  CachedNetworkImageNormal(
-                                    imageUrl: image,
-                                    width: 80,
-                                    height: 80,
-                                  ),
-                                  horizontalSmallSpace,
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          title,
-                                          style: titleSmallStyle,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          '$price ${LocaleKeys.salary.tr()}',
-                                          style: titleSmallStyle2,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                            height: 110.0,
+                            width: 110.0,
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(radius),
+                              border: Border.all(
+                                width: 1,
+                                color: greyLightColor,
                               ),
-                            ],
-                          ),
-                        );
+                            ),
+                            alignment: AlignmentDirectional.center,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 4),
+                            child: Stack(
+                              alignment: AlignmentDirectional.topEnd,
+                              children: [
+                                Row(
+                                  children: [
+                                    horizontalMicroSpace,
+                                    CachedNetworkImageNormal(
+                                      imageUrl: image,
+                                      width: 80,
+                                      height: 80,
+                                    ),
+                                    horizontalSmallSpace,
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            title,
+                                            style: titleSmallStyle,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            '$price ${LocaleKeys.salary.tr()}',
+                                            style: titleSmallStyle2,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         separatorBuilder: (context, index) => verticalMiniSpace,
                         itemCount:
@@ -471,7 +520,6 @@ class _ReservationDetailsUpcomingScreenState
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
@@ -550,7 +598,8 @@ class _ReservationDetailsUpcomingScreenState
                                   ),
                                 ],
                               ),
-                              verticalMicroSpace,verticalMicroSpace,
+                              verticalMicroSpace,
+                              verticalMicroSpace,
                               Row(
                                 children: [
                                   Text(
@@ -572,8 +621,10 @@ class _ReservationDetailsUpcomingScreenState
                   ),
                   verticalSmallSpace,
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
+                      if (labReservationsDataModel?.statusEn == 'Pending' || homeReservationsDataModel?.statusEn == 'Pending')
+                        Expanded(
                         child: MaterialButton(
                           onPressed: () {
                             showPopUp(
@@ -609,16 +660,28 @@ class _ReservationDetailsUpcomingScreenState
                                       style: subTitleSmallStyle,
                                     ),
                                     verticalMediumSpace,
-                                    GeneralButton(
-                                      radius: radius,
-                                      btnBackgroundColor: redColor,
-                                      title:
-                                          LocaleKeys.txtUnderstandContinue.tr(),
-                                      onPress: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
+
                                     verticalSmallSpace,
+                                    ConditionalBuilder(
+                                      condition: state is! AppCancelLabReservationLoadingState,
+                                      builder: (context) => GeneralButton(
+                                        radius: radius,
+                                        btnBackgroundColor: redColor,
+                                        title:
+                                        LocaleKeys.txtUnderstandContinue.tr(),
+                                        onPress: () {
+                                          AppCubit.get(context)
+                                              .cancelLabReservations(
+                                              reservationId: widget
+                                                  .homeReservationsModel
+                                                  ?.data?[widget.index]
+                                                  .id ??
+                                                  labReservationsDataModel
+                                                      ?.id);
+                                        },
+                                      ),
+                                      fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()) ,
+                                    ),
                                     GeneralButton(
                                       radius: radius,
                                       btnBackgroundColor: greyExtraLightColor,
@@ -627,7 +690,7 @@ class _ReservationDetailsUpcomingScreenState
                                       onPress: () {
                                         Navigator.pop(context);
                                       },
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -652,7 +715,6 @@ class _ReservationDetailsUpcomingScreenState
                       ),
                       MaterialButton(
                         onPressed: () async {
-                          print(widget.homeReservationsModel?.extra?.phone ?? widget.labReservationsModel?.extra?.phone);
                           await FlutterPhoneDirectCaller.callNumber(
                               '${widget.homeReservationsModel?.extra?.phone ?? widget.labReservationsModel?.extra?.phone}');
                         },

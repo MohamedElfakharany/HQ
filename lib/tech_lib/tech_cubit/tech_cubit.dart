@@ -17,6 +17,7 @@ import 'package:hq/shared/network/remote/end_points.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
 import 'package:hq/tech_lib/tech_models/requests_model.dart';
 import 'package:hq/tech_lib/tech_models/reservation_model.dart';
+import 'package:hq/tech_lib/tech_models/tech_tech_support_model.dart';
 import 'package:hq/tech_lib/tech_screens/profile_screens/profile_screen.dart';
 import 'package:hq/tech_lib/tech_screens/tech_home_screen.dart';
 import 'package:hq/tech_lib/tech_screens/tech_requests_screen.dart';
@@ -42,6 +43,7 @@ class AppTechCubit extends Cubit<AppTechStates> {
   List<TechReservationsDataModel>? techReservationsSamplingModel = [];
   List<TechReservationsDataModel>? techReservationsCanceledModel = [];
   List<TechReservationsDataModel>? techReservationsFinishedModel = [];
+  TechUserRequestModel? techUserRequestModel;
 
   double mLatitude = 0;
   double mLongitude = 0;
@@ -308,6 +310,35 @@ class AppTechCubit extends Cubit<AppTechStates> {
       emit(AppGetTechRequestsSuccessState(techRequestsModel!));
     } catch (error) {
       emit(AppGetTechRequestsErrorState(error.toString()));
+    }
+  }
+
+  Future getUserRequest() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Accept-Language': sharedLanguage,
+        'Authorization': 'Bearer $token',
+      };
+      emit(AppGetTechUserRequestLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        userRequestURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      techUserRequestModel = TechUserRequestModel.fromJson(responseJson);
+      print('techUserRequestModel : $responseJson');
+      emit(AppGetTechUserRequestSuccessState(techUserRequestModel!));
+    } catch (error) {
+      emit(AppGetTechUserRequestErrorState(error.toString()));
     }
   }
 

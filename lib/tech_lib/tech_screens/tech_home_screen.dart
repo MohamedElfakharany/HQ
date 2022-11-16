@@ -1,6 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/shared/components/general_components.dart';
@@ -19,13 +18,10 @@ class TechHomeScreen extends StatefulWidget {
 }
 
 class _TechHomeScreenState extends State<TechHomeScreen> {
-
   @override
-  void initState (){
+  void initState() {
     super.initState();
     AppTechCubit.get(context).getProfile();
-    AppTechCubit.get(context).getRequests();
-    AppTechCubit.get(context).getReservations();
   }
 
   @override
@@ -35,7 +31,8 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
       create: (BuildContext context) => AppTechCubit()
         ..getProfile()
         ..getRequests()
-        ..getReservations(),
+        ..getReservations()
+        ..getUserRequest(),
       child: BlocConsumer<AppTechCubit, AppTechStates>(
         listener: (context, state) {
           if (state is AppAcceptRequestsSuccessState) {
@@ -68,12 +65,14 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            setState(() {
-                              if (cubit.techRequestsModel?.data?.isNotEmpty ==
-                                  true) {
-                                cubit.changeBottomScreen(1);
-                              }
-                            });
+                            setState(
+                              () {
+                                if (cubit.techRequestsModel?.data?.isNotEmpty ==
+                                    true) {
+                                  cubit.changeBottomScreen(1);
+                                }
+                              },
+                            );
                           },
                           child: Text(
                             LocaleKeys.BtnSeeAll.tr(),
@@ -92,10 +91,7 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                         child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InkWell(
-                            onTap: () {},
-                            child: TechHomeRequestsCart(index: index),
-                          ),
+                          itemBuilder: (context, index) => TechHomeRequestsCart(index: index),
                           separatorBuilder: (context, index) =>
                               horizontalMiniSpace,
                           itemCount: AppTechCubit.get(context)

@@ -28,6 +28,7 @@ import 'package:hq/models/patient_models/profile_models/families_model.dart';
 import 'package:hq/models/patient_models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/patient_models/profile_models/notifications_model.dart';
 import 'package:hq/models/patient_models/profile_models/terms_model.dart';
+import 'package:hq/models/patient_models/patient_tech_request_model.dart';
 import 'package:hq/models/patient_models/test_models/categories_model.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
@@ -76,6 +77,7 @@ class AppCubit extends Cubit<AppStates> {
   HomeResultsModel? homeResultsModel;
   AddressModel? addressModel;
   NotificationsModel? notificationsModel;
+  PatientTechnicalSupportModel? patientTechnicalSupportModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -450,6 +452,67 @@ class AppCubit extends Cubit<AppStates> {
     extraBranchTitle = extraBranchTitle1;
   }
 
+  Future getUserRequest() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Accept-Language': sharedLanguage,
+        'Authorization': 'Bearer $token',
+      };
+      emit(AppGetTechRequestLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        patientTechnicalRequestsURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      print(responseJson);
+      patientTechnicalSupportModel = PatientTechnicalSupportModel.fromJson(responseJson);
+      print(patientTechnicalSupportModel);
+      emit(AppGetTechRequestSuccessState(patientTechnicalSupportModel!));
+    } catch (error) {
+      emit(AppGetTechRequestErrorState(error.toString()));
+    }
+  }
+
+  Future cancelTechRequest({
+    int? technicalRequestId,
+  }) async {
+    emit(AppCancelTechRequestsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        '$patientTechnicalRequestsURL/$technicalRequestId/cancel',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      print(responseJson);
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCancelTechRequestsSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCancelTechRequestsErrorState(error.toString()));
+    }
+  }
+
   Future getProfile() async {
     try {
       emit(AppGetProfileLoadingState());
@@ -714,6 +777,36 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppSelectAddressSuccessState(successModel!));
     } catch (error) {
       emit(AppSelectAddressErrorState(error.toString()));
+    }
+  }
+
+  Future cancelLabReservations({
+    int? reservationId,
+  }) async {
+    emit(AppCancelLabReservationLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$getLabReservationsURL/$reservationId/cancel',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCancelLabReservationSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCancelLabReservationErrorState(error.toString()));
     }
   }
 
@@ -1650,11 +1743,7 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      // printWrapped('labReservationsModel responseJson : $responseJson');
-      print('before');
       labReservationsModel = LabReservationsModel.fromJson(responseJson);
-      print('after');
-      // printWrapped('labReservationsModel : $labReservationsModel');
       emit(AppGetLabReservationsSuccessState(labReservationsModel!));
     } catch (error) {
       emit(AppGetLabReservationsErrorState(error.toString()));

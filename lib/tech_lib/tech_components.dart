@@ -146,6 +146,14 @@ class TechHomeRequestsCart extends StatelessWidget {
       builder: (context, state) {
         var techRequests =
             AppTechCubit.get(context).techRequestsModel?.data?[index];
+        String image;
+        if(techRequests?.tests != null){
+          image = techRequests?.tests?.first.image;
+        }else if (techRequests?.offers != null){
+          image = techRequests?.offers?.first.image;
+        }else {
+          image = imageTest;
+        }
         return Container(
           height: 260.0,
           width: MediaQuery.of(context).size.width * 0.7,
@@ -178,7 +186,7 @@ class TechHomeRequestsCart extends StatelessWidget {
               Row(
                 children: [
                   CachedNetworkImageCircular(
-                    imageUrl: imageTest,
+                    imageUrl: image,
                     height: 65,
                   ),
                   horizontalMiniSpace,
@@ -283,6 +291,14 @@ class TechHomeReservationsCart extends StatelessWidget {
         } else {
           stateColor = canceledColor;
         }
+        String image;
+        if(techReservations.tests != null){
+          image = techReservations.tests?.first.image;
+        }else if (techReservations.offers != null){
+          image = techReservations.offers?.first.image;
+        }else {
+          image = imageTest;
+        }
         return InkWell(
           onTap: () {
             Navigator.push(
@@ -347,7 +363,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                 Row(
                   children: [
                     CachedNetworkImageCircular(
-                      imageUrl: imageTest,
+                      imageUrl: image,
                       height: 55,
                     ),
                     horizontalMiniSpace,
@@ -547,6 +563,107 @@ class ReservedFinishingSubScreen extends StatelessWidget {
                 0,
           ),
           fallback: (context) => ScreenHolder(msg: LocaleKeys.txtFinished.tr()),
+        );
+      },
+    );
+  }
+}
+
+class TechUserRequestsCart extends StatelessWidget {
+  const TechUserRequestsCart({Key? key, required this.index}) : super(key: key);
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppTechCubit, AppTechStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var techRequests =
+        AppTechCubit.get(context).techRequestsModel?.data?[index];
+        return Container(
+          height: 200.0,
+          width: MediaQuery.of(context).size.width * 0.7,
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(radius),
+            border: Border.all(
+              width: 1,
+              color: greyLightColor,
+            ),
+          ),
+          alignment: AlignmentDirectional.center,
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('#${techRequests?.id ?? 0}'),
+                  const Spacer(),
+                ],
+              ),
+              Text('${techRequests?.date?.date} - ${techRequests?.date?.time}'),
+              myHorizontalDivider(),
+              verticalMicroSpace,
+              Expanded(
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_rounded,
+                      color: greyDarkColor,
+                    ),
+                    horizontalMiniSpace,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${techRequests?.address?.address}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                FadeRoute(
+                                  page: TechMapScreen(
+                                      lat: techRequests?.address?.latitude,
+                                      long: techRequests?.address?.longitude),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Show Map',
+                              style: titleSmallStyle2.copyWith(
+                                  decoration: TextDecoration.underline,
+                                  color: mainColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    horizontalMiniSpace,
+                  ],
+                ),
+              ),
+              ConditionalBuilder(
+                condition: state is! AppAcceptRequestsLoadingState,
+                builder: (context) => GeneralButton(
+                  height: 40.0,
+                  title: LocaleKeys.BtnAccept.tr(),
+                  onPress: () {
+                    AppTechCubit.get(context)
+                        .acceptRequest(requestId: techRequests!.id);
+                  },
+                ),
+                fallback: (context) =>
+                const Center(child: CircularProgressIndicator.adaptive()),
+              ),
+            ],
+          ),
         );
       },
     );
