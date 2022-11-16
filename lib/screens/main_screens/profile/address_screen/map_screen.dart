@@ -104,7 +104,7 @@ class _MapScreenState extends State<MapScreen> {
                     zoom: 10.0,
                   ),
                   onMapCreated: (controller) {
-                    controller = controller;
+                    // controller = controller;
                   },
                   onCameraMove: (camera) {},
                   onTap: (latLong) {
