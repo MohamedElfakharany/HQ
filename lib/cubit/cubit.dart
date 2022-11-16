@@ -1,36 +1,37 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/patient_models/auth_models/create_token_model.dart';
 import 'package:hq/models/patient_models/auth_models/reset_password_model.dart';
+import 'package:hq/models/patient_models/auth_models/user_resource_model.dart';
+import 'package:hq/models/patient_models/auth_models/verify_model.dart';
 import 'package:hq/models/patient_models/cores_models/branch_model.dart';
 import 'package:hq/models/patient_models/cores_models/carousel_model.dart';
 import 'package:hq/models/patient_models/cores_models/city_model.dart';
 import 'package:hq/models/patient_models/cores_models/country_model.dart';
 import 'package:hq/models/patient_models/cores_models/relations_model.dart';
-import 'package:hq/models/patient_models/auth_models/verify_model.dart';
-import 'package:hq/models/patient_models/auth_models/user_resource_model.dart';
 import 'package:hq/models/patient_models/home_appointments_model/home_appointments_model.dart';
 import 'package:hq/models/patient_models/home_appointments_model/home_reservation_model.dart';
 import 'package:hq/models/patient_models/home_appointments_model/home_result_model.dart';
 import 'package:hq/models/patient_models/lab_appointments_model/lab_appointment_model.dart';
 import 'package:hq/models/patient_models/lab_appointments_model/lab_reservation_model.dart';
 import 'package:hq/models/patient_models/lab_appointments_model/lab_result_model.dart';
+import 'package:hq/models/patient_models/patient_tech_request_model.dart';
 import 'package:hq/models/patient_models/profile_models/address_model.dart';
 import 'package:hq/models/patient_models/profile_models/families_model.dart';
 import 'package:hq/models/patient_models/profile_models/medical-inquiries.dart';
 import 'package:hq/models/patient_models/profile_models/notifications_model.dart';
 import 'package:hq/models/patient_models/profile_models/terms_model.dart';
-import 'package:hq/models/patient_models/patient_tech_request_model.dart';
 import 'package:hq/models/patient_models/test_models/categories_model.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
+import 'package:hq/models/patient_models/test_models/tests_model.dart';
 import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/screens/main_screens/home_screen.dart';
 import 'package:hq/screens/main_screens/profile/profile_screen.dart';
@@ -41,13 +42,10 @@ import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/network/local/cache_helper.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/end_points.dart';
-import 'package:hq/models/patient_models/test_models/tests_model.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart' as p;
-import 'package:geocoding/geocoding.dart' as geo;
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppStates());
@@ -99,112 +97,10 @@ class AppCubit extends Cubit<AppStates> {
 
   int? branchIdForReservationList;
 
-  double mLatitude = 0;
-  double mLongitude = 0;
-  GoogleMapController? controller;
-  Location currentLocation = Location();
-  final Set<Marker> markers = {};
-  geo.Placemark? userAddress;
-  String? addressLocation;
-  Location location = Location();
-
-  Future _getLocation({double? lat, double? long}) async {
-    LocationData pos = await location.getLocation();
-    mLatitude = pos.latitude!;
-    mLongitude = pos.longitude!;
-    lat = mLatitude;
-    long = mLongitude;
-    if (kDebugMode) {
-      print('latitude inside get location $lat');
-    }
-    var permission = await currentLocation.hasPermission();
-    if (permission == PermissionStatus.denied) {
-      permission = await currentLocation.requestPermission();
-      if (permission != PermissionStatus.granted) {
-        return;
-      }
-    } else {
-      currentLocation.onLocationChanged.listen((LocationData loc) {
-        lat = loc.latitude!;
-        long = loc.longitude!;
-        controller?.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(
-                  loc.latitude ?? lat ?? mLatitude, loc.longitude ?? long ?? mLongitude),
-              zoom: 17.0,
-            ),
-          ),
-        );
-        markers.add(
-          Marker(
-              markerId: const MarkerId('Home'),
-              position: LatLng(
-                  loc.latitude ?? lat ?? mLatitude, loc.longitude ?? long ?? mLongitude)),
-        );
-      });
-    }
-  }
-
-  Future<void> getAddressBasedOnLocation({double? lat, double? long}) async {
-    // if (mLatitude == 0.0 && mLongitude == 0.0) {
-    //   lat = mLatitude;
-    //   long = mLongitude;
-    //   await _getLocation().then((value) async {
-    //     print('latitude, longitude after $lat, $long}');
-    //     var address = await geo.placemarkFromCoordinates(lat!, long!);
-    //     userAddress = address.first;
-    //     if (kDebugMode) {
-    //       print('from getAddressBasedOnLocation userAddress : $userAddress');
-    //     }
-    //     controller?.animateCamera(
-    //       CameraUpdate.newCameraPosition(
-    //         CameraPosition(
-    //           target: LatLng(lat, long),
-    //           zoom: 17.0,
-    //         ),
-    //       ),
-    //     );
-    //     markers.add(
-    //       Marker(
-    //           markerId: const MarkerId('Home'),
-    //           position: LatLng(lat, long)),
-    //     );
-    //     addressLocation =
-    //     '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
-    //   });
-    // }
-    lat = mLatitude;
-    long = mLongitude;
-    await _getLocation(lat: lat, long: long).then((value) async {
-      var address = await geo.placemarkFromCoordinates(lat!, long!);
-      userAddress = address.first;
-      if (kDebugMode) {
-        print('from getAddressBasedOnLocation userAddress : $userAddress');
-      }
-      controller?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(lat, long),
-            zoom: 17.0,
-          ),
-        ),
-      );
-      markers.add(
-        Marker(
-            markerId: const MarkerId('Home'),
-            position: LatLng(lat, long)),
-      );
-      addressLocation =
-      '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
-    });
-  }
-
   void selectAddressId({required String address}) {
     for (int i = 0; i < addressNames!.length; i++) {
       if (addressNames![i].address == address) {
         addressIdList = addressNames![i].id;
-
       }
     }
   }
@@ -474,7 +370,8 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       print(responseJson);
-      patientTechnicalSupportModel = PatientTechnicalSupportModel.fromJson(responseJson);
+      patientTechnicalSupportModel =
+          PatientTechnicalSupportModel.fromJson(responseJson);
       print(patientTechnicalSupportModel);
       emit(AppGetTechRequestSuccessState(patientTechnicalSupportModel!));
     } catch (error) {
@@ -738,7 +635,7 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
-        print ('AppCreateAddressSuccessState : $responseJson');
+        print('AppCreateAddressSuccessState : $responseJson');
       }
       successModel = SuccessModel.fromJson(responseJson);
       getAddress();
@@ -1676,7 +1573,6 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-
   Future createTechnicalRequests({
     required String date,
     required String time,
@@ -1713,7 +1609,8 @@ class AppCubit extends Cubit<AppStates> {
       if (kDebugMode) {
         print('responseJson : $responseJson');
         print('formData : ${formData.fields}');
-        print('patientTechnicalRequestsCreateURL : $patientTechnicalRequestsCreateURL');
+        print(
+            'patientTechnicalRequestsCreateURL : $patientTechnicalRequestsCreateURL');
       }
       successModel = SuccessModel.fromJson(responseJson);
       emit(AppCreateTechnicalRequestsSuccessState(successModel!));

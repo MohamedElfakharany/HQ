@@ -1,8 +1,10 @@
 // ignore_for_file: must_be_immutable
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
@@ -11,6 +13,7 @@ import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -22,6 +25,22 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   var formKey = GlobalKey<FormState>();
   final focusNodes = Iterable<int>.generate(4).map((_) => FocusNode()).toList();
+  GoogleMapController? controller;
+
+  @override
+  void initState() {
+    getAddressBasedOnLocation();
+    // addMarkers();
+    super.initState();
+  }
+
+  double mLatitude = 0;
+  double mLongitude = 0;
+  Location currentLocation = Location();
+  final Set<Marker> markers = {};
+  geo.Placemark? userAddress;
+  String? addressLocation;
+  Location location = Location();
 
   final addressController = TextEditingController();
   final markOfPlaceController = TextEditingController();
@@ -41,7 +60,6 @@ class _MapScreenState extends State<MapScreen> {
         }
       },
       builder: (context, state) {
-        AppCubit.get(context).getAddressBasedOnLocation();
         return Scaffold(
           appBar: AppBar(
             title: const Icon(
@@ -56,7 +74,7 @@ class _MapScreenState extends State<MapScreen> {
                 color: greyDarkColor,
               ),
               onPressed: () {
-                AppCubit.get(context).currentLocation.serviceEnabled().ignore();
+                currentLocation.serviceEnabled().ignore();
                 Navigator.pop(context);
               },
             ),
@@ -72,21 +90,20 @@ class _MapScreenState extends State<MapScreen> {
                   zoomControlsEnabled: true,
                   myLocationEnabled: true,
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(AppCubit.get(context).mLatitude,
-                        AppCubit.get(context).mLongitude),
+                    target: LatLng(mLatitude, mLongitude),
                     zoom: 10.0,
                   ),
                   onMapCreated: (controller) {
-                    AppCubit.get(context).controller = controller;
+                    controller = controller;
                   },
                   onCameraMove: (camera) {},
                   onTap: (latLong) {
                     setState(() {
-                      AppCubit.get(context).getAddressBasedOnLocation(
+                      getAddressBasedOnLocation(
                           lat: latLong.latitude, long: latLong.longitude);
                     });
                   },
-                  markers: AppCubit.get(context).markers,
+                  markers: markers,
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .5,
@@ -115,8 +132,7 @@ class _MapScreenState extends State<MapScreen> {
                               label: LocaleKeys.txtFieldAddress.tr(),
                               onTap: () {},
                               suffixPressed: () {
-                                addressController.text =
-                                    AppCubit.get(context).addressLocation ?? '';
+                                addressController.text = addressLocation ?? '';
                               },
                             ),
                           ),
@@ -151,11 +167,11 @@ class _MapScreenState extends State<MapScreen> {
                               title: LocaleKeys.txtFieldAddress.tr(),
                               onPress: () {
                                 if (formKey.currentState!.validate()) {
-                                AppCubit.get(context).createAddress(
-                                  latitude: AppCubit.get(context).mLongitude,
-                                  longitude: AppCubit.get(context).mLongitude,
-                                  address: addressController.text,
-                                );
+                                  AppCubit.get(context).createAddress(
+                                    latitude: mLongitude,
+                                    longitude: mLongitude,
+                                    address: addressController.text,
+                                  );
                                 }
                               },
                             ),
@@ -175,5 +191,68 @@ class _MapScreenState extends State<MapScreen> {
         );
       },
     );
+  }
+
+  Future _getLocation({double? lat, double? long}) async {
+    LocationData pos = await location.getLocation();
+    mLatitude = pos.latitude!;
+    mLongitude = pos.longitude!;
+    lat = mLatitude;
+    long = mLongitude;
+    if (kDebugMode) {
+      print('latitude inside get location $lat');
+    }
+    var permission = await currentLocation.hasPermission();
+    if (permission == PermissionStatus.denied) {
+      permission = await currentLocation.requestPermission();
+      if (permission != PermissionStatus.granted) {
+        return;
+      }
+    } else {
+      currentLocation.onLocationChanged.listen((LocationData loc) {
+        lat = loc.latitude!;
+        long = loc.longitude!;
+        controller?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(loc.latitude ?? lat ?? mLatitude,
+                  loc.longitude ?? long ?? mLongitude),
+              zoom: 17.0,
+            ),
+          ),
+        );
+        markers.add(
+          Marker(
+              markerId: const MarkerId('Home'),
+              position: LatLng(loc.latitude ?? lat ?? mLatitude,
+                  loc.longitude ?? long ?? mLongitude)),
+        );
+      });
+    }
+  }
+
+  Future<void> getAddressBasedOnLocation({double? lat, double? long}) async {
+    lat = mLatitude;
+    long = mLongitude;
+    await _getLocation(lat: lat, long: long).then((value) async {
+      var address = await geo.placemarkFromCoordinates(lat!, long!);
+      userAddress = address.first;
+      if (kDebugMode) {
+        print('from getAddressBasedOnLocation userAddress : $userAddress');
+      }
+      controller?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(lat, long),
+            zoom: 17.0,
+          ),
+        ),
+      );
+      markers.add(
+        Marker(markerId: const MarkerId('Home'), position: LatLng(lat, long)),
+      );
+      addressLocation =
+          '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
+    });
   }
 }

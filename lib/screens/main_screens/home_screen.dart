@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     verticalMiniSpace,
                     Container(
-                      height: 150.0,
+                      // height: 170.0,
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(radius),
@@ -365,7 +365,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   title:
                                       '${LocaleKeys.TxtReservationScreenTitle.tr()} ${LocaleKeys.txtNow.tr()}',
                                   onPress: () {
-                                    Navigator.push(context,FadeRoute(page: const CreateTechSupportScreen(),),);
+                                    Navigator.push(
+                                      context,
+                                      FadeRoute(
+                                        page: const CreateTechSupportScreen(),
+                                      ),
+                                    );
                                   },
                                   height: 40,
                                 ),
@@ -375,7 +380,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                               child: Padding(
                             padding: const EdgeInsetsDirectional.only(
-                                top: 10.0, start: 10.0, bottom: 10.0),
+                              top: 10.0,
+                              start: 10.0,
+                              bottom: 10.0,
+                            ),
                             child: Image.asset(
                                 'assets/images/homeImageReserv.png'),
                           )),
@@ -433,8 +441,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   0,
                         ),
                       ),
-                      fallback: (context) =>
-                          const Center(child: CircularProgressIndicator.adaptive()),
+                      fallback: (context) => const Center(
+                          child: CircularProgressIndicator.adaptive()),
                     ),
                     verticalMiniSpace,
                   ],

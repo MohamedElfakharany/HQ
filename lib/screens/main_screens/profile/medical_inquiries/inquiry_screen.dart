@@ -67,15 +67,17 @@ class InquiryScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               medicalInquiriesDataModel.message ?? '',
-                              style:
-                                  subTitleSmallStyle.copyWith(color: whiteColor),
+                              style: subTitleSmallStyle.copyWith(
+                                  color: whiteColor),
                             ),
                           ),
                         ),
                         verticalSmallSpace,
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
-                          child: CachedNetworkImage(imageUrl: medicalInquiriesDataModel.file,),
+                          child: CachedNetworkImage(
+                            imageUrl: medicalInquiriesDataModel.file,
+                          ),
                         ),
                         verticalMicroSpace,
                         Text(
@@ -121,16 +123,22 @@ class InquiryScreen extends StatelessWidget {
                             child: Text(
                               '${medicalInquiriesDataModel.answer?.message ?? ''} \n \n ${medicalInquiriesDataModel.answer?.user?.name ?? ''},',
                               textAlign: TextAlign.start,
-                              style:
-                                  subTitleSmallStyle.copyWith(color: whiteColor),
+                              style: subTitleSmallStyle.copyWith(
+                                  color: whiteColor),
                             ),
                           ),
                         ),
                         verticalSmallSpace,
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: CachedNetworkImage(imageUrl: medicalInquiriesDataModel.answer?.file,),
-                        ),
+                        medicalInquiriesDataModel.answer == null
+                            ? Container()
+                            : SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      medicalInquiriesDataModel.answer?.file ??
+                                          '',
+                                ),
+                              ),
                         verticalMicroSpace,
                         Text(
                           medicalInquiriesDataModel.answer?.date?.time ?? '',
