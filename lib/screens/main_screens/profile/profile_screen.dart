@@ -31,6 +31,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool later = true;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const Duration(milliseconds: 0),
       () async {
         if (AppCubit.get(context).isVisitor == false) {
+          AppCubit.get(context).getTerms();
           AppCubit.get(context).getMedicalInquiries();
           AppCubit.get(context).getProfile();
         }
@@ -176,12 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       physics: const BouncingScrollPhysics(),
                       child: Column(
                         children: [
-                          if (AppCubit.get(context).isVisitor == true ||
-                              AppCubit.get(context)
-                                      .userResourceModel
-                                      ?.data
-                                      ?.isCompleted ==
-                                  0)
+                          if (AppCubit.get(context).isVisitor == true &&
+                              later == true)
                             Container(
                               height: 160,
                               decoration: BoxDecoration(
@@ -231,11 +230,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     children: [
                                       MaterialButton(
                                         onPressed: () {
-                                          Navigator.push(
+                                          showPopUp(
                                             context,
-                                            FadeRoute(
-                                              page: const EditProfileScreen(),
-                                            ),
+                                            const VisitorHoldingPopUp(),
                                           );
                                         },
                                         child: Container(
@@ -258,7 +255,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ),
                                       MaterialButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          setState(() {
+                                            later = false;
+                                          });
+                                        },
                                         child: Container(
                                           height: 50,
                                           width: 90,
@@ -301,7 +302,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               position: BadgePosition.topEnd(end: 40.0),
                               alignment: AlignmentDirectional.centerEnd,
                               animationType: BadgeAnimationType.fade,
-                              badgeContent: Text('${AppCubit.get(context).medicalInquiriesModel?.data?.length}',style: titleSmallStyle2.copyWith(color: whiteColor),),
+                              badgeContent: Text(
+                                '${AppCubit.get(context).medicalInquiriesModel?.data?.length ?? ''}',
+                                style: titleSmallStyle2.copyWith(
+                                    color: whiteColor),
+                              ),
                               child: Row(
                                 children: [
                                   Image.asset(

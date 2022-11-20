@@ -33,24 +33,27 @@ class HomeReservationDetailsScreen extends StatefulWidget {
       _HomeReservationDetailsScreenState();
 }
 
-class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScreen> {
-
+class _HomeReservationDetailsScreenState
+    extends State<HomeReservationDetailsScreen> {
   String? locationValue;
-  String? memberValue ;
+  String? memberValue;
 
   @override
   void initState() {
     super.initState();
     AppCubit.get(context).getBranch(cityID: extraCityId!);
     AppCubit.get(context).getFamilies();
+    AppCubit.get(context).getAddress();
   }
+
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        locationValue = extraBranchTitle;
+        // locationValue = extraBranchTitle;
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -60,280 +63,289 @@ class _HomeReservationDetailsScreenState extends State<HomeReservationDetailsScr
           ),
           body: ConditionalBuilder(
             condition: state is! AppGetBranchesLoadingState,
-            builder: (context) =>
-                Padding(
-                  padding:
+            builder: (context) => Padding(
+              padding:
                   const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        LocaleKeys.txtPatient.tr(),
-                        style: titleStyle.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      verticalMiniSpace,
-                      if (AppCubit.get(context).isVisitor == true)
-                        Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(radius),
-                          ),
-                          alignment: AlignmentDirectional.center,
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.perm_identity_rounded,
-                                  color: greyLightColor,
-                                  size: 30,
-                                ),
-                                horizontalMiniSpace,
-                                Text(
-                                  LocaleKeys.txtPatient.tr(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      if (AppCubit.get(context).isVisitor == false)
-                        Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(radius),
-                          ),
-                          alignment: AlignmentDirectional.center,
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButtonFormField<String>(
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Relation Required';
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.perm_identity_rounded,
-                                  color: greyLightColor,
-                                  size: 30,
-                                ),
-                                contentPadding: EdgeInsetsDirectional.only(
-                                  start: 20.0,
-                                  end: 0.0,
-                                ),
-                                fillColor: Colors.white,
-                                filled: true,
-                                errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
-                                border: InputBorder.none,
-                              ),
-                              value: memberValue,
-                              isExpanded: true,
-                              iconSize: 30,
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: mainColor,
-                              ),
-                              items: AppCubit
-                                  .get(context)
-                                  .familiesName.map(buildMenuItem).toList(),
-                              onChanged: (value) =>
-                                  setState(() {
-                                    memberValue = value;
-                                    AppCubit.get(context)
-                                        .selectBranchForReservation(
-                                        name: memberValue ?? '');
-                                  }),
-                              onSaved: (v) {
-                                FocusScope.of(context).unfocus();
-                              },
-                            ),
-                          ),
-                        ),
-                      verticalMiniSpace,
-                      Text(
-                        LocaleKeys.TxtPopUpReservationType.tr(),
-                        style: titleStyle.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      verticalMiniSpace,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      LocaleKeys.txtPatient.tr(),
+                      style: titleStyle.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    verticalMiniSpace,
+                    if (AppCubit.get(context).isVisitor == true)
                       Container(
-                        height: 150.0,
+                        height: 50.0,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: whiteColor,
                           borderRadius: BorderRadius.circular(radius),
                         ),
                         alignment: AlignmentDirectional.center,
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  horizontalSmallSpace,
-                                  Text(
-                                    LocaleKeys.BtnAtHome.tr(),
-                                    style: titleSmallStyle.copyWith(color: mainColor),
-                                  ),
-                                  const Spacer(),
-                                  Image.asset('assets/images/atHomeIcon.png',
-                                      height: 30, width: 20, color: greyDarkColor),
-                                  horizontalSmallSpace,
-                                ],
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 4),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Icon(
+                                Icons.perm_identity_rounded,
+                                color: greyLightColor,
+                                size: 30,
                               ),
-                            ),
-                            // myHorizontalDivider(),
-                            // Expanded(
-                            //   child: DropdownButtonHideUnderline(
-                            //     child: DropdownButtonFormField<String>(
-                            //       validator: (value) {
-                            //         if (value == null) {
-                            //           return 'Location Required';
-                            //         }
-                            //       },
-                            //       decoration: InputDecoration(
-                            //         prefixIcon: const Icon(
-                            //           Icons.location_on_rounded,
-                            //           color: greyLightColor,
-                            //           size: 30,
-                            //         ),
-                            //         contentPadding: const EdgeInsetsDirectional.only(
-                            //             start: 20.0, end: 0.0, bottom: 15.0),
-                            //         fillColor: Colors.white,
-                            //         filled: true,
-                            //         errorStyle:
-                            //         const TextStyle(color: Color(0xFF4F4F4F)),
-                            //         border: InputBorder.none,
-                            //         suffixIcon: IconButton(
-                            //           onPressed: () {
-                            //             Navigator.push(
-                            //               context,
-                            //               FadeRoute(
-                            //                 page: MapScreen(),
-                            //               ),
-                            //             );
-                            //           },
-                            //           icon: const Icon(
-                            //             Icons.add_location_alt_outlined,
-                            //             color: blueColor,
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       value: locationItems.first,
-                            //       isExpanded: true,
-                            //       iconSize: 30,
-                            //       icon: const Icon(
-                            //         Icons.keyboard_arrow_down_rounded,
-                            //         color: blueColor,
-                            //       ),
-                            //       items:
-                            //       locationItems.map(buildLocationItem).toList(),
-                            //       onChanged: (value) =>
-                            //           setState(() => locationValue = value),
-                            //       onSaved: (v) {
-                            //       },
-                            //     ),
-                            //   ),
-                            // ),
-                            myHorizontalDivider(),
-                            Expanded(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButtonFormField<String>(
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Location Required';
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.location_on_rounded,
-                                      color: greyLightColor,
-                                      size: 30,
-                                    ),
-                                    contentPadding: EdgeInsetsDirectional.only(
-                                        start: 20.0, end: 0.0, bottom: 5.0),
-                                    fillColor: Colors.white,
-                                    filled: true,
-                                    errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
-                                    border: InputBorder.none,
-                                    suffixIcon: Text(''),
-                                  ),
-                                  value: locationValue,
-                                  isExpanded: true,
-                                  iconSize: 30,
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: mainColor,
-                                  ),
-                                  items: AppCubit
-                                      .get(context)
-                                      .branchName.map(buildLocationItem).toList(),
-                                  onChanged: (value) =>
-                                      setState(() {
-                                        locationValue = value;
-                                        AppCubit.get(context).selectBranchForReservation(name: locationValue!);
-                                      }),
-                                  onSaved: (v) {
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                ),
+                              horizontalMiniSpace,
+                              Text(
+                                LocaleKeys.txtPatient.tr(),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      const Spacer(),
-                      MaterialButton(
-                        onPressed: () {
+                    if (AppCubit.get(context).isVisitor == false)
+                      Container(
+                        height: 50.0,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(radius),
+                        ),
+                        alignment: AlignmentDirectional.center,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 4),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.perm_identity_rounded,
+                                color: greyLightColor,
+                                size: 30,
+                              ),
+                              contentPadding: EdgeInsetsDirectional.only(
+                                start: 20.0,
+                                end: 0.0,
+                              ),
+                              fillColor: Colors.white,
+                              filled: true,
+                              errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
+                              border: InputBorder.none,
+                            ),
+                            value: memberValue,
+                            isExpanded: true,
+                            iconSize: 30,
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: mainColor,
+                            ),
+                            items: AppCubit.get(context)
+                                .familiesName
+                                .map(buildMenuItem)
+                                .toList(),
+                            onChanged: (value) => setState(() {
+                              memberValue = value;
+                              AppCubit.get(context).selectBranchForReservation(
+                                  name: memberValue ?? '');
+                            }),
+                            onSaved: (v) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
+                        ),
+                      ),
+                    verticalMiniSpace,
+                    Text(
+                      LocaleKeys.TxtPopUpReservationType.tr(),
+                      style: titleStyle.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    verticalMiniSpace,
+                    Container(
+                      height: 150.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(radius),
+                      ),
+                      alignment: AlignmentDirectional.center,
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                horizontalSmallSpace,
+                                Text(
+                                  LocaleKeys.BtnAtHome.tr(),
+                                  style:
+                                      titleSmallStyle.copyWith(color: mainColor),
+                                ),
+                                const Spacer(),
+                                Image.asset('assets/images/atHomeIcon.png',
+                                    height: 30, width: 20, color: greyDarkColor),
+                                horizontalSmallSpace,
+                              ],
+                            ),
+                          ),
+                          // myHorizontalDivider(),
+                          // Expanded(
+                          //   child: DropdownButtonHideUnderline(
+                          //     child: DropdownButtonFormField<String>(
+                          //       validator: (value) {
+                          //         if (value == null) {
+                          //           return 'Location Required';
+                          //         }
+                          //       },
+                          //       decoration: InputDecoration(
+                          //         prefixIcon: const Icon(
+                          //           Icons.location_on_rounded,
+                          //           color: greyLightColor,
+                          //           size: 30,
+                          //         ),
+                          //         contentPadding: const EdgeInsetsDirectional.only(
+                          //             start: 20.0, end: 0.0, bottom: 15.0),
+                          //         fillColor: Colors.white,
+                          //         filled: true,
+                          //         errorStyle:
+                          //         const TextStyle(color: Color(0xFF4F4F4F)),
+                          //         border: InputBorder.none,
+                          //         suffixIcon: IconButton(
+                          //           onPressed: () {
+                          //             Navigator.push(
+                          //               context,
+                          //               FadeRoute(
+                          //                 page: MapScreen(),
+                          //               ),
+                          //             );
+                          //           },
+                          //           icon: const Icon(
+                          //             Icons.add_location_alt_outlined,
+                          //             color: blueColor,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       value: locationItems.first,
+                          //       isExpanded: true,
+                          //       iconSize: 30,
+                          //       icon: const Icon(
+                          //         Icons.keyboard_arrow_down_rounded,
+                          //         color: blueColor,
+                          //       ),
+                          //       items:
+                          //       locationItems.map(buildLocationItem).toList(),
+                          //       onChanged: (value) =>
+                          //           setState(() => locationValue = value),
+                          //       onSaved: (v) {
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
+                          myHorizontalDivider(),
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButtonFormField<String>(
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Location Required';
+                                  }
+                                },
+                                hint: Text(
+                                  LocaleKeys.TxtFieldAddressOfVisit.tr(),
+                                ),
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.location_on_rounded,
+                                    color: greyLightColor,
+                                    size: 30,
+                                  ),
+                                  contentPadding: EdgeInsetsDirectional.only(
+                                      start: 20.0,
+                                      end: 0.0,
+                                      bottom: 0.0,
+                                      top: 10.0),
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
+                                  border: InputBorder.none,
+                                ),
+                                value: locationValue,
+                                isExpanded: true,
+                                iconSize: 30,
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: mainColor,
+                                ),
+                                items: AppCubit.get(context)
+                                    .addressName
+                                    .map(buildLocationItem)
+                                    .toList(),
+                                onChanged: (value) => setState(() {
+                                  locationValue = value;
+                                  AppCubit.get(context)
+                                      .selectAddressId(address: locationValue!);
+                                }),
+                                onSaved: (v) {
+                                  FocusScope.of(context).unfocus();
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    MaterialButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
                           Navigator.push(
                             context,
                             FadeRoute(
                               page: HomeReservationOverviewScreen(
-                                branchName: locationValue ?? AppCubit.get(context).userResourceModel?.data?.branch?.title,
+                                branchName: locationValue!,
                                 testsDataModel: widget.testsDataModel,
                                 offersDataModel: widget.offersDataModel,
                                 date: widget.date,
                                 time: widget.time,
-                                familyId: AppCubit
-                                    .get(context)
-                                    .relationIdList,
-                                branchId: AppCubit.get(context).branchIdForReservationList ?? extraBranchId!,
-                                familyName: memberValue ?? AppCubit.get(context).userResourceModel?.data?.name,
+                                familyId: AppCubit.get(context).relationIdList,
+                                branchId: extraBranchId!,
+                                familyName: memberValue ??
+                                    AppCubit.get(context)
+                                        .userResourceModel
+                                        ?.data
+                                        ?.name,
+                                addressId: AppCubit.get(context)
+                                    .addressIdList!,
                               ),
                             ),
                           );
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: mainColor,
-                            borderRadius: BorderRadius.circular(radius),
-                          ),
-                          child: Center(
-                              child: Text(
-                                LocaleKeys.BtnContinue.tr(),
-                                style: titleStyle.copyWith(
-                                    fontSize: 20.0,
-                                    color: whiteColor,
-                                    fontWeight: FontWeight.normal),
-                              )),
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: mainColor,
+                          borderRadius: BorderRadius.circular(radius),
                         ),
+                        child: Center(
+                            child: Text(
+                          LocaleKeys.BtnContinue.tr(),
+                          style: titleStyle.copyWith(
+                              fontSize: 20.0,
+                              color: whiteColor,
+                              fontWeight: FontWeight.normal),
+                        )),
                       ),
-                      verticalMiniSpace,
-                    ],
-                  ),
+                    ),
+                    verticalMiniSpace,
+                  ],
                 ),
+              ),
+            ),
             fallback: (context) =>
-            const Center(child: CircularProgressIndicator.adaptive()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },

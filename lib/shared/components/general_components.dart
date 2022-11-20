@@ -2,6 +2,7 @@
 
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -273,16 +274,51 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppGetCartSuccessState) {
+          if (state.cartModel.status == true) {
+            if (state.cartModel.data!.isEmpty) {
+              showToast(msg: LocaleKeys.noDataToShow.tr(), state: ToastState.error);
+            } else {
+              Navigator.push(
+                context,
+                FadeRoute(
+                  page: const CartScreen(),
+                ),
+              );
+            }
+          } else {
+            showToast(msg: state.cartModel.message, state: ToastState.error);
+          }
+        } else if (state is AppGetCartErrorState) {
+          showToast(msg: state.error, state: ToastState.error);
+        }
+      },
       builder: (context, state) {
         var cubit = AppCubit.get(context);
         String notifications;
-        if(AppCubit.get(context).notificationsModel != null){
-          if(AppCubit.get(context).notificationsModel!.data!.length > 9 ){notifications = '+9';}else{
-            notifications = AppCubit.get(context).notificationsModel!.data!.length.toString();
+        if (AppCubit.get(context).notificationsModel != null) {
+          if (AppCubit.get(context).notificationsModel!.data!.length > 9) {
+            notifications = '+9';
+          } else {
+            notifications = AppCubit.get(context)
+                .notificationsModel!
+                .data!
+                .length
+                .toString();
           }
-        }else{
+        } else {
           notifications = '';
+        }
+        String cart;
+        if (AppCubit.get(context).cartModel != null) {
+          if (AppCubit.get(context).cartModel!.data!.length > 9) {
+            cart = '+9';
+          } else {
+            cart = AppCubit.get(context).cartModel!.data!.length.toString();
+          }
+        } else {
+          cart = '';
         }
         return AppBar(
           backgroundColor: greyExtraLightColor,
@@ -371,60 +407,62 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
                 color: mainColor,
               ),
             ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  FadeRoute(
-                    page: CardScreen(),
+            if (AppCubit.get(context).isVisitor == false)
+              ConditionalBuilder(
+                condition: state is! AppGetCartLoadingState,
+                builder: (context) => InkWell(
+                  onTap: () {
+                    AppCubit.get(context).getCart();
+                  },
+                  child: Badge(
+                    position: BadgePosition.topEnd(top: 0),
+                    alignment: AlignmentDirectional.centerEnd,
+                    animationType: BadgeAnimationType.slide,
+                    badgeContent: Text(
+                      cart,
+                      style: titleSmallStyle2.copyWith(color: whiteColor),
+                    ),
+                    child: const ImageIcon(
+                      AssetImage(
+                        'assets/images/lab.png',
+                      ),
+                      color: mainColor,
+                    ),
                   ),
-                );
-              },
-              child: Badge(
-                position: BadgePosition.topEnd(top: 0),
-                alignment: AlignmentDirectional.centerEnd,
-                animationType: BadgeAnimationType.slide,
-                badgeContent: Text(
-                  '${AppCubit.get(context).medicalInquiriesModel?.data?.length ?? 0}',
-                  style: titleSmallStyle2.copyWith(color: whiteColor),
                 ),
-                child: const ImageIcon(
-                  AssetImage(
-                    'assets/images/lab.png',
+                fallback: (context) =>
+                    const Center(child: CircularProgressIndicator.adaptive()),
+              ),
+            horizontalSmallSpace,
+            if (AppCubit.get(context).isVisitor == false)
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    FadeRoute(
+                      page: const NotificationScreen(),
+                    ),
+                  );
+                },
+                child: Badge(
+                  position: BadgePosition.topEnd(top: 0),
+                  alignment: AlignmentDirectional.centerEnd,
+                  animationType: BadgeAnimationType.slide,
+                  badgeContent: Text(
+                    notifications,
+                    style: titleSmallStyle2.copyWith(
+                      color: whiteColor,
+                    ),
                   ),
-                  color: mainColor,
+                  child: const ImageIcon(
+                    AssetImage(
+                      'assets/images/notification.png',
+                    ),
+                    color: mainColor,
+                  ),
                 ),
               ),
-            ),
-            horizontalSmallSpace,
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  FadeRoute(
-                    page: const NotificationScreen(),
-                  ),
-                );
-              },
-              child: Badge(
-                position: BadgePosition.topEnd(top: 0),
-                alignment: AlignmentDirectional.centerEnd,
-                animationType: BadgeAnimationType.slide,
-                badgeContent: Text(
-                  notifications,
-                  style: titleSmallStyle2.copyWith(
-                    color: whiteColor,
-                  ),
-                ),
-                child: const ImageIcon(
-                  AssetImage(
-                    'assets/images/notification.png',
-                  ),
-                  color: mainColor,
-                ),
-              ),
-            ),
-            horizontalSmallSpace,
+            if (AppCubit.get(context).isVisitor == false) horizontalSmallSpace,
           ],
         );
       },

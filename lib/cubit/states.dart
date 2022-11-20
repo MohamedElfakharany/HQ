@@ -1,5 +1,6 @@
 import 'package:hq/models/patient_models/auth_models/create_token_model.dart';
 import 'package:hq/models/patient_models/auth_models/reset_password_model.dart';
+import 'package:hq/models/patient_models/cart_model.dart';
 import 'package:hq/models/patient_models/cores_models/branch_model.dart';
 import 'package:hq/models/patient_models/cores_models/carousel_model.dart';
 import 'package:hq/models/patient_models/cores_models/city_model.dart';
@@ -88,6 +89,18 @@ class AppCancelLabReservationSuccessState extends AppStates{
 class AppCancelLabReservationErrorState extends AppStates{
   final String error;
   AppCancelLabReservationErrorState(this.error);
+}
+
+class AppCancelHomeReservationLoadingState extends AppStates{}
+
+class AppCancelHomeReservationSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppCancelHomeReservationSuccessState(this.successModel);
+}
+
+class AppCancelHomeReservationErrorState extends AppStates{
+  final String error;
+  AppCancelHomeReservationErrorState(this.error);
 }
 
 class AppCancelTechRequestsLoadingState extends AppStates{}
@@ -223,6 +236,17 @@ class AppGetTechRequestErrorState extends AppStates{
   AppGetTechRequestErrorState(this.error);
 }
 
+class AppGetCartLoadingState extends AppStates{}
+
+class AppGetCartSuccessState extends AppStates{
+  final CartModel cartModel;
+  AppGetCartSuccessState(this.cartModel);
+}
+
+class AppGetCartErrorState extends AppStates{
+  final String error;
+  AppGetCartErrorState(this.error);
+}
 
 class AppGetCountriesLoadingState extends AppStates{}
 
@@ -490,6 +514,18 @@ class AppChangePasswordSuccessState extends AppStates{
 class AppChangePasswordErrorState extends AppStates{
   final String error;
   AppChangePasswordErrorState(this.error);
+}
+
+class AppAddToCartLoadingState extends AppStates{}
+
+class AppAddToCartSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppAddToCartSuccessState(this.successModel);
+}
+
+class AppAddToCartErrorState extends AppStates{
+  final String error;
+  AppAddToCartErrorState(this.error);
 }
 
 class AppGetBranchesLoadingState extends AppStates{}

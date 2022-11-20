@@ -58,6 +58,8 @@ class _LabReservationDetailsScreenState
           print('ghany 2 $locationValue');
           print('ghany 2 $extraBranchTitle');
           print('ghany 2 ${widget.date}');
+          print('testsDataModel : ${widget.testsDataModel?.id}');
+          print('offersDataModel : ${widget.offersDataModel?.id}');
           // print(AppCubit.get(context).labAppointmentsModel!.extra!.date);
         }
         return Scaffold(
@@ -270,12 +272,12 @@ class _LabReservationDetailsScreenState
                       const Spacer(),
                       MaterialButton(
                         onPressed: () {
-                          if (widget.testsDataModel == null) {
-                            AppCubit.get(context).getInvoices(offerId: widget
-                                .offersDataModel?.id);
-                          } else if (widget.offersDataModel == null) {
-                            AppCubit.get(context).getInvoices(testId: widget.testsDataModel?.id);
-                          }
+                          // if (widget.testsDataModel == null) {
+                          //   AppCubit.get(context).getInvoices(offerId: [widget
+                          //       .offersDataModel?.id]);
+                          // } else if (widget.offersDataModel == null) {
+                          //   AppCubit.get(context).getInvoices(testId: [widget.testsDataModel?.id]);
+                          // }
                           Navigator.push(
                             context,
                             FadeRoute(

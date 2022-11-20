@@ -87,8 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   state is! AppGetProfileLoadingState &&
                   cubit.branchNames != null,
               builder: (context) {
-                locationValue = AppCubit.get(context).branchName[2];
-
+                // locationValue = AppCubit.get(context).branchName[extraBranchIndex];
                 return Container(
                   color: greyExtraLightColor,
                   padding: const EdgeInsets.only(
@@ -108,40 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: titleSmallStyle,
                           ),
                           Expanded(
-                            child:
-                                // DropdownButtonHideUnderline(
-                                //   child: DropdownButtonFormField<String>(
-                                //     validator: (value) {
-                                //       if (value == null) {
-                                //         return LocaleKeys.txtTestName.tr();
-                                //       }
-                                //     },
-                                //     decoration: InputDecoration(
-                                //       fillColor: Colors.white,
-                                //       filled: true,
-                                //       contentPadding:
-                                //       const EdgeInsetsDirectional.only(
-                                //           start: 20.0, end: 10.0),
-                                //       errorStyle: const TextStyle(
-                                //           color: Color(0xFF4F4F4F)),
-                                //       label: Text(LocaleKeys.txtTestName.tr()),
-                                //       border: const OutlineInputBorder(
-                                //         borderSide: BorderSide(
-                                //           width: 2,
-                                //           color: blueColor,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //     value: cubit.branchName.first,
-                                //     isExpanded: true,
-                                //     iconSize: 35,
-                                //     items: cubit.branchName
-                                //         .map(buildLocationItem)
-                                //         .toList(),
-                                //     onChanged: (value) => setState(() => locationValue = value),
-                                //   ),
-                                // ),
-                                DropdownButtonHideUnderline(
+                            child: DropdownButtonHideUnderline(
                               child: ConditionalBuilder(
                                 condition:
                                     state is! AppGetBranchesLoadingState ||
@@ -150,18 +116,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         cubit.branchNames != null,
                                 builder: (context) {
                                   if (kDebugMode) {
-                                    print(
-                                        'ghany 2 ${AppCubit.get(context).branchName}');
+                                    print('ghany 2 ${AppCubit.get(context).branchName}');
                                     print('ghany 2 $locationValue');
                                     print('ghany 2 $extraBranchTitle');
                                   }
                                   return DropdownButtonFormField<String>(
-                                    // ignore: body_might_complete_normally_nullable
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return 'Location Required';
-                                      }
-                                    },
                                     decoration: const InputDecoration(
                                       fillColor: greyExtraLightColor,
                                       filled: true,
@@ -182,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .toList(),
                                     onChanged: (value) {
                                       setState(() => locationValue = value);
-                                      // AppCubit.get(context).selectBranch(name: locationValue!);
+                                      AppCubit.get(context).selectBranch(name: locationValue!);
                                       // AppCubit.get(context).userResourceModel?.data?.branch?.id
                                     },
                                     onSaved: (v) {

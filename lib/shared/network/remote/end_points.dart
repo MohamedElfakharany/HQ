@@ -18,11 +18,17 @@
 
       const technicalURL = '$mainURL/technical';
 
+      const cartURL = '$profileURL/carts';
+
       const patientTechnicalRequestsURL = '$mainURL/technical-requests';
 
 /// Technical Requests
 
       const patientTechnicalRequestsCreateURL = '$patientTechnicalRequestsURL/create';
+
+/// Create Cart
+
+      const createCartURL = '$cartURL/create';
 
 ///Auth
 

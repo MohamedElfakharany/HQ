@@ -147,11 +147,11 @@ class TechHomeRequestsCart extends StatelessWidget {
         var techRequests =
             AppTechCubit.get(context).techRequestsModel?.data?[index];
         String image;
-        if(techRequests?.tests != null){
+        if (techRequests?.tests != null) {
           image = techRequests?.tests?.first.image;
-        }else if (techRequests?.offers != null){
+        } else if (techRequests?.offers != null) {
           image = techRequests?.offers?.first.image;
-        }else {
+        } else {
           image = imageTest;
         }
         return Container(
@@ -292,11 +292,11 @@ class TechHomeReservationsCart extends StatelessWidget {
           stateColor = canceledColor;
         }
         String image;
-        if(techReservations.tests != null){
+        if (techReservations.tests != null) {
           image = techReservations.tests?.first.image;
-        }else if (techReservations.offers != null){
+        } else if (techReservations.offers != null) {
           image = techReservations.offers?.first.image;
-        }else {
+        } else {
           image = imageTest;
         }
         return InkWell(
@@ -305,7 +305,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                 context,
                 FadeRoute(
                     page: TechReservationsDetailsScreen(
-                      techReservationsDataModel: techReservations,
+                  techReservationsDataModel: techReservations,
                   index: index,
                 )));
           },
@@ -438,8 +438,7 @@ class ReservedAcceptedSubScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition:
-              true,
+          condition: true,
           builder: (context) => ListView.separated(
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.vertical,
@@ -579,7 +578,7 @@ class TechUserRequestsCart extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var techRequests =
-        AppTechCubit.get(context).techRequestsModel?.data?[index];
+            AppTechCubit.get(context).techUserRequestModel?.data?[index];
         return Container(
           height: 200.0,
           width: MediaQuery.of(context).size.width * 0.7,
@@ -649,18 +648,13 @@ class TechUserRequestsCart extends StatelessWidget {
                   ],
                 ),
               ),
-              ConditionalBuilder(
-                condition: state is! AppAcceptRequestsLoadingState,
-                builder: (context) => GeneralButton(
-                  height: 40.0,
-                  title: LocaleKeys.BtnAccept.tr(),
-                  onPress: () {
-                    AppTechCubit.get(context)
-                        .acceptRequest(requestId: techRequests!.id);
-                  },
-                ),
-                fallback: (context) =>
-                const Center(child: CircularProgressIndicator.adaptive()),
+              GeneralButton(
+                height: 40.0,
+                title: LocaleKeys.BtnAccept.tr(),
+                onPress: () {
+                  AppTechCubit.get(context)
+                      .acceptTechRequest(techRequest: techRequests!.id);
+                },
               ),
             ],
           ),

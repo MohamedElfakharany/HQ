@@ -52,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isLoading = false;
 
+  int branchIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     var cubit = AppCubit.get(context);
@@ -108,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     extraBranchTitle1:
                         state.userResourceModel.data!.branch!.title,
                     type: state.userResourceModel.data!.type,
+                    extraBranchIndex1: 0,
                   );
                   navigateAndFinish(
                     context,
@@ -263,14 +266,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (formKey.currentState!.validate()) {
                           cubit.isVisitor = false;
                           cubit.login(
-                              mobile: mobileController.text,
-                              password: passwordController.text,
-                              phoneCode: nationalCodeController.text);
+                            mobile: mobileController.text,
+                            password: passwordController.text,
+                            phoneCode: nationalCodeController.text,
+                            deviceTokenLogin: deviceToken!,
+                          );
                         }
                       },
                     ),
-                    fallback: (context) =>
-                        const Center(child: CircularProgressIndicator.adaptive()),
+                    fallback: (context) => const Center(
+                        child: CircularProgressIndicator.adaptive()),
                   ),
                   verticalMediumSpace,
                   Row(

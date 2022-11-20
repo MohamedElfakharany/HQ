@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,7 +17,6 @@ class TechMapScreen extends StatefulWidget {
 }
 
 class _TechMapScreenState extends State<TechMapScreen> {
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppTechCubit, AppTechStates>(
@@ -23,9 +24,12 @@ class _TechMapScreenState extends State<TechMapScreen> {
       builder: (context, state) {
         final Set<Marker> markers = {
           Marker(
-              markerId: const MarkerId('Home'),
-              position: LatLng(double.parse(widget.lat) ?? 31.168625,
-                  double.parse(widget.long) ?? 31.225432)),
+            markerId: const MarkerId('Home'),
+            position: LatLng(
+              double.parse(widget.lat),
+              double.parse(widget.long),
+            ),
+          ),
         };
         return Scaffold(
           appBar: AppBar(
@@ -50,16 +54,14 @@ class _TechMapScreenState extends State<TechMapScreen> {
             width: MediaQuery.of(context).size.width,
             child: GoogleMap(
               zoomControlsEnabled: true,
-              myLocationEnabled: true,
               mapType: MapType.satellite,
               initialCameraPosition: CameraPosition(
-                // target: LatLng(AppCubit.get(context).mLatitude,
-                //     AppCubit.get(context).mLongitude),
-                target: LatLng(double.parse(widget.lat) ?? 31.168625,
-                    double.parse(widget.long) ?? 31.225432),
+                target: LatLng(
+                  double.parse(widget.lat),
+                  double.parse(widget.long),
+                ),
                 zoom: 18.0,
               ),
-              onCameraMove: (camera) {},
               markers: markers,
             ),
           ),

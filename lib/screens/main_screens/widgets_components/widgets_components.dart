@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, must_be_immutable
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -627,31 +626,34 @@ class TestItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 110.0,
-      width: 110.0,
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(
-          width: 1,
-          color: greyDarkColor,
-        ),
-      ),
-      alignment: AlignmentDirectional.center,
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-      child: Stack(
-        children: [
-          Stack(
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Container(
+          height: 110.0,
+          width: 110.0,
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(radius),
+            border: Border.all(
+              width: 1,
+              color: greyDarkColor,
+            ),
+          ),
+          alignment: AlignmentDirectional.center,
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+          child: Stack(
             alignment: AlignmentDirectional.topEnd,
             children: [
               Row(
                 children: [
                   horizontalMicroSpace,
                   CachedNetworkImageNormal(
-                    imageUrl:
-                        AppCubit.get(context).testsModel?.data?[index].image ??
-                            '',
+                    imageUrl: AppCubit.get(context)
+                            .testsModel
+                            ?.data?[index]
+                            .image ??
+                        '',
                     width: 80,
                     height: 80,
                   ),
@@ -714,7 +716,8 @@ class TestItemCard extends StatelessWidget {
                           color: mainColor,
                           child: Text(
                             LocaleKeys.txtDetails.tr(),
-                            style: titleSmallStyle.copyWith(color: whiteColor),
+                            style:
+                                titleSmallStyle.copyWith(color: whiteColor),
                           ),
                         ),
                       ),
@@ -725,328 +728,333 @@ class TestItemCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    height: 30,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        horizontalMicroSpace,
-                        if (AppCubit.get(context)
-                                .testsModel
-                                ?.data?[index]
-                                .gender ==
-                            'Male')
-                          const Center(
-                            child: CircleAvatar(
-                              radius: 15,
-                              backgroundColor: mainLightColor,
-                              child: Icon(
-                                Icons.male,
-                                size: 25,
-                                color: whiteColor,
-                              ),
-                            ),
-                          ),
-                        if (AppCubit.get(context)
-                                .testsModel
-                                ?.data?[index]
-                                .gender ==
-                            'Female')
-                          const Center(
-                            child: CircleAvatar(
-                              radius: 15,
-                              backgroundColor: pinkColor,
-                              child: Icon(
-                                Icons.female,
-                                size: 25,
-                                color: whiteColor,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        if (kDebugMode) {
-                          print(
-                            'plus entered',
-                          );
-                        }
-                        if (AppCubit.get(context).isVisitor == true) {
-                          showPopUp(
-                            context,
-                            const VisitorHoldingPopUp(),
-                          );
-                        } else {
-                          showCustomBottomSheet(
-                            context,
-                            bottomSheetContent: Container(
-                              height: MediaQuery.of(context).size.height * 0.55,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(radius),
-                                  topRight: Radius.circular(radius),
+                    padding: EdgeInsets.all(10.0),
+                    child: Container(
+                      height: 30,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          horizontalMicroSpace,
+                          if (AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .gender ==
+                              'Male')
+                            const Center(
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundColor: mainLightColor,
+                                child: Icon(
+                                  Icons.male,
+                                  size: 25,
+                                  color: whiteColor,
                                 ),
                               ),
-                              padding: const EdgeInsetsDirectional.only(
-                                  start: 20.0, end: 20.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  verticalMicroSpace,
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/checkTrue.svg',
-                                      ),
-                                      horizontalMiniSpace,
-                                      Text(
-                                        LocaleKeys.txtReservationSucceeded.tr(),
-                                        style:
-                                            titleStyle.copyWith(fontSize: 15),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ],
+                            ),
+                          if (AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .gender ==
+                              'Female')
+                            const Center(
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundColor: pinkColor,
+                                child: Icon(
+                                  Icons.female,
+                                  size: 25,
+                                  color: whiteColor,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (AppCubit.get(context).isVisitor == false)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          if (AppCubit.get(context).isVisitor == false) {
+                            showPopUp(
+                              context,
+                              const VisitorHoldingPopUp(),
+                            );
+                          } else {
+                            showCustomBottomSheet(
+                              context,
+                              bottomSheetContent: Container(
+                                height: MediaQuery.of(context).size.height *
+                                    0.55,
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(radius),
+                                    topRight: Radius.circular(radius),
                                   ),
-                                  Text(
-                                    LocaleKeys.TxtPopUpReservationTypeSecond
-                                        .tr(),
-                                    style: subTitleSmallStyle.copyWith(
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 110.0,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius:
-                                          BorderRadius.circular(radius),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: greyDarkColor,
-                                      ),
-                                    ),
-                                    alignment: AlignmentDirectional.center,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 0, horizontal: 4),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                ),
+                                padding: const EdgeInsetsDirectional.only(
+                                    start: 20.0, end: 20.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    verticalMicroSpace,
+                                    Row(
                                       children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.only(
-                                                  start: 10.0, top: 10.0),
-                                          child: Image.asset(
-                                            'assets/images/logo.png',
-                                            width: 80,
-                                            height: 80,
-                                          ),
+                                        SvgPicture.asset(
+                                          'assets/images/checkTrue.svg',
                                         ),
                                         horizontalMiniSpace,
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              verticalMiniSpace,
-                                              Text(
-                                                AppCubit.get(context)
-                                                        .testsModel
-                                                        ?.data?[index]
-                                                        .title ??
-                                                    offersDataModel?.title,
-                                                style: titleStyle.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              // const Padding(
-                                              //   padding: EdgeInsets.symmetric(
-                                              //       vertical: 5.0),
-                                              //   child: Text(
-                                              //     'Sugar Checks',
-                                              //     style: TextStyle(),
-                                              //     maxLines: 2,
-                                              //     overflow: TextOverflow.ellipsis,
-                                              //   ),
-                                              // ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
-                                                    style: titleStyle.copyWith(
-                                                        fontSize: 15),
-                                                  ),
-                                                  horizontalMiniSpace,
-                                                  if (AppCubit.get(context)
-                                                          .offersModel
-                                                          ?.data?[index]
-                                                          .price !=
-                                                      null)
-                                                    Text(
-                                                      '${AppCubit.get(context).offersModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
-                                                      style: subTitleSmallStyle
-                                                          .copyWith(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  verticalMicroSpace,
-                                  Container(
-                                    height: 50,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(radius),
-                                      color: greyExtraLightColor,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        horizontalSmallSpace,
                                         Text(
-                                          LocaleKeys.txtTotal.tr(),
+                                          LocaleKeys.txtReservationSucceeded
+                                              .tr(),
                                           style: titleStyle.copyWith(
-                                              fontWeight: FontWeight.normal),
+                                              fontSize: 15),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                        const Spacer(),
-                                        Text(
-                                          '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
-                                          style:
-                                              titleStyle.copyWith(fontSize: 18),
-                                        ),
-                                        horizontalSmallSpace,
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 80.0,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Center(
+                                    Text(
+                                      LocaleKeys
+                                              .TxtPopUpReservationTypeSecond
+                                          .tr(),
+                                      style: subTitleSmallStyle.copyWith(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 110.0,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: whiteColor,
+                                        borderRadius:
+                                            BorderRadius.circular(radius),
+                                        border: Border.all(
+                                          width: 1,
+                                          color: greyDarkColor,
+                                        ),
+                                      ),
+                                      alignment:
+                                          AlignmentDirectional.center,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 4),
                                       child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: MaterialButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  FadeRoute(
-                                                    page: CardScreen(
-                                                        testsDataModel:
-                                                            testsDataModel,
-                                                        offersDataModel:
-                                                            offersDataModel),
-                                                  ),
-                                                );
-                                              },
-                                              height: 80.0,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: mainColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          radius),
-                                                ),
-                                                height: 50.0,
-                                                width: double.infinity,
-                                                child: Center(
-                                                  child: Text(
-                                                    LocaleKeys.BtnCheckout.tr(),
-                                                    style: titleSmallStyle
-                                                        .copyWith(
-                                                      color: whiteColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsetsDirectional
+                                                        .only(
+                                                    start: 10.0, top: 10.0),
+                                            child: Image.asset(
+                                              'assets/images/logo.png',
+                                              width: 80,
+                                              height: 80,
                                             ),
                                           ),
+                                          horizontalMiniSpace,
                                           Expanded(
-                                            child: GeneralUnfilledButton(
-                                              width: double.infinity,
-                                              title: LocaleKeys.BtnBrowse.tr(),
-                                              onPress: () {
-                                                AppCubit.get(context)
-                                                    .changeBottomScreen(0);
-                                                navigateAndFinish(
-                                                  context,
-                                                  const HomeLayoutScreen(),
-                                                );
-                                              },
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                verticalMiniSpace,
+                                                Text(
+                                                  AppCubit.get(context)
+                                                          .testsModel
+                                                          ?.data?[index]
+                                                          .title ??
+                                                      offersDataModel
+                                                          ?.title,
+                                                  style:
+                                                      titleStyle.copyWith(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .normal),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                // const Padding(
+                                                //   padding: EdgeInsets.symmetric(
+                                                //       vertical: 5.0),
+                                                //   child: Text(
+                                                //     'Sugar Checks',
+                                                //     style: TextStyle(),
+                                                //     maxLines: 2,
+                                                //     overflow: TextOverflow.ellipsis,
+                                                //   ),
+                                                // ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
+                                                      style: titleStyle
+                                                          .copyWith(
+                                                              fontSize: 15),
+                                                    ),
+                                                    horizontalMiniSpace,
+                                                    if (AppCubit.get(
+                                                                context)
+                                                            .offersModel
+                                                            ?.data?[index]
+                                                            .price !=
+                                                        null)
+                                                      Text(
+                                                        '${AppCubit.get(context).offersModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
+                                                        style:
+                                                            subTitleSmallStyle
+                                                                .copyWith(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .lineThrough,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    verticalMicroSpace,
+                                    Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                          0.9,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(radius),
+                                        color: greyExtraLightColor,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          horizontalSmallSpace,
+                                          Text(
+                                            LocaleKeys.txtTotal.tr(),
+                                            style: titleStyle.copyWith(
+                                                fontWeight:
+                                                    FontWeight.normal),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
+                                            style: titleStyle.copyWith(
+                                                fontSize: 18),
+                                          ),
+                                          horizontalSmallSpace,
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 80.0,
+                                      width:
+                                          MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: MaterialButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    FadeRoute(
+                                                      page: CartScreen(
+                                                        // testsDataModel:
+                                                        //     testsDataModel,
+                                                        // offersDataModel:
+                                                        //     offersDataModel,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                height: 80.0,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: mainColor,
+                                                    borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                                radius),
+                                                  ),
+                                                  height: 50.0,
+                                                  width: double.infinity,
+                                                  child: Center(
+                                                    child: Text(
+                                                      LocaleKeys.BtnCheckout
+                                                          .tr(),
+                                                      style: titleSmallStyle
+                                                          .copyWith(
+                                                        color: whiteColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: GeneralUnfilledButton(
+                                                width: double.infinity,
+                                                title: LocaleKeys.BtnBrowse
+                                                    .tr(),
+                                                onPress: () {
+                                                  AppCubit.get(context)
+                                                      .changeBottomScreen(
+                                                          0);
+                                                  navigateAndFinish(
+                                                    context,
+                                                    const HomeLayoutScreen(),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            bottomSheetHeight: 0.55,
-                          );
-                        }
-                      },
-                      child: const CircleAvatar(
-                        radius: 15,
-                        backgroundColor: greyLightColor,
-                        child: Icon(
-                          Icons.add,
-                          color: whiteColor,
+                              bottomSheetHeight: 0.55,
+                            );
+                          }
+                        },
+                        child: const CircleAvatar(
+                          radius: 15,
+                          backgroundColor: greyLightColor,
+                          child: Icon(
+                            Icons.add,
+                            color: whiteColor,
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               )
             ],
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 5.0),
-          //   child: Container(
-          //     height: 30,
-          //     width: 30,
-          //     decoration: BoxDecoration(
-          //       color: redColor,
-          //       borderRadius: BorderRadius.circular(30),
-          //     ),
-          //     child: const Center(
-          //       child: Text(
-          //         '%',
-          //         style: TextStyle(color: whiteColor, fontSize: 16),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -1092,13 +1100,15 @@ class VisitorHoldingPopUp extends StatelessWidget {
 }
 
 class NotificationsCard extends StatelessWidget {
-  const NotificationsCard({Key? key, required this.notificationsDataModel}) : super(key: key);
+  const NotificationsCard({Key? key, required this.notificationsDataModel})
+      : super(key: key);
   final NotificationsDataModel notificationsDataModel;
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit,AppStates>(
-      listener: (context, state){},
-      builder: (context, state){
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
         return Container(
           width: double.infinity,
           height: 100.0,

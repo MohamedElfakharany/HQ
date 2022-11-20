@@ -145,6 +145,7 @@ class TechRequestsScreen extends StatelessWidget {
                       ),
                     ),
                     // create widgets for each tab bar here
+                    verticalMiniSpace,
                     Expanded(
                       child: TabBarView(
                         physics: const BouncingScrollPhysics(),
@@ -181,21 +182,28 @@ class TechRequestsScreen extends StatelessWidget {
                             condition:
                                 cubit.techUserRequestModel?.data?.isNotEmpty ==
                                     true,
-                            builder: (context) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: ListView.separated(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                itemBuilder: (context, index) =>
-                                    TechUserRequestsCart(index: index),
-                                separatorBuilder: (context, index) =>
-                                    verticalMiniSpace,
-                                itemCount: AppTechCubit.get(context)
-                                        .techUserRequestModel
-                                        ?.data
-                                        ?.length ??
-                                    0,
+                            builder: (context) => ConditionalBuilder(
+                              condition:
+                                  state is! AppAcceptTechRequestsLoadingState,
+                              builder: (context) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: ListView.separated(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (context, index) =>
+                                      TechUserRequestsCart(index: index),
+                                  separatorBuilder: (context, index) =>
+                                      verticalMiniSpace,
+                                  itemCount: AppTechCubit.get(context)
+                                          .techUserRequestModel
+                                          ?.data
+                                          ?.length ??
+                                      0,
+                                ),
+                              ),
+                              fallback: (context) => const Center(
+                                child: CircularProgressIndicator.adaptive(),
                               ),
                             ),
                             fallback: (context) => Center(

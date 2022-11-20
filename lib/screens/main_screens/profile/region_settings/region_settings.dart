@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
-import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/screens/main_screens/profile/region_settings/profile_change_country.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -23,14 +22,12 @@ class RegionSettingsScreen extends StatefulWidget {
 }
 
 class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
-
-
   @override
   void initState() {
     super.initState();
     Timer(
       const Duration(milliseconds: 0),
-          () {
+      () {
         AppCubit.get(context).getBranch(cityID: extraCityId!);
       },
     );
@@ -41,6 +38,7 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var cubit = AppCubit.get(context);
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -66,14 +64,13 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                         () async {
                           AppCubit.get(context).changeLanguage();
                           await context
-                              .setLocale(Locale(AppCubit.get(context).local!))
+                              .setLocale(Locale(sharedLanguage!))
                               .then(
                                 (value) => {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      FadeRoute(
-                                          page: const HomeLayoutScreen()),
-                                      (route) => false)
+                                  setState(() {
+                                    Navigator.pop(context);
+                                    cubit.changeBottomScreen(0);
+                                  })
                                 },
                               );
                         },

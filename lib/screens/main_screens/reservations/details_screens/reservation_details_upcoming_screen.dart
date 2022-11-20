@@ -1,6 +1,4 @@
-// ignore_for_file: must_be_immutable
-
-import 'dart:async';
+// ignore_for_file: must_be_immutable, unnecessary_import
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,7 +18,7 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class ReservationDetailsUpcomingScreen extends StatefulWidget {
+class ReservationDetailsUpcomingScreen extends StatelessWidget {
   ReservationDetailsUpcomingScreen(
       {Key? key,
       this.labReservationsModel,
@@ -30,30 +28,6 @@ class ReservationDetailsUpcomingScreen extends StatefulWidget {
   LabReservationsModel? labReservationsModel;
   HomeReservationsModel? homeReservationsModel;
   final int index;
-
-  @override
-  State<ReservationDetailsUpcomingScreen> createState() =>
-      _ReservationDetailsUpcomingScreenState();
-}
-
-class _ReservationDetailsUpcomingScreenState
-    extends State<ReservationDetailsUpcomingScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (kDebugMode) {
-      print('object');
-    }
-
-    Timer(
-      const Duration(milliseconds: 1000),
-      () {
-        // showCustomBottomSheet(context,
-        //         bottomSheetContent: const ExperienceRateScreen(),
-        //         bottomSheetHeight: 0.65);
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +41,7 @@ class _ReservationDetailsUpcomingScreenState
             showToast(msg: state.successModel.message,state: ToastState.success);
             Navigator.pop(context);
             Navigator.pop(context);
+            AppCubit.get(context).changeBottomScreen(0);
           }else {
             showToast(msg: state.successModel.message,state: ToastState.error);
             Navigator.pop(context);
@@ -76,12 +51,28 @@ class _ReservationDetailsUpcomingScreenState
           showToast(msg: state.error,state: ToastState.error);
           Navigator.pop(context);
         }
+
+        if(state is AppCancelHomeReservationSuccessState){
+          if(state.successModel.status){
+            showToast(msg: state.successModel.message,state: ToastState.success);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            AppCubit.get(context).changeBottomScreen(0);
+          }else {
+            showToast(msg: state.successModel.message,state: ToastState.error);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
+        }else if(state is AppCancelHomeReservationErrorState) {
+          showToast(msg: state.error,state: ToastState.error);
+          Navigator.pop(context);
+        }
       },
       builder: (context, state) {
         var labReservationsDataModel =
-            widget.labReservationsModel?.data?[widget.index];
+            labReservationsModel?.data?[index];
         var homeReservationsDataModel =
-            widget.homeReservationsModel?.data?[widget.index];
+            homeReservationsModel?.data?[index];
         Color stateColor;
         if (labReservationsDataModel?.statusEn == 'Pending' || homeReservationsDataModel?.statusEn == 'Pending') {
           stateColor = pendingColor;
@@ -138,7 +129,7 @@ class _ReservationDetailsUpcomingScreenState
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '# ${widget.homeReservationsModel?.data?[widget.index].id ?? labReservationsDataModel?.id}',
+                            '# ${homeReservationsModel?.data?[index].id ?? labReservationsDataModel?.id}',
                           ),
                           const Spacer(),
                           Container(
@@ -151,8 +142,8 @@ class _ReservationDetailsUpcomingScreenState
                                 const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Center(
                               child: Text(
-                                widget.homeReservationsModel
-                                        ?.data?[widget.index].status ??
+                                homeReservationsModel
+                                        ?.data?[index].status ??
                                     labReservationsDataModel?.status,
                                 style: titleStyle.copyWith(
                                     fontSize: 15.0,
@@ -171,58 +162,58 @@ class _ReservationDetailsUpcomingScreenState
                   //   style: titleStyle.copyWith(fontWeight: FontWeight.w500),
                   // ),
                   verticalSmallSpace,
-                  if (widget.homeReservationsModel != null)
+                  if (homeReservationsModel != null)
                     SizedBox(
                       height: 120.0 *
-                          ((widget.homeReservationsModel?.data?[widget.index]
+                          ((homeReservationsModel?.data?[index]
                                       .offers?.length ??
                                   0) +
-                              (widget.homeReservationsModel?.data?[widget.index]
+                              (homeReservationsModel?.data?[index]
                                       .tests?.length ??
                                   0)),
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
-                          if (widget.homeReservationsModel != null) {
-                            if (widget.homeReservationsModel!
-                                .data![widget.index].tests!.isEmpty) {
-                              title = widget.homeReservationsModel
-                                  ?.data?[widget.index].offers?[index].title;
-                              price = widget.homeReservationsModel
-                                  ?.data?[widget.index].offers?[index].price;
-                              image = widget.homeReservationsModel
-                                  ?.data?[widget.index].offers?[index].image;
-                            } else if (widget.homeReservationsModel!
-                                .data![widget.index].offers!.isEmpty) {
-                              title = widget.homeReservationsModel
-                                  ?.data?[widget.index].tests?[index].title;
-                              price = widget.homeReservationsModel
-                                  ?.data?[widget.index].tests?[index].price;
-                              image = widget.homeReservationsModel
-                                  ?.data?[widget.index].tests?[index].image;
+                          if (homeReservationsModel != null) {
+                            if (homeReservationsModel!
+                                .data![index].tests!.isEmpty) {
+                              title = homeReservationsModel
+                                  ?.data?[index].offers?[index].title;
+                              price = homeReservationsModel
+                                  ?.data?[index].offers?[index].price;
+                              image = homeReservationsModel
+                                  ?.data?[index].offers?[index].image;
+                            } else if (homeReservationsModel!
+                                .data![index].offers!.isEmpty) {
+                              title = homeReservationsModel
+                                  ?.data?[index].tests?[index].title;
+                              price = homeReservationsModel
+                                  ?.data?[index].tests?[index].price;
+                              image = homeReservationsModel
+                                  ?.data?[index].tests?[index].image;
                             } else {
                               title = '';
                               image = imageTest;
                               price = 0;
                             }
-                          } else if (widget.labReservationsModel != null) {
-                            if (widget.labReservationsModel!.data![widget.index]
+                          } else if (labReservationsModel != null) {
+                            if (labReservationsModel!.data![index]
                                 .tests!.isEmpty) {
-                              title = widget.labReservationsModel
-                                  ?.data?[widget.index].offers?[index].title;
-                              price = widget.labReservationsModel
-                                  ?.data?[widget.index].offers?[index].price;
-                              image = widget.labReservationsModel
-                                  ?.data?[widget.index].offers?[index].image;
-                            } else if (widget.labReservationsModel!
-                                .data![widget.index].offers!.isEmpty) {
-                              title = widget.labReservationsModel
-                                  ?.data?[widget.index].tests?[index].title;
-                              price = widget.labReservationsModel
-                                  ?.data?[widget.index].tests?[index].price;
-                              image = widget.labReservationsModel
-                                  ?.data?[widget.index].tests?[index].image;
+                              title = labReservationsModel
+                                  ?.data?[index].offers?[index].title;
+                              price = labReservationsModel
+                                  ?.data?[index].offers?[index].price;
+                              image = labReservationsModel
+                                  ?.data?[index].offers?[index].image;
+                            } else if (labReservationsModel!
+                                .data![index].offers!.isEmpty) {
+                              title = labReservationsModel
+                                  ?.data?[index].tests?[index].title;
+                              price = labReservationsModel
+                                  ?.data?[index].tests?[index].price;
+                              image = labReservationsModel
+                                  ?.data?[index].tests?[index].image;
                             } else {
                               title = '';
                               image = imageTest;
@@ -288,10 +279,10 @@ class _ReservationDetailsUpcomingScreenState
                           );
                         },
                         separatorBuilder: (context, index) => verticalMiniSpace,
-                        itemCount: (widget.homeReservationsModel
-                                    ?.data?[widget.index].offers?.length ??
+                        itemCount: (homeReservationsModel
+                                    ?.data?[index].offers?.length ??
                                 0) +
-                            (widget.homeReservationsModel?.data?[widget.index]
+                            (homeReservationsModel?.data?[index]
                                     .tests?.length ??
                                 0),
                       ),
@@ -459,7 +450,7 @@ class _ReservationDetailsUpcomingScreenState
                                         MediaQuery.of(context).size.width * 0.7,
                                     child: Text(
                                       textAlign: TextAlign.start,
-                                      '${widget.homeReservationsModel?.data?[widget.index].address?.address ?? labReservationsDataModel?.branch?.title}  ${widget.homeReservationsModel?.data?[widget.index].address?.specialMark ?? ''}',
+                                      '${homeReservationsModel?.data?[index].address?.address ?? labReservationsDataModel?.branch?.title}  ${homeReservationsModel?.data?[index].address?.specialMark ?? ''}',
                                       style: subTitleSmallStyle,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -492,7 +483,7 @@ class _ReservationDetailsUpcomingScreenState
                                   ),
                                   Text(
                                     textAlign: TextAlign.start,
-                                    '${labReservationsDataModel?.date ?? widget.homeReservationsModel?.data?[widget.index].date} - ${labReservationsDataModel?.time ?? widget.homeReservationsModel?.data?[widget.index].time}',
+                                    '${labReservationsDataModel?.date ?? homeReservationsModel?.data?[index].date} - ${labReservationsDataModel?.time ?? homeReservationsModel?.data?[index].time}',
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -507,7 +498,7 @@ class _ReservationDetailsUpcomingScreenState
                   ),
                   verticalMiniSpace,
                   Container(
-                    height: 170.0,
+                    height: 190.0,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: whiteColor,
@@ -547,7 +538,7 @@ class _ReservationDetailsUpcomingScreenState
                                   const Spacer(),
                                   Text(
                                     textAlign: TextAlign.start,
-                                    '${labReservationsDataModel?.price ?? widget.homeReservationsModel?.data?[widget.index].price} ${LocaleKeys.salary.tr()}',
+                                    '${labReservationsDataModel?.price ?? homeReservationsModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -663,21 +654,30 @@ class _ReservationDetailsUpcomingScreenState
 
                                     verticalSmallSpace,
                                     ConditionalBuilder(
-                                      condition: state is! AppCancelLabReservationLoadingState,
+                                      condition: state is! AppCancelLabReservationLoadingState || state is! AppCancelHomeReservationLoadingState,
                                       builder: (context) => GeneralButton(
                                         radius: radius,
                                         btnBackgroundColor: redColor,
                                         title:
                                         LocaleKeys.txtUnderstandContinue.tr(),
                                         onPress: () {
+                                          if (labReservationsModel == null ){
                                           AppCubit.get(context)
-                                              .cancelLabReservations(
-                                              reservationId: widget
-                                                  .homeReservationsModel
-                                                  ?.data?[widget.index]
+                                              .cancelHomeReservations(
+                                              reservationId: homeReservationsModel
+                                                  ?.data?[index]
                                                   .id ??
                                                   labReservationsDataModel
                                                       ?.id);
+                                          }else if (homeReservationsModel == null ){
+                                            AppCubit.get(context)
+                                                .cancelLabReservations(
+                                                reservationId: homeReservationsModel
+                                                    ?.data?[index]
+                                                    .id ??
+                                                    labReservationsDataModel
+                                                        ?.id);
+                                          }
                                         },
                                       ),
                                       fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()) ,
@@ -716,7 +716,7 @@ class _ReservationDetailsUpcomingScreenState
                       MaterialButton(
                         onPressed: () async {
                           await FlutterPhoneDirectCaller.callNumber(
-                              '${widget.homeReservationsModel?.extra?.phone ?? widget.labReservationsModel?.extra?.phone}');
+                              '${homeReservationsModel?.extra?.phone ?? labReservationsModel?.extra?.phone}');
                         },
                         child: Container(
                           height: 50,

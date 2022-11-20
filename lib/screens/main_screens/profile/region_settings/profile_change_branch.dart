@@ -87,7 +87,7 @@ class _ProfileChangeBranchScreenState extends State<ProfileChangeBranchScreen> {
                                 extraBranchTitle1: AppCubit.get(context)
                                     .branchModel!
                                     .data![index]
-                                    .title);
+                                    .title, extraBranchIndex1: index);
                             AppCubit.get(context).changeLocation(
                                 countryId: widget.countryId,
                                 cityId: widget.cityId,

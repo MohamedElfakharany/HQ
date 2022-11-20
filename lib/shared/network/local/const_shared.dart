@@ -16,6 +16,8 @@ String? extraCityTitle = '';
 
 int? extraBranchId = 1;
 
+int extraBranchIndex = 0;
+
 String? extraBranchTitle = '';
 
 int? verified;

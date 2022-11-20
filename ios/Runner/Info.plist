@@ -29,18 +29,31 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+    <key>FirebaseMessagingAutoInitEnabled</key>
+    <false/>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>tel</string>
+    </array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>SULTAN MEDICA want to accesses your Location</string>
+	<string>HQ want to accesses your Location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>SULTAN MEDICA want to accesses your Location</string>
+	<string>HQ want to accesses your Location</string>
 	<key>NSCameraUsageDescription</key>
-    <string>SULTAN MEDICA want to accesses your camera</string>
+    <string>HQ want to accesses your camera</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>SULTAN MEDICA want to accesses your photo library</string>
+    <string>HQ want to accesses your photo library</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

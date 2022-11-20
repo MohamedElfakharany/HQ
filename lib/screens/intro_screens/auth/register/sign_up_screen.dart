@@ -597,13 +597,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             password: passwordController.text,
                             mobile: mobileController.text,
                             phoneCode: nationalCodeController.text,
+                            deviceTokenLogin: deviceToken!,
                           );
                         }
                         cubit.isVisitor = false;
                       },
                     ),
-                    fallback: (context) =>
-                        const Center(child: CircularProgressIndicator.adaptive()),
+                    fallback: (context) => const Center(
+                        child: CircularProgressIndicator.adaptive()),
                   ),
                   verticalMediumSpace,
                   Row(

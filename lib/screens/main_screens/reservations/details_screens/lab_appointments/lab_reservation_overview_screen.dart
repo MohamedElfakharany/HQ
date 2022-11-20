@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
@@ -18,7 +19,7 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
-class LabReservationOverviewScreen extends StatelessWidget {
+class LabReservationOverviewScreen extends StatefulWidget {
   LabReservationOverviewScreen(
       {Key? key,
       this.offersDataModel,
@@ -39,6 +40,13 @@ class LabReservationOverviewScreen extends StatelessWidget {
   TestsDataModel? testsDataModel;
   OffersDataModel? offersDataModel;
 
+  @override
+  State<LabReservationOverviewScreen> createState() =>
+      _LabReservationOverviewScreenState();
+}
+
+class _LabReservationOverviewScreenState
+    extends State<LabReservationOverviewScreen> {
   var couponController = TextEditingController();
 
   var formKey = GlobalKey<FormState>();
@@ -47,13 +55,21 @@ class LabReservationOverviewScreen extends StatelessWidget {
       Iterable<int>.generate(1).map((_) => FocusNode()).toList();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.testsDataModel == null && widget.offersDataModel == null) {
+      AppCubit.get(context).getCart();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
         if (state is AppCheckCouponSuccessState) {
           if (state.successModel.status) {
             AppCubit.get(context).getInvoices(testId: [
-              testsDataModel?.id ?? offersDataModel?.id
+              widget.testsDataModel?.id ?? widget.offersDataModel?.id
             ]);
           } else {
             showDialog(
@@ -83,10 +99,10 @@ class LabReservationOverviewScreen extends StatelessWidget {
             navigateAndFinish(
               context,
               ReservedSuccessScreen(
-                  date: date,
-                  time: time,
+                  date: widget.date,
+                  time: widget.time,
                   isLab: true,
-                  branchName: branchName),
+                  branchName: widget.branchName),
             );
           } else {
             showDialog(
@@ -135,13 +151,16 @@ class LabReservationOverviewScreen extends StatelessWidget {
       },
       builder: (context, state) {
         if (kDebugMode) {
-          print('date ya ro7 omak $date');
-          print('familyId ya ro7 omak $familyId');
-          print('time ya ro7 omak $time');
-          print('branchId ya ro7 omak $branchId');
-          print('familyName ya ro7 omak $familyName');
-          print('test image ya ro7 omak ${testsDataModel?.image}');
+          print('date ya ro7 omak ${widget.date}');
+          print('familyId ya ro7 omak ${widget.familyId}');
+          print('time ya ro7 omak ${widget.time}');
+          print('branchId ya ro7 omak ${widget.branchId}');
+          print('familyName ya ro7 omak ${widget.familyName}');
+          print('test image ya ro7 omak ${widget.testsDataModel?.image}');
+          print(
+              'cartModel ya ro7 omak ${AppCubit.get(context).cartModel?.extra?.tests?.toSet()}');
         }
+        var cartModel = AppCubit.get(context).cartModel;
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -167,60 +186,194 @@ class LabReservationOverviewScreen extends StatelessWidget {
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    Container(
-                      height: 110.0,
-                      width: 110.0,
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.circular(radius),
-                        border: Border.all(
-                          width: 1,
-                          color: greyLightColor,
+                    if (widget.testsDataModel != null ||
+                        widget.offersDataModel != null)
+                      Container(
+                        height: 110.0,
+                        width: 110.0,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(radius),
+                          border: Border.all(
+                            width: 1,
+                            color: greyLightColor,
+                          ),
+                        ),
+                        alignment: AlignmentDirectional.center,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 4),
+                        child: Row(
+                          children: [
+                            horizontalMicroSpace,
+                            CachedNetworkImageNormal(
+                              imageUrl: widget.offersDataModel?.image ??
+                                  widget.testsDataModel?.image ??
+                                  '',
+                              width: 80,
+                              height: 80,
+                            ),
+                            horizontalSmallSpace,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    widget.offersDataModel?.title ??
+                                        widget.testsDataModel?.title ??
+                                        '',
+                                    style: titleSmallStyle,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    widget.testsDataModel?.category?.name ?? '',
+                                    style: subTitleSmallStyle2,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '${widget.offersDataModel?.discount ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                    style: titleSmallStyle2,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      alignment: AlignmentDirectional.center,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 4),
-                      child: Row(
-                        children: [
-                          horizontalMicroSpace,
-                          CachedNetworkImageNormal(
-                            imageUrl: offersDataModel?.image ??
-                                testsDataModel?.image ?? '',
-                            width: 80,
-                            height: 80,
-                          ),
-                          horizontalSmallSpace,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  offersDataModel?.title ??
-                                      testsDataModel?.title,
-                                  style: titleSmallStyle,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                    if (widget.testsDataModel == null &&
+                        widget.offersDataModel == null)
+                      SizedBox(
+                        height:
+                            120.0 * (cartModel?.data?.length.toDouble() ?? 0),
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, index) => SwipeActionCell(
+                            key: const ValueKey(1),
+                            trailingActions: [
+                              SwipeAction(
+                                nestedAction: SwipeNestedAction(
+                                  /// customize your nested action content
+                                  content: ConditionalBuilder(
+                                    condition:
+                                        state is! AppDeleteInquiryLoadingState,
+                                    builder: (context) => Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: Colors.red,
+                                      ),
+                                      width: 130,
+                                      height: 60,
+                                      child: OverflowBox(
+                                        maxWidth: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                            Text(LocaleKeys.BtnDelete.tr(),
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    fallback: (context) => const Center(
+                                        child: CircularProgressIndicator
+                                            .adaptive()),
+                                  ),
                                 ),
-                                Text(
-                                  testsDataModel?.category?.name ?? '',
-                                  style: subTitleSmallStyle2,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+
+                                /// you should set the default  bg color to transparent
+                                color: Colors.transparent,
+
+                                /// set content instead of title of icon
+                                content:
+                                    _getIconButton(Colors.red, Icons.delete),
+                                onTap: (handler) async {
+                                  // AppCubit.get(context).deleteInquiry(
+                                  //   inquiryId: AppCubit.get(context)
+                                  //       .medicalInquiriesModel!
+                                  //       .data![index]
+                                  //       .id,
+                                  // );
+                                },
+                              ),
+                            ],
+                            child: Container(
+                              height: 110.0,
+                              width: 110.0,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(radius),
+                                border: Border.all(
+                                  width: 1,
+                                  color: greyLightColor,
                                 ),
-                                Text(
-                                  '${offersDataModel?.discount ?? testsDataModel?.price} ${LocaleKeys.salary.tr()}',
-                                  style: titleSmallStyle2,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                              ),
+                              alignment: AlignmentDirectional.center,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 4),
+                              child: Stack(
+                                alignment: AlignmentDirectional.topEnd,
+                                children: [
+                                  Row(
+                                    children: [
+                                      horizontalMicroSpace,
+                                      CachedNetworkImageNormal(
+                                        imageUrl:
+                                            '${cartModel?.data?[index].image}',
+                                        width: 80,
+                                        height: 80,
+                                      ),
+                                      horizontalSmallSpace,
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '${cartModel?.data?[index].title}',
+                                              style: titleSmallStyle,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              '# ${cartModel?.data?[index].cartId}',
+                                              style: subTitleSmallStyle2,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              '${cartModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
+                                              style: titleSmallStyle2,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
+                          separatorBuilder: (context, index) =>
+                              verticalMiniSpace,
+                          itemCount: cartModel?.data?.length ?? 0,
+                        ),
                       ),
-                    ),
                     verticalMiniSpace,
                     Text(
                       LocaleKeys.txtReservationDetails.tr(),
@@ -228,7 +381,7 @@ class LabReservationOverviewScreen extends StatelessWidget {
                     ),
                     verticalMiniSpace,
                     Container(
-                      height: 166.0,
+                      height: 250.0,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: whiteColor,
@@ -263,7 +416,7 @@ class LabReservationOverviewScreen extends StatelessWidget {
                                     if (AppCubit.get(context).isVisitor ==
                                         false)
                                       Text(
-                                        familyName ??
+                                        widget.familyName ??
                                             AppCubit.get(context)
                                                 .userResourceModel
                                                 ?.data
@@ -273,6 +426,42 @@ class LabReservationOverviewScreen extends StatelessWidget {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          myHorizontalDivider(),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                horizontalSmallSpace,
+                                Image.asset(
+                                  'assets/images/location.jpg',
+                                  width: 25,
+                                  height: 35,
+                                ),
+                                myVerticalDivider(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      LocaleKeys.txtReservationDetails.tr(),
+                                      style: titleStyle.copyWith(
+                                          color: greyLightColor),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.7,
+                                      child: Text(
+                                        textAlign: TextAlign.start,
+                                        widget.branchName,
+                                        style: titleSmallStyle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -301,7 +490,7 @@ class LabReservationOverviewScreen extends StatelessWidget {
                                     ),
                                     Text(
                                       textAlign: TextAlign.start,
-                                      '$date - $time',
+                                      '${widget.date} - ${widget.time}',
                                       style: titleSmallStyle,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -373,153 +562,294 @@ class LabReservationOverviewScreen extends StatelessWidget {
                       ),
                     ),
                     verticalMiniSpace,
-                    ConditionalBuilder(
-                      condition: state is! AppCheckCouponLoadingState &&
-                          state is! AppGetInvoicesLoadingState,
-                      builder: (context) => Container(
-                        height: 150.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.circular(radius),
-                        ),
-                        alignment: AlignmentDirectional.center,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 4),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            verticalSmallSpace,
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(
-                                LocaleKeys.txtSummary.tr(),
-                                style: titleSmallStyle.copyWith(
-                                  fontWeight: FontWeight.normal,
+                    if (widget.testsDataModel?.id != null ||
+                        widget.offersDataModel?.id != null)
+                      ConditionalBuilder(
+                        condition: state is! AppCheckCouponLoadingState &&
+                            state is! AppGetInvoicesLoadingState,
+                        builder: (context) => Container(
+                          height: 140.0,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(radius),
+                          ),
+                          alignment: AlignmentDirectional.center,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 4),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              verticalSmallSpace,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Text(
+                                  LocaleKeys.txtSummary.tr(),
+                                  style: titleSmallStyle.copyWith(
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
-                            ),
-                            myHorizontalDivider(),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        LocaleKeys.txtPrice.tr(),
-                                        style: titleSmallStyle.copyWith(
-                                            color: greyDarkColor,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        textAlign: TextAlign.start,
-                                        '${offersDataModel?.discount ?? testsDataModel?.price} ${LocaleKeys.salary.tr()}',
-                                        style: titleSmallStyle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                  verticalMicroSpace,
-                                  // Row(
-                                  //   crossAxisAlignment:
-                                  //       CrossAxisAlignment.center,
-                                  //   mainAxisAlignment: MainAxisAlignment.start,
-                                  //   children: [
-                                  //     Text(
-                                  //       LocaleKeys.txtVAT.tr(),
-                                  //       style: titleSmallStyle.copyWith(
-                                  //           color: greyDarkColor,
-                                  //           fontWeight: FontWeight.normal),
-                                  //     ),
-                                  //     const Spacer(),
-                                  //     Text(
-                                  //       textAlign: TextAlign.start,
-                                  //       '${offersDataModel?.discount ?? testsDataModel?.price}%',
-                                  //       style: titleSmallStyle,
-                                  //       maxLines: 1,
-                                  //       overflow: TextOverflow.ellipsis,
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  verticalMicroSpace,
-                                  const MySeparator(),
-                                  verticalMicroSpace,
-                                  // verticalMicroSpace,
-                                  // Row(
-                                  //   crossAxisAlignment:
-                                  //       CrossAxisAlignment.center,
-                                  //   mainAxisAlignment: MainAxisAlignment.start,
-                                  //   children: [
-                                  //     Text(
-                                  //       LocaleKeys.txtTotal.tr(),
-                                  //       style: titleSmallStyle.copyWith(
-                                  //           color: greyDarkColor,
-                                  //           fontWeight: FontWeight.bold),
-                                  //     ),
-                                  //     const Spacer(),
-                                  //     Text(
-                                  //       textAlign: TextAlign.start,
-                                  //       '${offersDataModel?.discount ?? testsDataModel?.price} ${LocaleKeys.salary.tr()}',
-                                  //       style: titleSmallStyle,
-                                  //       maxLines: 1,
-                                  //       overflow: TextOverflow.ellipsis,
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        LocaleKeys.txtAddedTax.tr(),
-                                        textAlign: TextAlign.start,
-                                        style: titleSmallStyle.copyWith(
-                                            color: greyDarkColor,
-                                            fontWeight: FontWeight.normal),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              myHorizontalDivider(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          LocaleKeys.txtPrice.tr(),
+                                          style: titleSmallStyle.copyWith(
+                                              color: greyDarkColor,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          textAlign: TextAlign.start,
+                                          '${widget.offersDataModel?.discount ?? widget.testsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                          style: titleSmallStyle,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                    verticalMicroSpace,
+                                    const MySeparator(),
+                                    verticalMicroSpace,
+                                    verticalMicroSpace,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          LocaleKeys.txtAddedTax.tr(),
+                                          textAlign: TextAlign.start,
+                                          style: titleSmallStyle.copyWith(
+                                              color: greyDarkColor,
+                                              fontWeight: FontWeight.normal),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        fallback: (context) => const Center(
+                            child: CircularProgressIndicator.adaptive()),
+                      ),
+                    if (widget.testsDataModel?.id == null &&
+                        widget.offersDataModel?.id == null)
+                    Container(
+                      height: 250.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(radius),
+                      ),
+                      alignment: AlignmentDirectional.center,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          verticalSmallSpace,
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Text(
+                              LocaleKeys.txtSummary.tr(),
+                              style: titleSmallStyle.copyWith(
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          myHorizontalDivider(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      LocaleKeys.txtItems.tr(),
+                                      style: titleSmallStyle.copyWith(
+                                          color: greyDarkColor,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      textAlign: TextAlign.start,
+                                      '${cartModel?.data?.length ?? 1}',
+                                      style: titleSmallStyle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                                verticalMicroSpace,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      LocaleKeys.txtPrice.tr(),
+                                      style: titleSmallStyle.copyWith(
+                                          color: greyDarkColor,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      textAlign: TextAlign.start,
+                                      '${cartModel?.extra?.price} ${LocaleKeys.salary.tr()}',
+                                      style: titleSmallStyle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                                verticalMicroSpace,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      LocaleKeys.txtVAT.tr(),
+                                      style: titleSmallStyle.copyWith(
+                                          color: greyDarkColor,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      textAlign: TextAlign.start,
+                                      '${cartModel?.extra?.tax}',
+                                      style: titleSmallStyle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                                verticalMicroSpace,
+                                const MySeparator(),
+                                verticalMicroSpace,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      LocaleKeys.txtTotal.tr(),
+                                      style: titleSmallStyle.copyWith(
+                                          color: greyDarkColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      textAlign: TextAlign.start,
+                                      '${cartModel?.extra?.total} ${LocaleKeys.salary.tr()}',
+                                      style: titleSmallStyle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      LocaleKeys.txtAddedTax.tr(),
+                                      textAlign: TextAlign.start,
+                                      style: titleSmallStyle.copyWith(
+                                          color: greyDarkColor,
+                                          fontWeight: FontWeight.normal),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      fallback: (context) =>
-                          const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                     verticalSmallSpace,
                     ConditionalBuilder(
                       condition: state is! AppCreateLabReservationLoadingState,
                       builder: (context) => MaterialButton(
                         onPressed: () {
-                          if (testsDataModel?.id == null) {
-                            AppCubit.get(context).createLabReservation(
-                              date: date,
-                              time: time,
-                              familyId: familyId,
-                              branchId: branchId,
-                              coupon: couponController.text,
-                              offerId: [offersDataModel?.id],
-                            );
-                          } else if (offersDataModel?.id == null){
-                            AppCubit.get(context).createLabReservation(
-                                date: date,
-                                time: time,
-                                familyId: familyId,
-                                branchId: branchId,
+                          print(widget.testsDataModel?.id);
+                          print(widget.offersDataModel?.id);
+                          print(cartModel?.extra?.offers);
+                          print(cartModel?.extra?.tests);
+                          if (widget.testsDataModel?.id == null &&
+                              widget.offersDataModel?.id == null) {
+                            if (cartModel!.extra!.offers!.isNotEmpty &&
+                                cartModel.extra!.tests!.isNotEmpty) {
+                              AppCubit.get(context).createLabReservation(
+                                date: widget.date,
+                                time: widget.time,
+                                familyId: widget.familyId,
+                                branchId: widget.branchId,
                                 coupon: couponController.text,
-                                testId: [testsDataModel?.id]);
+                                offerId: cartModel.extra!.offers,
+                                testId: cartModel.extra!.tests,
+                              );
+                            } else {
+                              if (cartModel.extra!.offers!.isEmpty) {
+                                AppCubit.get(context).createLabReservation(
+                                  date: widget.date,
+                                  time: widget.time,
+                                  familyId: widget.familyId,
+                                  branchId: widget.branchId,
+                                  coupon: couponController.text,
+                                  testId: cartModel.extra?.tests,
+                                );
+                                print('1');
+                              } else if (cartModel.extra!.tests!.isEmpty) {
+                                AppCubit.get(context).createLabReservation(
+                                    date: widget.date,
+                                    time: widget.time,
+                                    familyId: widget.familyId,
+                                    branchId: widget.branchId,
+                                    coupon: couponController.text,
+                                    offerId: cartModel.extra?.offers);
+                                print('2');
+                              }
+                            }
+                          } else {
+                            if (widget.testsDataModel?.id == null) {
+                              AppCubit.get(context).createLabReservation(
+                                date: widget.date,
+                                time: widget.time,
+                                familyId: widget.familyId,
+                                branchId: widget.branchId,
+                                coupon: couponController.text,
+                                offerId: [widget.offersDataModel?.id],
+                              );
+                              print('3');
+                            } else if (widget.offersDataModel?.id == null) {
+                              AppCubit.get(context).createLabReservation(
+                                  date: widget.date,
+                                  time: widget.time,
+                                  familyId: widget.familyId,
+                                  branchId: widget.branchId,
+                                  coupon: couponController.text,
+                                  testId: ['${widget.testsDataModel?.id}']);
+                              print('4');
+                            }
                           }
+                          print('5');
                         },
                         child: Container(
                           height: 50,
@@ -539,8 +869,8 @@ class LabReservationOverviewScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      fallback: (context) =>
-                          const Center(child: CircularProgressIndicator.adaptive()),
+                      fallback: (context) => const Center(
+                          child: CircularProgressIndicator.adaptive()),
                     ),
                   ],
                 ),
@@ -549,6 +879,22 @@ class LabReservationOverviewScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+  Widget _getIconButton(color, icon) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+
+        /// set you real bg color in your content
+        color: color,
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+      ),
     );
   }
 }

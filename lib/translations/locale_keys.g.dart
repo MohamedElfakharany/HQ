@@ -75,6 +75,7 @@ abstract class  LocaleKeys {
   static const txtEnterValidEmail = 'txtEnterValidEmail';
   static const BtnChangeMobile = 'BtnChangeMobile';
   static const BtnAccept = 'BtnAccept';
+  static const noDataToShow = 'noDataToShow';
   static const passwordConditions = 'passwordConditions';
   static const TxtFieldNewPassword = 'TxtFieldNewPassword';
   static const TxtFieldReEnterPassword = 'TxtFieldReEnterPassword';

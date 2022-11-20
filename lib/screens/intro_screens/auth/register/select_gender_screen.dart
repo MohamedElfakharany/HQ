@@ -19,13 +19,13 @@ class SelectGenderScreen extends StatelessWidget {
       {Key? key,
       required this.countryId,
       required this.cityId,
-      required this.branchId})
+      required this.branchId,
+      required this.branchIndex,})
       : super(key: key);
   final int countryId;
   final int cityId;
   final int branchId;
-
-
+  final int branchIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,7 @@ class SelectGenderScreen extends StatelessWidget {
               cityId: state.userResourceModel.data!.city!.id,
               branchId: state.userResourceModel.data!.branch!.id,
               extraBranchTitle1: state.userResourceModel.data!.branch!.title,
+              extraBranchIndex1: branchIndex,
             );
             navigateAndFinish(
               context,
@@ -59,7 +60,7 @@ class SelectGenderScreen extends StatelessWidget {
               countryId: state.userResourceModel.data!.country!.id,
               cityId: state.userResourceModel.data!.city!.id,
               branchId: state.userResourceModel.data!.branch!.id,
-              extraBranchTitle1: state.userResourceModel.data!.branch!.title,
+              extraBranchTitle1: state.userResourceModel.data!.branch!.title, extraBranchIndex1: branchIndex,
             );
             navigateAndFinish(
               context,

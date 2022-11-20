@@ -22,6 +22,9 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
   void initState() {
     super.initState();
     AppTechCubit.get(context).getProfile();
+    AppTechCubit.get(context).getRequests();
+    AppTechCubit.get(context).getReservations();
+    AppTechCubit.get(context).getUserRequest();
   }
 
   @override

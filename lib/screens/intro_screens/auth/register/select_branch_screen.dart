@@ -64,7 +64,7 @@ class SelectBranchScreen extends StatelessWidget {
                                   extraBranchTitle1: AppCubit.get(context)
                                       .branchModel!
                                       .data![index]
-                                      .title)
+                                      .title, extraBranchIndex1: index)
                               .then((v) {
                             if (kDebugMode) {
                               print(
@@ -90,7 +90,7 @@ class SelectBranchScreen extends StatelessWidget {
                                       .data![index]
                                       .id,
                                   countryId: countryId,
-                                  cityId: cityId,
+                                  cityId: cityId, branchIndex: index,
                                 ),
                               ),
                             );

@@ -32,6 +32,8 @@ class LabAppointmentsScreen extends StatelessWidget {
         builder: (context, state) {
           var cubit = AppCubit.get(context);
           var labAppointmentModel = cubit.labAppointmentsModel;
+          print('testsDataModel : ${testsDataModel?.id}');
+          print('offersDataModel : ${offersDataModel?.id}');
           return Scaffold(
             backgroundColor: greyExtraLightColor,
             appBar: GeneralAppBar(
@@ -48,38 +50,36 @@ class LabAppointmentsScreen extends StatelessWidget {
                   condition: state is! AppGetLabAppointmentsLoadingState,
                   builder: (context) => ConditionalBuilder(
                     condition: labAppointmentModel != null,
-                    builder: (context) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 10.0,
-                          childAspectRatio: 3 / 1,
-                          children: List.generate(
-                            labAppointmentModel?.data?.length ?? 0,
-                            (index) => InkWell(
-                              onTap: () {
-                                if (labAppointmentModel?.data?[index].isUsed) {
-                                  Navigator.push(
-                                    context,
-                                    FadeRoute(
-                                      page: LabReservationDetailsScreen(
-                                        testsDataModel: testsDataModel,
-                                        offersDataModel: offersDataModel,
-                                        time: labAppointmentModel?.data?[index].time24,
-                                        date: labAppointmentModel?.extra?.date.toString() ?? '',
-                                      ),
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10.0,
+                        crossAxisSpacing: 10.0,
+                        childAspectRatio: 3 / 1,
+                        children: List.generate(
+                          labAppointmentModel?.data?.length ?? 0,
+                          (index) => InkWell(
+                            onTap: () {
+                              if (labAppointmentModel?.data?[index].isUsed) {
+                                Navigator.push(
+                                  context,
+                                  FadeRoute(
+                                    page: LabReservationDetailsScreen(
+                                      testsDataModel: testsDataModel,
+                                      offersDataModel: offersDataModel,
+                                      time: labAppointmentModel?.data?[index].time24,
+                                      date: labAppointmentModel?.extra?.date.toString() ?? '',
                                     ),
-                                  );
-                                }
-                              },
-                              child: LabAppointmentsCard(
-                                labAppointmentsDataModel:
-                                    labAppointmentModel?.data?[index],
-                              ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: LabAppointmentsCard(
+                              labAppointmentsDataModel:
+                                  labAppointmentModel?.data?[index],
                             ),
                           ),
                         ),

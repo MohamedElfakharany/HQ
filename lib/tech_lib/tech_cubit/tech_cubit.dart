@@ -90,33 +90,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
   }
 
   Future<void> getAddressBasedOnLocation({double? lat, double? long}) async {
-    // if (mLatitude == 0.0 && mLongitude == 0.0) {
-    //   lat = mLatitude;
-    //   long = mLongitude;
-    //   await _getLocation().then((value) async {
-    //     print('latitude, longitude after $lat, $long}');
-    //     var address = await geo.placemarkFromCoordinates(lat!, long!);
-    //     userAddress = address.first;
-    //     if (kDebugMode) {
-    //       print('from getAddressBasedOnLocation userAddress : $userAddress');
-    //     }
-    //     controller?.animateCamera(
-    //       CameraUpdate.newCameraPosition(
-    //         CameraPosition(
-    //           target: LatLng(lat, long),
-    //           zoom: 17.0,
-    //         ),
-    //       ),
-    //     );
-    //     markers.add(
-    //       Marker(
-    //           markerId: const MarkerId('Home'),
-    //           position: LatLng(lat, long)),
-    //     );
-    //     addressLocation =
-    //     '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
-    //   });
-    // }
     lat = mLatitude;
     long = mLongitude;
     await _getLocation(lat: lat, long: long).then((value) async {
@@ -136,42 +109,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
       addressLocation =
           '${userAddress?.administrativeArea} ${userAddress?.locality} ${userAddress?.street} ${userAddress?.subThoroughfare}';
     });
-  }
-
-  Future login({
-    required String mobile,
-    required String phoneCode,
-    required String password,
-  }) async {
-    var formData = {
-      'phone': mobile,
-      'phoneCode': phoneCode,
-      'password': password,
-    };
-    try {
-      emit(AppTechLoginLoadingState());
-      Dio dio = Dio();
-      var response = await dio.post(
-        loginURL,
-        data: formData,
-        options: Options(
-          followRedirects: false,
-          responseType: ResponseType.bytes,
-          validateStatus: (status) => true,
-          headers: {
-            'Accept': 'application/json',
-            'Accept-Language': sharedLanguage,
-          },
-        ),
-      );
-      var responseJsonB = response.data;
-      var convertedResponse = utf8.decode(responseJsonB);
-      var responseJson = json.decode(convertedResponse);
-      userResourceModel = UserResourceModel.fromJson(responseJson);
-      emit(AppTechLoginSuccessState(userResourceModel!));
-    } catch (error) {
-      emit(AppTechLoginErrorState(error.toString()));
-    }
   }
 
   Future getProfile() async {
@@ -335,7 +272,6 @@ class AppTechCubit extends Cubit<AppTechStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       techUserRequestModel = TechUserRequestModel.fromJson(responseJson);
-      print('techUserRequestModel : $responseJson');
       emit(AppGetTechUserRequestSuccessState(techUserRequestModel!));
     } catch (error) {
       emit(AppGetTechUserRequestErrorState(error.toString()));
@@ -372,10 +308,7 @@ class AppTechCubit extends Cubit<AppTechStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print('responseJson : $responseJson');
-      print('url : $url');
       techReservationsModel = TechReservationsModel.fromJson(responseJson);
-      print('before${techReservationsModel!.data}');
       techReservationsAcceptedModel = [];
       techReservationsSamplingModel = [];
       techReservationsFinishedModel = [];
@@ -383,23 +316,14 @@ class AppTechCubit extends Cubit<AppTechStates> {
       for (var i = 0; i < techReservationsModel!.data!.length; i++) {
         if (techReservationsModel!.data?[i].statusEn == 'Accepted') {
           techReservationsAcceptedModel!.add(techReservationsModel!.data![i]);
-          print(
-              'techReservationsAcceptedModel${techReservationsAcceptedModel?.first.price}');
         } else if (techReservationsModel?.data?[i].statusEn == 'Sampling') {
           techReservationsSamplingModel!.add(techReservationsModel!.data![i]);
-          print(
-              'techReservationsSamplingModel${techReservationsSamplingModel?.first.price}');
         } else if (techReservationsModel?.data?[i].statusEn == 'Finished') {
           techReservationsFinishedModel!.add(techReservationsModel!.data![i]);
-          print(
-              'techReservationsFinishedModel${techReservationsFinishedModel?.first.price}');
         } else {
           techReservationsCanceledModel?.add(techReservationsModel!.data![i]);
-          print(
-              'techReservationsCanceledModel${techReservationsCanceledModel?.first.price}');
         }
       }
-      print('after${techReservationsModel!.data}');
       emit(AppGetTechReservationsSuccessState(techReservationsModel!));
     } catch (error) {
       emit(AppGetTechReservationsErrorState(error.toString()));
@@ -435,6 +359,37 @@ class AppTechCubit extends Cubit<AppTechStates> {
       emit(AppAcceptRequestsSuccessState(successModel!));
     } catch (error) {
       emit(AppAcceptRequestsErrorState(error.toString()));
+    }
+  }
+
+  Future acceptTechRequest({
+    required var techRequest,
+  }) async {
+    emit(AppAcceptTechRequestsLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$userRequestURL/$techRequest/accepted',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      getUserRequest();
+      emit(AppAcceptTechRequestsSuccessState(successModel!));
+    } catch (error) {
+      emit(AppAcceptTechRequestsErrorState(error.toString()));
     }
   }
 

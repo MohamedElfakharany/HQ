@@ -123,6 +123,18 @@ class AppAcceptRequestsErrorState extends AppTechStates{
   AppAcceptRequestsErrorState(this.error);
 }
 
+class AppAcceptTechRequestsLoadingState extends AppTechStates{}
+
+class AppAcceptTechRequestsSuccessState extends AppTechStates{
+  final SuccessModel successModel;
+  AppAcceptTechRequestsSuccessState(this.successModel);
+}
+
+class AppAcceptTechRequestsErrorState extends AppTechStates{
+  final String error;
+  AppAcceptTechRequestsErrorState(this.error);
+}
+
 class AppSamplingRequestsLoadingState extends AppTechStates{}
 
 class AppSamplingRequestsSuccessState extends AppTechStates{

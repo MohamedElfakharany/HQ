@@ -12,6 +12,7 @@ import 'package:hq/models/patient_models/auth_models/create_token_model.dart';
 import 'package:hq/models/patient_models/auth_models/reset_password_model.dart';
 import 'package:hq/models/patient_models/auth_models/user_resource_model.dart';
 import 'package:hq/models/patient_models/auth_models/verify_model.dart';
+import 'package:hq/models/patient_models/cart_model.dart';
 import 'package:hq/models/patient_models/cores_models/branch_model.dart';
 import 'package:hq/models/patient_models/cores_models/carousel_model.dart';
 import 'package:hq/models/patient_models/cores_models/city_model.dart';
@@ -76,6 +77,7 @@ class AppCubit extends Cubit<AppStates> {
   AddressModel? addressModel;
   NotificationsModel? notificationsModel;
   PatientTechnicalSupportModel? patientTechnicalSupportModel;
+  CartModel? cartModel;
 
   List<BranchesDataModel>? branchNames = [];
   List<String> branchName = [];
@@ -97,6 +99,39 @@ class AppCubit extends Cubit<AppStates> {
 
   int? branchIdForReservationList;
 
+  String? verificationId = "";
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future fetchOtp(
+      {required String number, required String phoneCode}) async {
+    if (kDebugMode) {
+      print('verificationId Sign In before : $verificationId');
+    }
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+$phoneCode$number',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential).then((v) => {
+          print(v.credential?.asMap())
+        });
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          if (kDebugMode) {
+            print('The provided phone number is not valid.');
+          }
+        }
+      },
+      codeSent: (String verificationIdC, int? resendToken) async {
+        verificationId = verificationIdC;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+
+    if (kDebugMode) {
+      print('verificationId Sign In after  : $verificationId');
+    }
+  }
+
   void selectAddressId({required String address}) {
     for (int i = 0; i < addressNames!.length; i++) {
       if (addressNames![i].address == address) {
@@ -109,7 +144,7 @@ class AppCubit extends Cubit<AppStates> {
     for (int i = 0; i < branchNames!.length; i++) {
       if (branchNames![i].title == name) {
         branchIdList = branchNames![i].id;
-        getBranch(cityID: branchIdList!);
+        getOffers(branchId: branchIdList!);
       }
     }
   }
@@ -136,13 +171,15 @@ class AppCubit extends Cubit<AppStates> {
     required String phoneCode,
     required String nationalID,
     required String password,
+    required String deviceTokenLogin,
   }) async {
     var formData = json.encode({
       'name': name,
       'phone': mobile,
-      'phoneCode': phoneCode,
+      'phoneCode': '+$phoneCode',
       'password': password,
       'nationalId': nationalID,
+      'deviceToken': deviceTokenLogin,
     });
     try {
       emit(AppRegisterLoadingState());
@@ -164,9 +201,8 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
-        print('response : $response');
-        print('responseJsonB : $responseJsonB');
         print('responseJson : $responseJson');
+        print('formData : ${formData}');
       }
       userResourceModel = UserResourceModel.fromJson(responseJson);
       emit(AppRegisterSuccessState(userResourceModel!));
@@ -182,11 +218,13 @@ class AppCubit extends Cubit<AppStates> {
     required String mobile,
     required String phoneCode,
     required String password,
+    required String deviceTokenLogin,
   }) async {
     var formData = {
       'phone': mobile,
       'phoneCode': '+$phoneCode',
       'password': password,
+      'deviceToken': deviceTokenLogin,
     };
     try {
       emit(AppLoginLoadingState());
@@ -333,6 +371,7 @@ class AppCubit extends Cubit<AppStates> {
     required int extraCountryId1,
     required int extraCityId1,
     required int extraBranchId1,
+    required int extraBranchIndex1,
     required String extraBranchTitle1,
   }) async {
     (await SharedPreferences.getInstance())
@@ -342,10 +381,13 @@ class AppCubit extends Cubit<AppStates> {
         .setInt('extraBranchId', extraBranchId1);
     (await SharedPreferences.getInstance())
         .setString('extraBranchTitle', extraBranchTitle1);
+    (await SharedPreferences.getInstance())
+        .setInt('extraBranchIndex', extraBranchIndex1);
     extraCountryId = extraCountryId1;
     extraCityId = extraCityId1;
     extraBranchId = extraBranchId1;
     extraBranchTitle = extraBranchTitle1;
+    extraBranchIndex = extraBranchIndex1;
   }
 
   Future getUserRequest() async {
@@ -369,13 +411,42 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print(responseJson);
       patientTechnicalSupportModel =
           PatientTechnicalSupportModel.fromJson(responseJson);
-      print(patientTechnicalSupportModel);
       emit(AppGetTechRequestSuccessState(patientTechnicalSupportModel!));
     } catch (error) {
       emit(AppGetTechRequestErrorState(error.toString()));
+    }
+  }
+
+  Future getCart() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Accept-Language': sharedLanguage,
+        'Authorization': 'Bearer $token',
+      };
+      emit(AppGetCartLoadingState());
+      Dio dio = Dio();
+      var response = await dio.get(
+        cartURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      print(responseJson);
+      cartModel = CartModel.fromJson(responseJson);
+
+      emit(AppGetCartSuccessState(cartModel!));
+    } catch (error) {
+      print(error.toString());
+      emit(AppGetCartErrorState(error.toString()));
     }
   }
 
@@ -402,7 +473,6 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      print(responseJson);
       successModel = SuccessModel.fromJson(responseJson);
       emit(AppCancelTechRequestsSuccessState(successModel!));
     } catch (error) {
@@ -430,12 +500,9 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
-      if (kDebugMode) {
-        print('responseJson : $responseJson');
-      }
       userResourceModel = UserResourceModel.fromJson(responseJson);
       if (kDebugMode) {
-        print('userResourceModel : ${userResourceModel?.data?.profile}');
+        print('userResourceModel : ${userResourceModel?.data?.id}');
       }
       emit(AppGetProfileSuccessState(userResourceModel!));
     } catch (error) {
@@ -704,6 +771,36 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppCancelLabReservationSuccessState(successModel!));
     } catch (error) {
       emit(AppCancelLabReservationErrorState(error.toString()));
+    }
+  }
+
+  Future cancelHomeReservations({
+    int? reservationId,
+  }) async {
+    emit(AppCancelHomeReservationLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(
+        '$getHomeReservationsURL/$reservationId/cancel',
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      successModel = SuccessModel.fromJson(responseJson);
+      emit(AppCancelHomeReservationSuccessState(successModel!));
+    } catch (error) {
+      emit(AppCancelHomeReservationErrorState(error.toString()));
     }
   }
 
@@ -1124,6 +1221,48 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
+  Future addToCart({
+    int? testId,
+    int? offerId,
+  }) async {
+    emit(AppAddToCartLoadingState());
+    var headers = {
+      'Accept': 'application/json',
+      'Accept-Language': sharedLanguage,
+      'Authorization': 'Bearer $token',
+    };
+    var formData = FormData.fromMap({
+      if (offerId != null) 'offerId[]': offerId,
+      if (testId != null) 'testId[]': testId,
+    });
+    try {
+      Dio dio = Dio();
+      var response = await dio.post(
+        createCartURL,
+        options: Options(
+          followRedirects: false,
+          responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
+          headers: headers,
+        ),
+        data: formData,
+      );
+      var responseJsonB = response.data;
+      var convertedResponse = utf8.decode(responseJsonB);
+      var responseJson = json.decode(convertedResponse);
+      print('successModel responseJson : $responseJson');
+      print('formData : ${formData}');
+      print('headers : ${headers.entries}');
+      print('createCartURL : $createCartURL');
+
+      successModel = SuccessModel.fromJson(responseJson);
+      print('successModel : $successModel');
+      emit(AppAddToCartSuccessState(successModel!));
+    } catch (error) {
+      emit(AppAddToCartErrorState(error.toString()));
+    }
+  }
+
   Future resetPassword({
     required String newPassword,
     required String? resetToken,
@@ -1162,36 +1301,6 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppResetPasswordSuccessState(resetPasswordModel!));
     } catch (error) {
       emit(AppResetPasswordErrorState(error.toString()));
-    }
-  }
-
-  String? verificationId = "";
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  Future<void> fetchOtp(
-      {required String number, required String phoneCode}) async {
-    emit(AppStartFetchOTPState());
-    await auth.verifyPhoneNumber(
-      phoneNumber: '+$phoneCode$number',
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((v) => {});
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          if (kDebugMode) {
-            print('The provided phone number is not valid.');
-          }
-        }
-      },
-      codeSent: (String verificationIdC, int? resendToken) async {
-        verificationId = verificationIdC;
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-    emit(AppEndFetchOTPState());
-
-    if (kDebugMode) {
-      print('verificationId Sign In : $verificationId');
     }
   }
 
@@ -1527,8 +1636,8 @@ class AppCubit extends Cubit<AppStates> {
     required int branchId,
     int? familyId,
     String? coupon,
-    List<int>? testId,
-    List<int>? offerId,
+    List<String>? testId,
+    List<String>? offerId,
   }) async {
     emit(AppCreateLabReservationLoadingState());
     var headers = {
@@ -1650,12 +1759,12 @@ class AppCubit extends Cubit<AppStates> {
   Future createHomeReservation({
     required String date,
     required String time,
-    required String addressId,
+    required int addressId,
     int? familyId,
     required int branchId,
     String? coupon,
-    List<int>? testId,
-    List<int>? offerId,
+    List<String>? testId,
+    List<String>? offerId,
   }) async {
     emit(AppCreateHomeReservationLoadingState());
     var headers = {
@@ -1827,12 +1936,13 @@ class AppCubit extends Cubit<AppStates> {
         print(responseJson);
         print(headers.entries);
       }
-      (await SharedPreferences.getInstance()).setInt('verified', 1);
-      successModel = SuccessModel.fromJson(responseJson);
-      if (kDebugMode) {
-        print('successModel : ${successModel!.status}');
-      }
-      emit(AppGetVerifySuccessState(successModel!));
+      (await SharedPreferences.getInstance()).setInt('verified', 1).then((v) {
+        successModel = SuccessModel.fromJson(responseJson);
+        if (kDebugMode) {
+          print('successModel : ${successModel!.status}');
+        }
+        emit(AppGetVerifySuccessState(successModel!));
+      });
     } catch (error) {
       emit(AppGetVerifyErrorState(error.toString()));
     }
@@ -1867,12 +1977,20 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future getOffers() async {
+  Future getOffers({
+    int? branchId,
+  }) async {
+    String url;
+    if (branchId == null) {
+      url = offersURL;
+    } else {
+      url = '$offersURL?branchId=$branchId';
+    }
     try {
       emit(AppGetOffersLoadingState());
       Dio dio = Dio();
       var response = await dio.get(
-        offersURL,
+        url,
         options: Options(
           followRedirects: false,
           responseType: ResponseType.bytes,
@@ -1970,6 +2088,7 @@ class AppCubit extends Cubit<AppStates> {
     required int countryId,
     required int cityId,
     required int branchId,
+    required int extraBranchIndex1,
     required int isVerifiedSave,
   }) async {
     (await SharedPreferences.getInstance()).setString('token', extraTokenSave);
@@ -1980,12 +2099,15 @@ class AppCubit extends Cubit<AppStates> {
     (await SharedPreferences.getInstance()).setInt('extraCityId', cityId);
     (await SharedPreferences.getInstance()).setInt('extraBranchId', branchId);
     (await SharedPreferences.getInstance()).setInt('verified', isVerifiedSave);
+    (await SharedPreferences.getInstance())
+        .setInt('extraBranchIndex', extraBranchIndex1);
     token = extraTokenSave;
     verified = isVerifiedSave;
     extraCountryId = countryId;
     extraCityId = cityId;
     extraBranchId = branchId;
     extraBranchTitle = extraBranchTitle1;
+    extraBranchIndex = extraBranchIndex1;
   }
 
   IconData loginSufIcon = Icons.visibility_off;

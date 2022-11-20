@@ -11,11 +11,10 @@ import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
+import 'package:hq/shared/constants/general_constants.dart';
+import 'package:hq/translations/locale_keys.g.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
-
-import '../../../../shared/constants/general_constants.dart';
-import '../../../../translations/locale_keys.g.dart';
 
 class MapScreen extends StatefulWidget {
   Position position;

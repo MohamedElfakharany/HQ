@@ -51,8 +51,7 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
-            title:
-                '${LocaleKeys.TxtTestResult.tr()} ( ${result?.countResult ?? ''} )',
+            title: LocaleKeys.TxtTestResult.tr(),
             appBarColor: greyExtraLightColor,
             centerTitle: false,
           ),

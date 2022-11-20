@@ -83,6 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
                 verticalSmallSpace,
+
                 Expanded(
                   child: ConditionalBuilder(
                     condition: state is! AppGetTestsLoadingState,

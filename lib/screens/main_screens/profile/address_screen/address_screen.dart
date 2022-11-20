@@ -48,7 +48,6 @@ class _AddressScreenState extends State<AddressScreen> {
                   onTap: () async {
                     Position position = await Geolocator.getCurrentPosition(
                         desiredAccuracy: LocationAccuracy.high);
-
                     Navigator.push(
                       context,
                       FadeRoute(
