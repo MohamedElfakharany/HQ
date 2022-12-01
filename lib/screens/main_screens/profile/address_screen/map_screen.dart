@@ -1,11 +1,14 @@
 // ignore_for_file: must_be_immutable
+import 'dart:async';
+import 'dart:io';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:geocoding/geocoding.dart' as geo;
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
@@ -17,10 +20,11 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
-  Position position;
+  geolocator.Position? position;
+
   MapScreen({
     Key? key,
-    required this.position,
+    this.position,
   }) : super(key: key);
 
   @override
@@ -30,17 +34,34 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   var formKey = GlobalKey<FormState>();
   final focusNodes = Iterable<int>.generate(4).map((_) => FocusNode()).toList();
-  GoogleMapController? controller;
+  GoogleMapController? topController;
   double mLatitude = 0;
   double mLongitude = 0;
   late bool isInit;
 
+  geolocator.Position? position;
+
+  Future<void> getLocation() async {
+    position = await geolocator.Geolocator.getCurrentPosition(
+        desiredAccuracy: geolocator.LocationAccuracy.high);
+  }
+
   @override
   void initState() {
-    mLatitude = widget.position.latitude;
-    mLongitude = widget.position.longitude;
-
-    getAddressBasedOnLocation(lat: mLatitude, long: mLongitude);
+    if (Platform.isIOS) {
+      getLocation().then((v) {
+        setState(() {
+          getAddressBasedOnLocation(
+              lat: position?.latitude, long: position?.longitude);
+          mLatitude = position!.latitude;
+          mLongitude = position!.longitude;
+        });
+      });
+    } else {
+      mLatitude = widget.position!.latitude;
+      mLongitude = widget.position!.longitude;
+      getAddressBasedOnLocation(lat: mLatitude, long: mLongitude);
+    }
 
     super.initState();
   }
@@ -100,17 +121,10 @@ class _MapScreenState extends State<MapScreen> {
                   myLocationEnabled: true,
                   initialCameraPosition: CameraPosition(
                     target: LatLng(mLatitude, mLongitude),
-                    zoom: 10.0,
+                    zoom: 17.0,
                   ),
-                  onMapCreated: (controller) {
-                    // controller = controller;
-                  },
-                  onCameraMove: (camera) {},
-                  onTap: (latLong) {
-                    setState(() {
-                      getAddressBasedOnLocation(
-                          lat: latLong.latitude, long: latLong.longitude);
-                    });
+                  onTap: (value){
+                    getAddressBasedOnLocation(lat: value.latitude,long: value.longitude);
                   },
                   markers: markers,
                 ),
@@ -138,6 +152,7 @@ class _MapScreenState extends State<MapScreen> {
                               focusNode: focusNodes[0],
                               suffixIcon: Icons.location_searching,
                               type: TextInputType.text,
+                              validatedText: LocaleKeys.txtFieldAddress.tr(),
                               label: LocaleKeys.txtFieldAddress.tr(),
                               onTap: () {},
                               suffixPressed: () {
@@ -221,11 +236,10 @@ class _MapScreenState extends State<MapScreen> {
       currentLocation.onLocationChanged.listen((LocationData loc) {
         lat = loc.latitude!;
         long = loc.longitude!;
-        controller?.animateCamera(
+        topController?.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
-              target: LatLng(loc.latitude ?? lat ?? mLatitude,
-                  loc.longitude ?? long ?? mLongitude),
+              target: LatLng(loc.latitude!, loc.longitude!),
               zoom: 17.0,
             ),
           ),
@@ -237,19 +251,19 @@ class _MapScreenState extends State<MapScreen> {
                   loc.longitude ?? long ?? mLongitude)),
         );
       });
+      mLatitude = lat!;
+      mLongitude = long!;
     }
   }
 
   Future<void> getAddressBasedOnLocation({double? lat, double? long}) async {
-    lat = mLatitude;
-    long = mLongitude;
     await _getLocation(lat: lat, long: long).then((value) async {
       var address = await geo.placemarkFromCoordinates(lat!, long!);
       userAddress = address.first;
       if (kDebugMode) {
         print('from getAddressBasedOnLocation userAddress : $userAddress');
       }
-      controller?.animateCamera(
+      topController?.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: LatLng(lat, long),
@@ -266,6 +280,8 @@ class _MapScreenState extends State<MapScreen> {
     });
     setState(() {
       addressController.text = addressLocation ?? '';
+      markOfPlaceController.text = userAddress?.thoroughfare ?? '';
+      buildingController.text = userAddress?.subThoroughfare ?? '';
     });
   }
 }

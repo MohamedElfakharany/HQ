@@ -89,6 +89,7 @@ class InquiryScreen extends StatelessWidget {
                     ),
                   ),
                   verticalSmallSpace,
+                  if (medicalInquiriesDataModel.answer?.date?.date != null)
                   Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -107,6 +108,7 @@ class InquiryScreen extends StatelessWidget {
                     ),
                   ),
                   verticalSmallSpace,
+                  if (medicalInquiriesDataModel.answer?.date?.date != null)
                   Align(
                     alignment: AlignmentDirectional.centerEnd,
                     child: Column(
@@ -147,6 +149,18 @@ class InquiryScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (medicalInquiriesDataModel.answer?.date?.date == null)
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(radius),
+                        color: greyExtraLightColor,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ScreenHolder(msg: LocaleKeys.txtAnswer.tr()),
+                      ),
+                    ),
                 ],
               ),
             ),

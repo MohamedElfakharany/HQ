@@ -41,43 +41,39 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(appLogo, width: 150, height: 150,),
+                  Image.asset(
+                    appLogo,
+                    width: 150,
+                    height: 150,
+                  ),
                   verticalLargeSpace,
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
                       isFirst = false;
                       CacheHelper.saveData(key: 'isFirst', value: false);
-                      setState(() async {
-                        if (sharedLanguage == 'en') {
-                          await AppCubit.get(context)
-                              .changeLanguage();
-                          await context
-                              .setLocale(Locale(sharedLanguage!))
-                              .then((value) {
+                      if (sharedLanguage == 'en') {
+                        await AppCubit.get(context).changeLanguage();
+                        await context.setLocale(Locale(sharedLanguage!));
+                        setState(() async {
+                          setState(() {
                             Navigator.push(
-                                context, FadeRoute(page:  OnBoardingScreen()));
+                                context, FadeRoute(page: OnBoardingScreen()));
                           });
-                        } else if (sharedLanguage == 'ar') {
-                          await context
-                              .setLocale(Locale(sharedLanguage!))
-                              .then((value) {
-                            Navigator.push(
-                                context, FadeRoute(page:  OnBoardingScreen()));
-                          });
-                        }else {
-                          await context
-                              .setLocale(const Locale('ar'))
-                              .then((value) {
-                            CacheHelper.saveData(key: 'local', value: 'ar');
-                            Navigator.push(
-                                context, FadeRoute(page:  OnBoardingScreen()));
-                          });
-                        }
-                        // if (AppCubit.get(context).isEnglish) {
-                        //   AppCubit.get(context).changeLanguage();
-                        // }
-                        // print(AppCubit.get(context).isEnglish);
-                      });
+                        });
+                      } else if (sharedLanguage == 'ar') {
+                        await context.setLocale(Locale(sharedLanguage!));
+                        setState(() async {
+                          Navigator.push(
+                              context, FadeRoute(page: OnBoardingScreen()));
+                        });
+                      } else {
+                        await context.setLocale(const Locale('ar'));
+                        setState(() async {
+                          CacheHelper.saveData(key: 'local', value: 'ar');
+                          Navigator.push(
+                              context, FadeRoute(page: OnBoardingScreen()));
+                        });
+                      }
                     },
                     child: Container(
                       height: 60,
@@ -127,27 +123,27 @@ class _SelectLangScreenState extends State<SelectLangScreen> {
                       CacheHelper.saveData(key: 'isFirst', value: false);
                       setState(() async {
                         if (sharedLanguage == 'ar') {
-                          await AppCubit.get(context)
-                              .changeLanguage();
-                          await context.setLocale(Locale(sharedLanguage!))
-                              .then((value) {
-                            Navigator.push(
-                                context, FadeRoute(page:  OnBoardingScreen()));
-                          });
-                        } else if (sharedLanguage == 'en'){
+                          await AppCubit.get(context).changeLanguage();
                           await context
                               .setLocale(Locale(sharedLanguage!))
                               .then((value) {
                             Navigator.push(
-                                context, FadeRoute(page:  OnBoardingScreen()));
+                                context, FadeRoute(page: OnBoardingScreen()));
                           });
-                        }else {
+                        } else if (sharedLanguage == 'en') {
+                          await context
+                              .setLocale(Locale(sharedLanguage!))
+                              .then((value) {
+                            Navigator.push(
+                                context, FadeRoute(page: OnBoardingScreen()));
+                          });
+                        } else {
                           await context
                               .setLocale(const Locale('en'))
                               .then((value) {
                             CacheHelper.saveData(key: 'local', value: 'en');
                             Navigator.push(
-                                context, FadeRoute(page:  OnBoardingScreen()));
+                                context, FadeRoute(page: OnBoardingScreen()));
                           });
                         }
                         // if (!AppCubit.get(context).isEnglish) {

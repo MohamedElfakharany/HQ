@@ -8,6 +8,7 @@ import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/models/patient_models/test_models/offers_model.dart';
 import 'package:hq/models/patient_models/test_models/tests_model.dart';
+import 'package:hq/screens/main_screens/profile/address_screen/address_screen.dart';
 import 'package:hq/screens/main_screens/reservations/details_screens/home_appointments/home_reservation_overview_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -53,6 +54,7 @@ class _HomeReservationDetailsScreenState
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        print('HomeReservationDetailsScreen');
         // locationValue = extraBranchTitle;
         return Scaffold(
           backgroundColor: greyExtraLightColor,
@@ -162,15 +164,15 @@ class _HomeReservationDetailsScreenState
                     ),
                     verticalMiniSpace,
                     Container(
-                      height: 150.0,
+                      // height: 150.0,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: whiteColor,
                         borderRadius: BorderRadius.circular(radius),
                       ),
                       alignment: AlignmentDirectional.center,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -180,69 +182,18 @@ class _HomeReservationDetailsScreenState
                                 horizontalSmallSpace,
                                 Text(
                                   LocaleKeys.BtnAtHome.tr(),
-                                  style:
-                                      titleSmallStyle.copyWith(color: mainColor),
+                                  style: titleSmallStyle.copyWith(
+                                      color: mainColor),
                                 ),
                                 const Spacer(),
                                 Image.asset('assets/images/atHomeIcon.png',
-                                    height: 30, width: 20, color: greyDarkColor),
+                                    height: 30,
+                                    width: 20,
+                                    color: greyDarkColor),
                                 horizontalSmallSpace,
                               ],
                             ),
                           ),
-                          // myHorizontalDivider(),
-                          // Expanded(
-                          //   child: DropdownButtonHideUnderline(
-                          //     child: DropdownButtonFormField<String>(
-                          //       validator: (value) {
-                          //         if (value == null) {
-                          //           return 'Location Required';
-                          //         }
-                          //       },
-                          //       decoration: InputDecoration(
-                          //         prefixIcon: const Icon(
-                          //           Icons.location_on_rounded,
-                          //           color: greyLightColor,
-                          //           size: 30,
-                          //         ),
-                          //         contentPadding: const EdgeInsetsDirectional.only(
-                          //             start: 20.0, end: 0.0, bottom: 15.0),
-                          //         fillColor: Colors.white,
-                          //         filled: true,
-                          //         errorStyle:
-                          //         const TextStyle(color: Color(0xFF4F4F4F)),
-                          //         border: InputBorder.none,
-                          //         suffixIcon: IconButton(
-                          //           onPressed: () {
-                          //             Navigator.push(
-                          //               context,
-                          //               FadeRoute(
-                          //                 page: MapScreen(),
-                          //               ),
-                          //             );
-                          //           },
-                          //           icon: const Icon(
-                          //             Icons.add_location_alt_outlined,
-                          //             color: blueColor,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       value: locationItems.first,
-                          //       isExpanded: true,
-                          //       iconSize: 30,
-                          //       icon: const Icon(
-                          //         Icons.keyboard_arrow_down_rounded,
-                          //         color: blueColor,
-                          //       ),
-                          //       items:
-                          //       locationItems.map(buildLocationItem).toList(),
-                          //       onChanged: (value) =>
-                          //           setState(() => locationValue = value),
-                          //       onSaved: (v) {
-                          //       },
-                          //     ),
-                          //   ),
-                          // ),
                           myHorizontalDivider(),
                           Expanded(
                             child: DropdownButtonHideUnderline(
@@ -255,21 +206,37 @@ class _HomeReservationDetailsScreenState
                                 hint: Text(
                                   LocaleKeys.TxtFieldAddressOfVisit.tr(),
                                 ),
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(
                                     Icons.location_on_rounded,
                                     color: greyLightColor,
                                     size: 30,
                                   ),
-                                  contentPadding: EdgeInsetsDirectional.only(
+                                  contentPadding: const EdgeInsetsDirectional.only(
                                       start: 20.0,
                                       end: 0.0,
                                       bottom: 0.0,
                                       top: 10.0),
                                   fillColor: Colors.white,
                                   filled: true,
-                                  errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
+                                  errorStyle:
+                                      const TextStyle(color: Color(0xFF4F4F4F)),
                                   border: InputBorder.none,
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      AppCubit.get(context).getAddress();
+                                      Navigator.push(
+                                        context,
+                                        FadeRoute(
+                                          page: const AddressScreen(),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.add_location_alt_outlined,
+                                      color: mainColor,
+                                    ),
+                                  ),
                                 ),
                                 value: locationValue,
                                 isExpanded: true,
@@ -316,8 +283,7 @@ class _HomeReservationDetailsScreenState
                                         .userResourceModel
                                         ?.data
                                         ?.name,
-                                addressId: AppCubit.get(context)
-                                    .addressIdList!,
+                                addressId: AppCubit.get(context).addressIdList!,
                               ),
                             ),
                           );

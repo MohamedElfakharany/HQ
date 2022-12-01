@@ -22,7 +22,7 @@ class _TechnicalSupportScreenState extends State<TechnicalSupportScreen> {
   @override
   void initState() {
     super.initState();
-        AppCubit.get(context).getUserRequest();
+    AppCubit.get(context).getUserRequest();
   }
 
   @override
@@ -31,7 +31,8 @@ class _TechnicalSupportScreenState extends State<TechnicalSupportScreen> {
       listener: (context, state) {
         if (state is AppCancelTechRequestsSuccessState) {
           if (state.successModel.status) {
-            showToast(msg: state.successModel.message,state: ToastState.success);
+            showToast(
+                msg: state.successModel.message, state: ToastState.success);
             Navigator.pop(context);
             Navigator.pop(context);
           } else {
@@ -45,15 +46,13 @@ class _TechnicalSupportScreenState extends State<TechnicalSupportScreen> {
               },
             );
           }
-        } else if (state is AppCancelTechRequestsErrorState){
+        } else if (state is AppCancelTechRequestsErrorState) {
           Navigator.pop(context);
           showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                content: Text(
-                    state.error.toString()
-                ),
+                content: Text(state.error.toString()),
               );
             },
           );
@@ -69,38 +68,30 @@ class _TechnicalSupportScreenState extends State<TechnicalSupportScreen> {
           ),
           body: Padding(
             padding:
-            const EdgeInsets.only(right: 20.0, bottom: 20.0, left: 20.0),
+                const EdgeInsets.only(right: 20.0, bottom: 20.0, left: 20.0),
             child: Column(
               children: [
                 GeneralButton(
-                  title: '${LocaleKeys.TxtReservationScreenTitle.tr()} ${LocaleKeys.txtNow.tr()}',
+                  title:
+                      '${LocaleKeys.TxtReservationScreenTitle.tr()} ${LocaleKeys.txtNow.tr()}',
                   onPress: () {
-                    Navigator.push(
-                        context, FadeRoute(page: const CreateTechSupportScreen()));
+                    Navigator.push(context,
+                        FadeRoute(page: const CreateTechSupportScreen()));
                   },
                 ),
                 verticalMediumSpace,
-                ConditionalBuilder(
-                  condition: state is! AppGetTechRequestLoadingState,
-                  builder: (context) => ConditionalBuilder(
-                    condition:
-                    AppCubit.get(context).patientTechnicalSupportModel?.data != null,
-                    builder: (context) => Expanded(
-                      child: ListView.separated(
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) => UserRequestsCart(
-                          index: index,
-                        ),
-                        separatorBuilder: (context, index) => verticalSmallSpace,
-                        itemCount: 1,
-                      ),
+                if (AppCubit.get(context).patientTechnicalSupportModel?.data != null)
+                  ConditionalBuilder(
+                    condition: AppCubit.get(context).patientTechnicalSupportModel?.data == null,
+                    builder: (context) => ConditionalBuilder(
+                      condition: state is! AppGetTechRequestLoadingState,
+                      builder: (context) => const UserRequestsCart(),
+                      fallback: (context) => const Center(
+                          child: CircularProgressIndicator.adaptive()),
                     ),
-                    fallback: (context) =>
-                        ScreenHolder(msg: LocaleKeys.TxtReservationScreenTitle.tr()),
+                    fallback: (context) => ScreenHolder(
+                        msg: LocaleKeys.TxtReservationScreenTitle.tr()),
                   ),
-                  fallback: (context) =>
-                  const Center(child: CircularProgressIndicator.adaptive()),
-                ),
               ],
             ),
           ),

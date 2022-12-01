@@ -93,8 +93,9 @@ class ResultsScreenCard extends StatelessWidget {
 }
 
 class ResultsDetailsCart extends StatelessWidget {
-  const ResultsDetailsCart({Key? key, required this.labResultsDataFileModel}) : super(key: key);
-  final LabResultsDataFileModel labResultsDataFileModel;
+   ResultsDetailsCart({Key? key, this.labResultsDataFileModel, this.homeResultsDataFileModel}) : super(key: key);
+  LabResultsDataFileModel? labResultsDataFileModel;
+  HomeResultsDataFileModel? homeResultsDataFileModel;
 
   @override
   Widget build(BuildContext context) {
@@ -128,14 +129,14 @@ class ResultsDetailsCart extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '# ${labResultsDataFileModel.id}',
+                      '# ${labResultsDataFileModel?.id ?? homeResultsDataFileModel?.id}',
                       style: titleSmallStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     horizontalMediumSpace,
                     Text(
-                      '${labResultsDataFileModel.date?.date ?? 0}',
+                      '${labResultsDataFileModel?.date?.date  ?? homeResultsDataFileModel?.date?.date}',
                       style: subTitleSmallStyle2,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -143,7 +144,14 @@ class ResultsDetailsCart extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  '${labResultsDataFileModel.notes}',
+                  '${labResultsDataFileModel?.title ?? homeResultsDataFileModel?.title ?? ''}',
+                  style: subTitleSmallStyle2,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (labResultsDataFileModel?.notes != null || homeResultsDataFileModel?.notes != null)
+                Text(
+                  '${labResultsDataFileModel?.notes ?? homeResultsDataFileModel?.notes ?? ''}',
                   style: subTitleSmallStyle2,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

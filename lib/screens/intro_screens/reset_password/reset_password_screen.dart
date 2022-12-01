@@ -152,7 +152,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 10),
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
                             color: whiteColor,
@@ -245,7 +245,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 10),
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
                             color: whiteColor,
@@ -315,16 +315,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   verticalMiniSpace,
                   ConditionalBuilder(
                     condition: state is! AppResetPasswordLoadingState,
-                    builder: (context) => GeneralButton(
-                      title: LocaleKeys.BtnReset.tr(),
-                      onPress: () {
-                        if (formKey.currentState!.validate()) {
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: GeneralButton(
+                        title: LocaleKeys.BtnReset.tr(),
+                        onPress: () {
+                          if (formKey.currentState!.validate()) {
 
-                          AppCubit.get(context).resetPassword(
-                              resetToken: widget.resetToken,
-                              newPassword: passwordController.text);
-                        }
-                      },
+                            AppCubit.get(context).resetPassword(
+                                resetToken: widget.resetToken,
+                                newPassword: passwordController.text);
+                          }
+                        },
+                      ),
                     ),
                     fallback: (context) => const Center(
                       child: CircularProgressIndicator.adaptive(),

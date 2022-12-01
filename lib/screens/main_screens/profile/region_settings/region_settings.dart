@@ -64,15 +64,15 @@ class _RegionSettingsScreenState extends State<RegionSettingsScreen> {
                         () async {
                           AppCubit.get(context).changeLanguage();
                           await context
-                              .setLocale(Locale(sharedLanguage!))
+                              .setLocale(Locale(AppCubit.get(context).local!))
                               .then(
                                 (value) => {
-                                  setState(() {
-                                    Navigator.pop(context);
-                                    cubit.changeBottomScreen(0);
-                                  })
-                                },
-                              );
+                              setState(() {
+                                Navigator.pop(context);
+                                cubit.changeBottomScreen(0);
+                              })
+                            },
+                          );
                         },
                       );
                     },

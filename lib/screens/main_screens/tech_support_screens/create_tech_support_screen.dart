@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
+import 'package:hq/screens/main_screens/profile/address_screen/address_screen.dart';
 import 'package:hq/screens/main_screens/tech_support_screens/tech_support_overview_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
@@ -20,7 +21,8 @@ class CreateTechSupportScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CreateTechSupportScreen> createState() => _CreateTechSupportScreenState();
+  State<CreateTechSupportScreen> createState() =>
+      _CreateTechSupportScreenState();
 }
 
 class _CreateTechSupportScreenState extends State<CreateTechSupportScreen> {
@@ -155,7 +157,7 @@ class _CreateTechSupportScreenState extends State<CreateTechSupportScreen> {
                     ),
                     verticalMiniSpace,
                     Container(
-                      height: 150.0,
+                      height: 275.0,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: whiteColor,
@@ -167,120 +169,127 @@ class _CreateTechSupportScreenState extends State<CreateTechSupportScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: DefaultFormField(
-                                    controller: dateController,
-                                    type: TextInputType.none,
-                                    label: LocaleKeys.TxtFieldDateOfVisit.tr(),
-                                    suffixPressed: () {},
-                                    validatedText:
-                                        LocaleKeys.TxtFieldDateOfVisit.tr(),
-                                    onTap: () {
-                                      DatePicker.showDatePicker(context,
-                                          showTitleActions: true,
-                                          minTime: DateTime.now(),
-                                          maxTime: DateTime.now()
-                                              .add(const Duration(days: 30)),
-                                          onChanged: (date) {
-                                        setState(() {
-                                          dateController.text =
-                                              '${date.year.toString()}-${date.month.toString()}-${date.day.toString()}';
-                                        });
-                                      }, onConfirm: (date) {
-                                        setState(() {
-                                          dateController.text =
-                                              '${date.year.toString()}-${date.month.toString()}-${date.day.toString()}';
-                                        });
-                                      },
-                                          currentTime: DateTime.now(),
-                                          locale: LocaleType.en);
-                                    },
-                                  ),
-                                ),
-                                horizontalMiniSpace,
-                                Expanded(
-                                  child: DefaultFormField(
-                                    controller: timeController,
-                                    type: TextInputType.none,
-                                    label: LocaleKeys.TxtFieldTimeOfVisit.tr(),
-                                    suffixPressed: () {},
-                                    validatedText:
-                                        LocaleKeys.TxtFieldTimeOfVisit.tr(),
-                                    onTap: () {
-                                      DatePicker.showTimePicker(context,
-                                          showTitleActions: true,
-                                          showSecondsColumn: false,
-                                          onChanged: (date) {
-                                        setState(() {
-                                          timeController.text =
-                                              '${date.hour.toString()}:${date.minute.toString()}';
-                                        });
-                                      }, onConfirm: (date) {
-                                        setState(() {
-                                          timeController.text =
-                                              '${date.hour.toString()}:${date.minute.toString()}';
-                                        });
-                                      },
-                                          currentTime: DateTime.now(),
-                                          locale: LocaleType.en);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                          DefaultFormField(
+                            controller: dateController,
+                            type: TextInputType.none,
+                            label: LocaleKeys.TxtFieldDateOfVisit.tr(),
+                            suffixPressed: () {},
+                            validatedText:
+                                LocaleKeys.TxtFieldDateOfVisit.tr(),
+                            onTap: () {
+                              DatePicker.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime.now(),
+                                  maxTime: DateTime.now()
+                                      .add(const Duration(days: 30)),
+                                  onChanged: (date) {
+                                setState(() {
+                                  dateController.text =
+                                      '${date.year.toString()}-${date.month.toString()}-${date.day.toString()}';
+                                });
+                              }, onConfirm: (date) {
+                                setState(() {
+                                  dateController.text =
+                                      '${date.year.toString()}-${date.month.toString()}-${date.day.toString()}';
+                                });
+                              },
+                                  currentTime: DateTime.now(),
+                                  locale: LocaleType.en);
+                            },
                           ),
+                          const Spacer(),
                           myHorizontalDivider(),
-                          Expanded(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField<String>(
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Location Required';
-                                  }
-                                },
-                                hint: Text(
-                                  LocaleKeys.TxtFieldAddressOfVisit.tr(),
-                                ),
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.location_on_rounded,
-                                    color: greyLightColor,
-                                    size: 30,
-                                  ),
-                                  contentPadding: EdgeInsetsDirectional.only(
-                                      start: 20.0,
-                                      end: 0.0,
-                                      bottom: 0.0,
-                                      top: 10.0),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorStyle:
-                                      TextStyle(color: Color(0xFF4F4F4F)),
-                                  border: InputBorder.none,
-                                ),
-                                value: locationValue,
-                                isExpanded: true,
-                                iconSize: 30,
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: mainColor,
-                                ),
-                                items: AppCubit.get(context)
-                                    .addressName
-                                    .map(buildLocationItem)
-                                    .toList(),
-                                onChanged: (value) => setState(() {
-                                  locationValue = value;
-                                  AppCubit.get(context)
-                                      .selectAddressId(address: locationValue!);
-                                }),
-                                onSaved: (v) {
-                                  FocusScope.of(context).unfocus();
-                                },
+                          const Spacer(),
+                          DefaultFormField(
+                            controller: timeController,
+                            type: TextInputType.none,
+                            label: LocaleKeys.TxtFieldTimeOfVisit.tr(),
+                            suffixPressed: () {},
+                            validatedText:
+                                LocaleKeys.TxtFieldTimeOfVisit.tr(),
+                            onTap: () {
+                              DatePicker.showTimePicker(context,
+                                  showTitleActions: true,
+                                  showSecondsColumn: false,
+                                  onChanged: (date) {
+                                setState(() {
+                                  timeController.text =
+                                      '${date.hour.toString()}:${date.minute.toString()}';
+                                });
+                              }, onConfirm: (date) {
+                                setState(() {
+                                  timeController.text =
+                                      '${date.hour.toString()}:${date.minute.toString()}';
+                                });
+                              },
+                                  currentTime: DateTime.now(),
+                                  locale: LocaleType.en);
+                            },
+                          ),
+                          const Spacer(),
+                          myHorizontalDivider(),
+                          const Spacer(),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField<String>(
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Location Required';
+                                }
+                              },
+                              hint: Text(
+                                LocaleKeys.TxtFieldAddressOfVisit.tr(),
                               ),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.location_on_rounded,
+                                  color: greyLightColor,
+                                  size: 30,
+                                ),
+                                contentPadding: const EdgeInsetsDirectional.only(
+                                    start: 20.0,
+                                    end: 0.0,
+                                    bottom: 0.0,
+                                    top: 10.0),
+                                fillColor: Colors.white,
+                                filled: true,
+                                errorStyle:
+                                    const TextStyle(color: Color(0xFF4F4F4F)),
+                                border: InputBorder.none,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    AppCubit.get(context).getAddress();
+                                    Navigator.push(
+                                      context,
+                                      FadeRoute(
+                                        page: const AddressScreen(),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_location_alt_outlined,
+                                    color: mainColor,
+                                  ),
+                                ),
+                              ),
+                              value: locationValue,
+                              isExpanded: true,
+                              iconSize: 30,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: mainColor,
+                              ),
+                              items: AppCubit.get(context)
+                                  .addressName
+                                  .map(buildLocationItem)
+                                  .toList(),
+                              onChanged: (value) => setState(() {
+                                locationValue = value;
+                                AppCubit.get(context)
+                                    .selectAddressId(address: locationValue!);
+                              }),
+                              onSaved: (v) {
+                                FocusScope.of(context).unfocus();
+                              },
                             ),
                           ),
                         ],
@@ -294,8 +303,7 @@ class _CreateTechSupportScreenState extends State<CreateTechSupportScreen> {
                             context,
                             FadeRoute(
                               page: TechSupportOverviewScreen(
-                                addressId:
-                                AppCubit.get(context).addressIdList,
+                                addressId: AppCubit.get(context).addressIdList,
                                 time: timeController.text,
                                 date: dateController.text,
                                 addressTitle: locationValue!,
@@ -312,12 +320,12 @@ class _CreateTechSupportScreenState extends State<CreateTechSupportScreen> {
                         ),
                         child: Center(
                             child: Text(
-                              LocaleKeys.BtnContinue.tr(),
-                              style: titleStyle.copyWith(
-                                  fontSize: 20.0,
-                                  color: whiteColor,
-                                  fontWeight: FontWeight.normal),
-                            )),
+                          LocaleKeys.BtnContinue.tr(),
+                          style: titleStyle.copyWith(
+                              fontSize: 20.0,
+                              color: whiteColor,
+                              fontWeight: FontWeight.normal),
+                        )),
                       ),
                     ),
                     verticalMiniSpace,

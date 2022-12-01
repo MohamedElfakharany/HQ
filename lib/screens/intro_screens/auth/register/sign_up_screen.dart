@@ -2,7 +2,6 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,34 +40,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final _focusNodes =
       Iterable<int>.generate(5).map((_) => FocusNode()).toList();
-
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  String? verificationId = "";
-
-  Future<void> fetchOtp({required String number}) async {
-    await auth.verifyPhoneNumber(
-      phoneNumber: '+2$number',
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((v) => {});
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          if (kDebugMode) {
-            print('The provided phone number is not valid.');
-          }
-        }
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        verificationId = verificationId;
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-
-    if (kDebugMode) {
-      print('verificationId Sign In : $verificationId');
-    }
-  }
 
   RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
 
@@ -115,7 +86,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (state is AppRegisterSuccessState) {
           if (state.userResourceModel.status) {
             token = state.userResourceModel.extra!.token;
-            fetchOtp(number: mobileController.text.toString());
             await Navigator.push(
               context,
               FadeRoute(
@@ -257,9 +227,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onEditingComplete: () {
                           isPasswordTyping = false;
                         },
-                        onTapOutside: (value) {
-                          isPasswordTyping = false;
-                        },
+                        // onTapOutside: (value) {
+                        //   isPasswordTyping = false;
+                        // },
                         onFieldSubmitted: (value) {
                           isPasswordTyping = false;
                         },
@@ -433,6 +403,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
+                            child: Text(
+                              LocaleKeys.txtTitleOfOurTermsOfService.tr(),
+                              style: const TextStyle(color: mainColor),
+                            ),
                             onPressed: () {
                               showPopUp(
                                 context,
@@ -499,10 +473,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               );
                             },
-                            child: Text(
-                              LocaleKeys.txtTitleOfOurTermsOfService.tr(),
-                              style: const TextStyle(color: mainColor),
-                            ),
                           ),
                           // const Text(
                           //   'And',
@@ -587,21 +557,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   horizontalMiniSpace,
                   ConditionalBuilder(
                     condition: state is! AppRegisterLoadingState,
-                    builder: (context) => GeneralButton(
-                      title: LocaleKeys.BtnSignUp.tr(),
-                      onPress: () {
-                        if (formKey.currentState!.validate()) {
-                          cubit.register(
-                            name: userNameController.text,
-                            nationalID: nationalIdController.text,
-                            password: passwordController.text,
-                            mobile: mobileController.text,
-                            phoneCode: nationalCodeController.text,
-                            deviceTokenLogin: deviceToken!,
-                          );
-                        }
-                        cubit.isVisitor = false;
-                      },
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: GeneralButton(
+                        title: LocaleKeys.BtnSignUp.tr(),
+                        onPress: () {
+                          if (formKey.currentState!.validate()) {
+                            cubit.register(
+                              name: userNameController.text,
+                              nationalID: nationalIdController.text,
+                              password: passwordController.text,
+                              mobile: mobileController.text,
+                              phoneCode: nationalCodeController.text,
+                              deviceTokenLogin: deviceToken!,
+                            );
+                          }
+                          cubit.isVisitor = false;
+                        },
+                      ),
                     ),
                     fallback: (context) => const Center(
                         child: CircularProgressIndicator.adaptive()),

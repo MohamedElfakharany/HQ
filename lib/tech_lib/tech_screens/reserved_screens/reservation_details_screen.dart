@@ -38,7 +38,7 @@ class _TechReservationsDetailsScreenState
   var couponController = TextEditingController();
   bool isFinished = false;
   var swipeColor = mainColor;
-  var swipeText = 'Swap to Sampling';
+  var swipeText = LocaleKeys.BtnSwapToSample.tr();
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +75,10 @@ class _TechReservationsDetailsScreenState
         }
         if (techReservations?.statusEn == 'Accepted') {
           swipeColor = mainColor;
-          swipeText = 'Swap to Sampling';
+          swipeText = LocaleKeys.BtnSwapToSample.tr();
         } else if (techReservations?.statusEn == 'Sampling') {
           swipeColor = yellowColor;
-          swipeText = 'Sampling';
+          swipeText = LocaleKeys.txtSampling.tr();
         }
         return Scaffold(
           backgroundColor: greyExtraLightColor,
@@ -349,7 +349,7 @@ class _TechReservationsDetailsScreenState
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Location',
+                                          LocaleKeys.txtAddress.tr(),
                                           style: titleStyle.copyWith(
                                               color: greyLightColor),
                                         ),
@@ -377,7 +377,7 @@ class _TechReservationsDetailsScreenState
                                                 );
                                               },
                                               child: Text(
-                                                'Show Map',
+                                                LocaleKeys.txtShowMap.tr(),
                                                 style:
                                                     titleSmallStyle2.copyWith(
                                                         decoration:
@@ -419,8 +419,8 @@ class _TechReservationsDetailsScreenState
                                             color: greyLightColor),
                                       ),
                                       Text(
-                                        textAlign: TextAlign.start,
                                         '${techReservations?.createdAt?.date} - ${techReservations?.createdAt?.time}',
+                                        textAlign: TextAlign.start,
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -478,8 +478,8 @@ class _TechReservationsDetailsScreenState
                                       ),
                                       const Spacer(),
                                       Text(
-                                        textAlign: TextAlign.start,
                                         '${techReservations?.tests?.length ?? 0 + (techReservations?.offers?.length ?? 0)}',
+                                        textAlign: TextAlign.start,
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -500,8 +500,8 @@ class _TechReservationsDetailsScreenState
                                       ),
                                       const Spacer(),
                                       Text(
-                                        textAlign: TextAlign.start,
                                         '${techReservations?.price} ${LocaleKeys.salary.tr()}',
+                                        textAlign: TextAlign.start,
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -522,8 +522,8 @@ class _TechReservationsDetailsScreenState
                                       ),
                                       const Spacer(),
                                       Text(
-                                        textAlign: TextAlign.start,
                                         '${techReservations?.tax} %',
+                                        textAlign: TextAlign.start,
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -546,8 +546,8 @@ class _TechReservationsDetailsScreenState
                                       ),
                                       const Spacer(),
                                       Text(
-                                        textAlign: TextAlign.start,
                                         '${techReservations?.total} ${LocaleKeys.salary.tr()}',
+                                        textAlign: TextAlign.start,
                                         style: titleSmallStyle,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,

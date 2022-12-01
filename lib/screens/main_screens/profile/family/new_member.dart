@@ -344,6 +344,7 @@ class _NewMemberScreenState extends State<NewMemberScreen> {
                         maleImage: const AssetImage('assets/images/male.jpg'),
                         onChanged: (Gender? value) {
                           if (value != null) {
+                            gender = value;
                             if (kDebugMode) {
                               print(value.index);
                             }

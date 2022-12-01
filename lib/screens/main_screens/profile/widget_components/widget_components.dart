@@ -267,54 +267,50 @@ class AddressCard extends StatelessWidget {
         }
         return Container(
           width: double.infinity,
-          height: 90,
           decoration: BoxDecoration(
             color: whiteColor,
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(width: 1, color: greyDarkColor),
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 10.0),
-                  child: Row(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 15.0, vertical: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                isSelectedAddress,
+                horizontalSmallSpace,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      isSelectedAddress,
-                      horizontalSmallSpace,
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${addressDataModel.address}',
-                              style: titleSmallStyle.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              '${addressDataModel.specialMark}',
-                              style: titleSmallStyle.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                      Text(
+                        '${addressDataModel.address}',
+                        style: titleSmallStyle.copyWith(
+                          fontWeight: FontWeight.w500,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const Icon(
-                        Icons.location_on_rounded,
-                        color: greyDarkColor,
+                      if (addressDataModel.specialMark != '')
+                      Text(
+                        '${addressDataModel.specialMark}',
+                        style: titleSmallStyle.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                const Icon(
+                  Icons.location_on_rounded,
+                  color: greyDarkColor,
+                ),
+              ],
+            ),
           ),
         );
       },

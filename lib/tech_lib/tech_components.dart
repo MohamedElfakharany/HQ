@@ -230,7 +230,7 @@ class TechHomeRequestsCart extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              'Show Map',
+                              LocaleKeys.txtShowMap.tr(),
                               style: titleSmallStyle2.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: mainColor),
@@ -248,7 +248,7 @@ class TechHomeRequestsCart extends StatelessWidget {
                 condition: state is! AppAcceptRequestsLoadingState,
                 builder: (context) => GeneralButton(
                   height: 40.0,
-                  title: 'Accept',
+                  title: LocaleKeys.BtnAccept.tr(),
                   onPress: () {
                     AppTechCubit.get(context)
                         .acceptRequest(requestId: techRequests!.id);
@@ -407,7 +407,7 @@ class TechHomeReservationsCart extends StatelessWidget {
                                 );
                               },
                               child: Text(
-                                'Show Map',
+                                LocaleKeys.txtShowMap.tr(),
                                 style: titleSmallStyle2.copyWith(
                                     decoration: TextDecoration.underline,
                                     color: mainColor),
@@ -635,7 +635,7 @@ class TechUserRequestsCart extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              'Show Map',
+                              LocaleKeys.txtShowMap.tr(),
                               style: titleSmallStyle2.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: mainColor),

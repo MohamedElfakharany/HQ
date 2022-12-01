@@ -43,9 +43,9 @@ class _TechProfileScreenState extends State<TechProfileScreen> {
                 Container(
                   width: double.infinity,
                   height: 280,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/profileAppBar.jpg'),
+                      image: AssetImage(profileBG),
                       fit: BoxFit.fill,
                     ),
                   ),

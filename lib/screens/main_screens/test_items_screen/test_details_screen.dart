@@ -41,7 +41,7 @@ class TestDetailsScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 FadeRoute(
-                  page: const CartScreen(),
+                  page: CartScreen(),
                 ),
               );
             }
@@ -116,7 +116,7 @@ class TestDetailsScreen extends StatelessWidget {
                             padding: const EdgeInsetsDirectional.only(
                                 start: 10.0, top: 10.0),
                             child: Image.asset(
-                              'assets/images/logo.png',
+                              appLogo,
                               width: 80,
                               height: 80,
                             ),
@@ -426,12 +426,10 @@ class TestDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    testsDataModel?.description ?? offersDataModel?.description,
-                    style: subTitleSmallStyle.copyWith(
-                      fontSize: 15,
-                    ),
+                Text(
+                  testsDataModel?.description ?? offersDataModel?.description,
+                  style: subTitleSmallStyle.copyWith(
+                    fontSize: 15,
                   ),
                 ),
                 verticalMediumSpace,
@@ -465,7 +463,7 @@ class TestDetailsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/images/logo.png',
+                          appLogo,
                           width: 80,
                           height: 80,
                         ),
@@ -473,7 +471,7 @@ class TestDetailsScreen extends StatelessWidget {
                         Center(
                           child: Text(
                             LocaleKeys.txtAnalysisPreparations.tr(),
-                            style: titleStyle,
+                            style: titleSmallStyle,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -490,8 +488,8 @@ class TestDetailsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    MaterialButton(
-                      onPressed: () {
+                    InkWell(
+                      onTap: () {
                         if (AppCubit
                             .get(context)
                             .isVisitor == false) {

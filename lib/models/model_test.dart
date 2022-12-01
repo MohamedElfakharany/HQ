@@ -10,7 +10,7 @@ import 'package:hq/translations/locale_keys.g.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SyncfusionFlutterDatePicker extends StatefulWidget {
-  const SyncfusionFlutterDatePicker({super.key});
+   const SyncfusionFlutterDatePicker({Key? key,}) : super(key: key);
 
   @override
   SyncfusionFlutterDatePickerState createState() =>

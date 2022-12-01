@@ -70,10 +70,7 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                           onPressed: () {
                             setState(
                               () {
-                                if (cubit.techRequestsModel?.data?.isNotEmpty ==
-                                    true) {
                                   cubit.changeBottomScreen(1);
-                                }
                               },
                             );
                           },
@@ -117,11 +114,7 @@ class _TechHomeScreenState extends State<TechHomeScreen> {
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              if (cubit.techReservationsModel?.data
-                                      ?.isNotEmpty ==
-                                  true) {
                                 cubit.changeBottomScreen(2);
-                              }
                             });
                           },
                           child: Text(

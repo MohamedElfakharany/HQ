@@ -47,7 +47,7 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var result = AppCubit.get(context).labResultsModel?.data?[widget.index];
+        var result = widget.homeResultsDataModel;
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -172,7 +172,8 @@ class _ResultDetailsScreenState extends State<ResultDetailsScreen> {
                               ),
                             )
                           : ResultsDetailsCart(
-                              labResultsDataFileModel: result!.results![index],
+                              homeResultsDataFileModel: widget.homeResultsDataModel?.results?[index],
+                              labResultsDataFileModel: widget.labResultsDataModel?.results?[index],
                             ),
                     ),
                     separatorBuilder: (context, index) => verticalMiniSpace,

@@ -103,8 +103,8 @@ class GeneralButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         onPress();
       },
       child: Container(
@@ -283,7 +283,7 @@ class GeneralHomeLayoutAppBar extends StatelessWidget with PreferredSizeWidget {
               Navigator.push(
                 context,
                 FadeRoute(
-                  page: const CartScreen(),
+                  page: CartScreen(),
                 ),
               );
             }
@@ -599,7 +599,7 @@ class DefaultFormField extends StatelessWidget {
             }
           }
           if (validatedText == LocaleKeys.txtFieldIdNumber.tr()) {
-            if (value.length != 9) {
+            if (value.length != 10) {
               return LocaleKeys.txtNationalIdValidate.tr();
             }
           }
@@ -678,7 +678,7 @@ class DefaultFormField extends StatelessWidget {
   }
 }
 
-class GeneralNationalityCode extends StatelessWidget {
+class GeneralNationalityCode extends StatefulWidget {
   GeneralNationalityCode({
     this.canSelect,
     Key? key,
@@ -688,22 +688,28 @@ class GeneralNationalityCode extends StatelessWidget {
   bool? canSelect = true;
 
   @override
+  State<GeneralNationalityCode> createState() => _GeneralNationalityCodeState();
+}
+
+class _GeneralNationalityCodeState extends State<GeneralNationalityCode> {
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       keyboardType: TextInputType.none,
-      readOnly: canSelect != null ? true : false,
+      readOnly: widget.canSelect != null ? true : false,
       validator: (value) {
         if (value!.isEmpty) {
           return '${LocaleKeys.txtFill.tr()} ${LocaleKeys.txtFieldNationality.tr()}';
         }
       },
       onTap: () {
-        if (canSelect == true) {
+        if (widget.canSelect == true) {
           showCountryPicker(
             context: context,
             onSelect: (Country country) {
-              controller.text = country.phoneCode;
+              setState((){
+                  widget.controller.text = country.phoneCode;});
             },
           );
         } else {}
@@ -976,11 +982,10 @@ class MySeparator extends StatelessWidget {
   final double height;
   final Color color;
 
-  const MySeparator({
-    super.key,
+  const MySeparator({Key? key,
     this.height = 1,
     this.color = greyLightColor,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

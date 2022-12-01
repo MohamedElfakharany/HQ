@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:711990167248:android:eb97bf9d5a9d43a37300d5",
+        "mobilesdk_app_id": "1:711990167248:android:daa95924fb03ac237300d5",
         "android_client_info": {
           "package_name": "com.orcavision.hq"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "711990167248-p1aij1ffkrkjl7sbbo27o0i9cssg9hbt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orcavision.hq",
+            "certificate_hash": "0afd5fe963c793c29e39b3b29695c94387696756"
+          }
+        },
         {
           "client_id": "711990167248-kqr6cb998fhn003eanf170hmv90cvjbh.apps.googleusercontent.com",
           "client_type": 3

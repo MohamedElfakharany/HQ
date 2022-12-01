@@ -17,11 +17,12 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class LabReservationDetailsScreen extends StatefulWidget {
-  LabReservationDetailsScreen({Key? key,
-    this.offersDataModel,
-    this.testsDataModel,
-    required this.date,
-    required this.time})
+  LabReservationDetailsScreen(
+      {Key? key,
+      this.offersDataModel,
+      this.testsDataModel,
+      required this.date,
+      required this.time})
       : super(key: key);
   final String date;
   final String time;
@@ -50,11 +51,9 @@ class _LabReservationDetailsScreenState
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        locationValue = extraBranchTitle;
+
         if (kDebugMode) {
-          print('ghany 2 ${AppCubit
-              .get(context)
-              .branchName}');
+          print('ghany 2 ${AppCubit.get(context).branchName}');
           print('ghany 2 $locationValue');
           print('ghany 2 $extraBranchTitle');
           print('ghany 2 ${widget.date}');
@@ -70,274 +69,279 @@ class _LabReservationDetailsScreenState
             appBarColor: greyExtraLightColor,
           ),
           body: ConditionalBuilder(
-            condition: state is! AppGetBranchesLoadingState,
-            builder: (context) =>
-                Padding(
-                  padding:
+            condition: state is! AppGetBranchesLoadingState || AppCubit.get(context).branchNames != null,
+            builder: (context) {
+              locationValue = AppCubit.get(context).branchName[extraBranchIndex ?? 0];
+              return Padding(
+              padding:
                   const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        LocaleKeys.txtPatient.tr(),
-                        style: titleStyle.copyWith(fontWeight: FontWeight.w500),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    LocaleKeys.txtPatient.tr(),
+                    style: titleStyle.copyWith(fontWeight: FontWeight.w500),
+                  ),
+                  verticalMiniSpace,
+                  if (AppCubit.get(context).isVisitor == true)
+                    Container(
+                      height: 50.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(radius),
                       ),
-                      verticalMiniSpace,
-                      if (AppCubit
-                          .get(context)
-                          .isVisitor == true)
-                        Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(radius),
-                          ),
-                          alignment: AlignmentDirectional.center,
-                          padding:
-                          const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 4),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.perm_identity_rounded,
-                                  color: greyLightColor,
-                                  size: 30,
-                                ),
-                                horizontalMiniSpace,
-                                Text(
-                                  LocaleKeys.txtPatient.tr(),
-                                ),
-                              ],
+                      alignment: AlignmentDirectional.center,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.perm_identity_rounded,
+                              color: greyLightColor,
+                              size: 30,
                             ),
+                            horizontalMiniSpace,
+                            Text(
+                              LocaleKeys.txtPatient.tr(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (AppCubit.get(context).isVisitor == false)
+                    Container(
+                      height: 50.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(radius),
+                      ),
+                      alignment: AlignmentDirectional.center,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField<String>(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Relation Required';
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.perm_identity_rounded,
+                              color: greyLightColor,
+                              size: 30,
+                            ),
+                            contentPadding: EdgeInsetsDirectional.only(
+                              start: 20.0,
+                              end: 0.0,
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
+                            border: InputBorder.none,
+                          ),
+                          value: memberValue,
+                          isExpanded: true,
+                          iconSize: 30,
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: mainColor,
+                          ),
+                          items: AppCubit.get(context)
+                              .familiesName
+                              .map(buildMenuItem)
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            memberValue = value!;
+                            AppCubit.get(context).selectBranchForReservation(
+                                name: memberValue ?? '');
+                          }),
+                          onSaved: (v) {
+                            FocusScope.of(context).unfocus();
+                          },
+                        ),
+                      ),
+                    ),
+                  verticalMiniSpace,
+                  Text(
+                    LocaleKeys.TxtPopUpReservationType.tr(),
+                    style: titleStyle.copyWith(fontWeight: FontWeight.w500),
+                  ),
+                  verticalMiniSpace,
+                  Container(
+                    height: 150.0,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(radius),
+                    ),
+                    alignment: AlignmentDirectional.center,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              horizontalSmallSpace,
+                              Text(
+                                LocaleKeys.BtnAtLab.tr(),
+                                style:
+                                    titleSmallStyle.copyWith(color: mainColor),
+                              ),
+                              const Spacer(),
+                              Image.asset('assets/images/atLabIcon.png',
+                                  height: 30, width: 20, color: greyDarkColor),
+                              horizontalSmallSpace,
+                            ],
                           ),
                         ),
-                      if (AppCubit
-                          .get(context)
-                          .isVisitor == false)
-                        Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(radius),
-                          ),
-                          alignment: AlignmentDirectional.center,
-                          padding:
-                          const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 4),
+                        myHorizontalDivider(),
+                        Expanded(
                           child: DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
                               validator: (value) {
                                 if (value == null) {
-                                  return 'Relation Required';
+                                  return 'Location Required';
                                 }
                               },
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(
-                                  Icons.perm_identity_rounded,
+                                  Icons.location_on_rounded,
                                   color: greyLightColor,
                                   size: 30,
                                 ),
                                 contentPadding: EdgeInsetsDirectional.only(
-                                  start: 20.0,
-                                  end: 0.0,
-                                ),
+                                    start: 20.0,
+                                    end: 0.0,
+                                    bottom: 0.0,
+                                    top: 10.0),
                                 fillColor: Colors.white,
                                 filled: true,
                                 errorStyle: TextStyle(color: Color(0xFF4F4F4F)),
                                 border: InputBorder.none,
+                                suffixIcon: Text(''),
                               ),
-                              value: memberValue,
+                              value: locationValue,
                               isExpanded: true,
                               iconSize: 30,
                               icon: const Icon(
                                 Icons.keyboard_arrow_down_rounded,
                                 color: mainColor,
                               ),
-                              items: AppCubit
-                                  .get(context)
-                                  .familiesName
-                                  .map(buildMenuItem)
+                              items: AppCubit.get(context)
+                                  .branchName
+                                  .map(buildLocationItem)
                                   .toList(),
-                              onChanged: (value) =>
-                                  setState(() {
-                                    memberValue = value!;
-                                    AppCubit.get(context)
-                                        .selectBranchForReservation(
-                                        name: memberValue ?? '');
-                                  }),
+                              onChanged: (value) => setState(() {
+                                locationValue = value;
+                                AppCubit.get(context)
+                                    .selectBranchForReservation(
+                                        name: locationValue!);
+                              }),
                               onSaved: (v) {
                                 FocusScope.of(context).unfocus();
                               },
                             ),
                           ),
                         ),
-                      verticalMiniSpace,
-                      Text(
-                        LocaleKeys.TxtPopUpReservationType.tr(),
-                        style: titleStyle.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      verticalMiniSpace,
-                      Container(
-                        height: 150.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.circular(radius),
-                        ),
-                        alignment: AlignmentDirectional.center,
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  horizontalSmallSpace,
-                                  Text(
-                                    LocaleKeys.BtnAtLab.tr(),
-                                    style: titleSmallStyle.copyWith(
-                                        color: mainColor),
-                                  ),
-                                  const Spacer(),
-                                  Image.asset('assets/images/atLabIcon.png',
-                                      height: 30,
-                                      width: 20,
-                                      color: greyDarkColor),
-                                  horizontalSmallSpace,
-                                ],
-                              ),
-                            ),
-                            myHorizontalDivider(),
-                            Expanded(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButtonFormField<String>(
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Location Required';
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.location_on_rounded,
-                                      color: greyLightColor,
-                                      size: 30,
-                                    ),
-                                    contentPadding: EdgeInsetsDirectional.only(
-                                        start: 20.0,
-                                        end: 0.0,
-                                        bottom: 0.0,
-                                        top: 10.0),
-                                    fillColor: Colors.white,
-                                    filled: true,
-                                    errorStyle: TextStyle(
-                                        color: Color(0xFF4F4F4F)),
-                                    border: InputBorder.none,
-                                    suffixIcon: Text(''),
-                                  ),
-                                  value: locationValue,
-                                  isExpanded: true,
-                                  iconSize: 30,
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: mainColor,
-                                  ),
-                                  items: AppCubit
-                                      .get(context)
-                                      .branchName
-                                      .map(buildLocationItem)
-                                      .toList(),
-                                  onChanged: (value) =>
-                                      setState(() {
-                                        locationValue = value;
-                                        AppCubit.get(context)
-                                            .selectBranchForReservation(
-                                            name: locationValue!);
-                                      }),
-                                  onSaved: (v) {
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      MaterialButton(
-                        onPressed: () {
-                          // if (widget.testsDataModel == null) {
-                          //   AppCubit.get(context).getInvoices(offerId: [widget
-                          //       .offersDataModel?.id]);
-                          // } else if (widget.offersDataModel == null) {
-                          //   AppCubit.get(context).getInvoices(testId: [widget.testsDataModel?.id]);
-                          // }
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  ConditionalBuilder(
+                    condition: state is! AppGetCartLoadingState,
+                    builder: (context) => InkWell(
+                      onTap: () {
+                        if (widget.testsDataModel != null) {
                           Navigator.push(
                             context,
                             FadeRoute(
                               page: LabReservationOverviewScreen(
-                                branchName: locationValue ?? AppCubit
-                                    .get(context)
-                                    .userResourceModel
-                                    ?.data
-                                    ?.branch
-                                    ?.title,
+                                branchName: locationValue ??
+                                    AppCubit.get(context)
+                                        .userResourceModel
+                                        ?.data
+                                        ?.branch
+                                        ?.title,
                                 testsDataModel: widget.testsDataModel,
                                 offersDataModel: widget.offersDataModel,
                                 date: widget.date,
                                 time: widget.time,
-                                familyId: AppCubit
-                                    .get(context)
-                                    .relationIdList,
-                                branchId: AppCubit
-                                    .get(context)
+                                familyId: AppCubit.get(context).relationIdList,
+                                branchId: AppCubit.get(context)
                                     .branchIdForReservationList ??
                                     extraBranchId!,
-                                familyName: memberValue ?? AppCubit
-                                    .get(context)
-                                    .userResourceModel
-                                    ?.data
-                                    ?.name,
+                                familyName: memberValue ??
+                                    AppCubit.get(context)
+                                        .userResourceModel
+                                        ?.data
+                                        ?.name,
                               ),
                             ),
                           );
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: mainColor,
-                            borderRadius: BorderRadius.circular(radius),
-                          ),
-                          child: Center(
-                              child: Text(
-                                LocaleKeys.BtnContinue.tr(),
-                                style: titleStyle.copyWith(
-                                    fontSize: 20.0,
-                                    color: whiteColor,
-                                    fontWeight: FontWeight.normal),
-                              )),
+                        } else
+                        {
+                          if (widget.testsDataModel == null && widget.offersDataModel == null) {
+                              Navigator.push(
+                                context,
+                                FadeRoute(
+                                  page: LabReservationOverviewScreen(
+                                    date: widget.date,
+                                    branchName: locationValue!,
+                                    time: widget.time,
+                                    branchId: AppCubit.get(context)
+                                        .branchIdForReservationList ??
+                                        extraBranchId!,
+                                    familyName: memberValue ??
+                                        AppCubit.get(context)
+                                            .userResourceModel
+                                            ?.data
+                                            ?.name,
+                                  ),
+                                ),
+                              );
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: mainColor,
+                          borderRadius: BorderRadius.circular(radius),
                         ),
+                        child: Center(
+                            child: Text(
+                              LocaleKeys.BtnContinue.tr(),
+                              style: titleStyle.copyWith(
+                                  fontSize: 20.0,
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.normal),
+                            )),
                       ),
-                      verticalMiniSpace,
-                    ],
+                    ),
+                    fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                   ),
-                ),
+                  verticalMiniSpace,
+                ],
+              ),
+            );
+            },
             fallback: (context) =>
-            const Center(child: CircularProgressIndicator.adaptive()),
+                const Center(child: CircularProgressIndicator.adaptive()),
           ),
         );
       },
     );
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) =>
-      DropdownMenuItem(
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
         value: item,
         child: Row(
           children: [
@@ -346,8 +350,7 @@ class _LabReservationDetailsScreenState
         ),
       );
 
-  DropdownMenuItem<String> buildLocationItem(String item) =>
-      DropdownMenuItem(
+  DropdownMenuItem<String> buildLocationItem(String item) => DropdownMenuItem(
         value: item,
         child: Text(item),
       );

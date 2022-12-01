@@ -92,7 +92,7 @@ class _TechSupportOverviewScreenState extends State<TechSupportOverviewScreen> {
                 ),
                 verticalMiniSpace,
                 Container(
-                  height: 220.0,
+                  height: 250.0,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: whiteColor,
@@ -198,8 +198,8 @@ class _TechSupportOverviewScreenState extends State<TechSupportOverviewScreen> {
                                       color: greyLightColor),
                                 ),
                                 Text(
-                                  textAlign: TextAlign.start,
                                   '${widget.date}  &  ${widget.time}',
+                                  textAlign: TextAlign.start,
                                   style: titleSmallStyle,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

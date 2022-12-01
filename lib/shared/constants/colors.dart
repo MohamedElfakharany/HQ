@@ -34,7 +34,7 @@ const ofWhiteColor = Color(0xFFF8F9FD);
 
 const whiteColor = Color(0xFFFFFFFF);
 
-const blueGreenGradient = LinearGradient(
+var blueGreenGradient = const LinearGradient(
   colors: [Color(0xFF0099CC),Color(0xFF99FF66)],
   tileMode: TileMode.clamp,
   begin: Alignment.topLeft,
@@ -42,7 +42,7 @@ const blueGreenGradient = LinearGradient(
   stops: [0.0,0.0],
 );
 
-const transparentGradient = LinearGradient(
+var transparentGradient = const LinearGradient(
   colors: [Color(0xFF000000),Color(0xFF000000)],
   tileMode: TileMode.clamp,
   begin: Alignment.topLeft,

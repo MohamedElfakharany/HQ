@@ -19,31 +19,19 @@ import 'package:hq/translations/codegen_loader.g.dart';
 
 void main() async {
   ErrorWidget.builder = (FlutterErrorDetails details) {
-    // If we're in debug mode, use the normal error widget which shows the error
-    // message:
-    if (kDebugMode) {
-      return ErrorWidget(details.exception);
-    }
-    // In release builds, show a yellow-on-blue message instead:
     return Container(
       alignment: Alignment.center,
       child: const CircularProgressIndicator.adaptive(),
-      // Text(
-      //   'Error!\n${details.exception}',
-      //   style: const TextStyle(color: Colors.yellow),
-      //   textAlign: TextAlign.center,
-      // ),
     );
   };
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   await CacheHelper.init();
-
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   DioHelper.init();
 
   await FirebaseMessaging.instance.setAutoInitEnabled(true);
-
 
   deviceToken = await FirebaseMessaging.instance.getToken();
   if (kDebugMode) {
@@ -62,12 +50,11 @@ void main() async {
         print('message Reservation Screen');
       }
     }
-
   });
 
   void permission() async {
     NotificationSettings settings =
-    await FirebaseMessaging.instance.requestPermission(
+        await FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -106,8 +93,6 @@ void main() async {
   });
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
-
   // token = CacheHelper.getData(key: 'token');
   // verified = CacheHelper.getData(key: 'verified');
   // if(sharedLanguage != null) {
@@ -117,9 +102,8 @@ void main() async {
   // }
   BlocOverrides.runZoned(
     () {
-
-      if (Platform.isIOS) {
-        //IOS check permission
+      if (Platform.isIOS || Platform.isAndroid) {
+        /// IOS || Android check permission
         permission();
       }
       runApp(
@@ -141,9 +125,7 @@ void main() async {
   );
 }
 
-
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
   if (kDebugMode) {
     print('on background message');
     print(message.data.toString());
@@ -154,10 +136,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MyApp extends StatelessWidget {
   final Widget startWidget;
 
-  const MyApp({
-    super.key,
+  const MyApp({Key? key,
     required this.startWidget,
-  });
+  }) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -165,11 +146,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => AppCubit()
-        ),
-        BlocProvider(
-          create: (BuildContext context) => AppTechCubit()
-        ),
+            create: (BuildContext context) => AppCubit()..getCarouselData()),
+        BlocProvider(create: (BuildContext context) => AppTechCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

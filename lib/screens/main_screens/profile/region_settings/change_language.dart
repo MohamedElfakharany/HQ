@@ -6,6 +6,7 @@ import 'package:hq/screens/intro_screens/startup/onboarding_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
+import 'package:hq/shared/network/local/const_shared.dart';
 
 class VisitorHolderScreen extends StatefulWidget {
   const VisitorHolderScreen({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class VisitorHolderScreenState extends State<VisitorHolderScreen> {
               children: [
                 verticalSmallSpace,
                 Image.asset(
-                  'assets/images/logo.png',
+                  appLogo,
                   width: 150,
                   height: 150,
                 ),

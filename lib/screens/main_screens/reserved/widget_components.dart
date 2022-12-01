@@ -101,7 +101,7 @@ class ReservedCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          '${labReservationsDataModel?.price ?? homeReservationsDataModel?.price} ${LocaleKeys.salary.tr()}',
+                          '${labReservationsDataModel?.total ?? homeReservationsDataModel?.total} ${LocaleKeys.salary.tr()}',
                           style: titleStyle.copyWith(fontSize: 18.0),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

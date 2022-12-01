@@ -260,19 +260,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   ConditionalBuilder(
                     condition: state is! AppLoginLoadingState,
-                    builder: (context) => GeneralButton(
-                      title: LocaleKeys.BtnSignIn.tr(),
-                      onPress: () {
-                        if (formKey.currentState!.validate()) {
-                          cubit.isVisitor = false;
-                          cubit.login(
-                            mobile: mobileController.text,
-                            password: passwordController.text,
-                            phoneCode: nationalCodeController.text,
-                            deviceTokenLogin: deviceToken!,
-                          );
-                        }
-                      },
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: GeneralButton(
+                        title: LocaleKeys.BtnSignIn.tr(),
+                        onPress: () {
+                          if (formKey.currentState!.validate()) {
+                            cubit.isVisitor = false;
+                            cubit.login(
+                              mobile: mobileController.text,
+                              password: passwordController.text,
+                              phoneCode: nationalCodeController.text,
+                              deviceTokenLogin: deviceToken!,
+                            );
+                          }
+                        },
+                      ),
                     ),
                     fallback: (context) => const Center(
                         child: CircularProgressIndicator.adaptive()),

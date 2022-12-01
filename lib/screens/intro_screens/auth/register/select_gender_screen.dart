@@ -44,6 +44,7 @@ class SelectGenderScreen extends StatelessWidget {
               extraBranchTitle1: state.userResourceModel.data!.branch!.title,
               extraBranchIndex1: branchIndex,
             );
+            AppCubit.get(context).getCarouselData();
             navigateAndFinish(
               context,
               const HomeLayoutScreen(),
@@ -127,19 +128,23 @@ class SelectGenderScreen extends StatelessWidget {
                   verticalSmallSpace,
                   ConditionalBuilder(
                     condition: state is! AppCompleteProfileLoadingState,
-                    builder: (context) => GeneralButton(
-                        title: LocaleKeys.BtnSubmit.tr(),
-                        onPress: () {
-                          extraCountryId = countryId;
-                          extraCityId = cityId;
-                          extraBranchId = branchId;
-                          AppCubit.get(context).completeProfile(
-                            countryId: countryId,
-                            cityId: cityId,
-                            branchId: branchId,
-                            gender: selectedGender.name,
-                          );
-                        }),
+                    builder: (context) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: GeneralButton(
+                          title: LocaleKeys.BtnSubmit.tr(),
+                          onPress: () {
+                            extraCountryId = countryId;
+                            extraCityId = cityId;
+                            extraBranchId = branchId;
+                            AppCubit.get(context).completeProfile(
+                              countryId: countryId,
+                              cityId: cityId,
+                              branchId: branchId,
+                              gender: selectedGender.name,
+                            );
+
+                          }),
+                    ),
                     fallback: (context) => const Center(
                       child: CircularProgressIndicator.adaptive(),
                     ),

@@ -112,27 +112,30 @@ class ForgetPasswordScreen extends StatelessWidget {
               verticalMediumSpace,
               ConditionalBuilder(
                 condition: state is! AppCreateTokenLoadingState,
-                builder: (context) => GeneralButton(
-                  title: LocaleKeys.BtnContinue.tr(),
-                  onPress: () {
-                    if (formKey.currentState!.validate()) {
-                      if (isChangeMobile == false) {
-                        AppCubit.get(context)
-                            .createToken(mobile: mobileController.text, phoneCode: nationalCodeController.text);
-                      } else {
-                        Navigator.push(
-                          context,
-                          FadeRoute(
-                            page: VerificationScreen(
-                                mobileNumber: mobileController.text,
-                                phoneCode: nationalCodeController.text,
-                                isRegister: false,
-                                isChangeMobile: true),
-                          ),
-                        );
+                builder: (context) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: GeneralButton(
+                    title: LocaleKeys.BtnContinue.tr(),
+                    onPress: () {
+                      if (formKey.currentState!.validate()) {
+                        if (isChangeMobile == false) {
+                          AppCubit.get(context)
+                              .createToken(mobile: mobileController.text, phoneCode: nationalCodeController.text);
+                        } else {
+                          Navigator.push(
+                            context,
+                            FadeRoute(
+                              page: VerificationScreen(
+                                  mobileNumber: mobileController.text,
+                                  phoneCode: nationalCodeController.text,
+                                  isRegister: false,
+                                  isChangeMobile: true),
+                            ),
+                          );
+                        }
                       }
-                    }
-                  },
+                    },
+                  ),
                 ),
                 fallback: (context) => const Center(
                   child: CircularProgressIndicator.adaptive(),

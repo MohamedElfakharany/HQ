@@ -39,7 +39,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           child: Scaffold(
             backgroundColor: greyExtraLightColor,
             body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Column(
                 children: <Widget>[
                   // the tab bar with two items
@@ -57,6 +57,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         //   borderRadius: BorderRadius.circular(20),
                         // ),
                         bottom: TabBar(
+                          indicatorColor: mainColor,
                           tabs: [
                             Tab(
                               child: Column(
@@ -90,7 +91,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                             height: 25,
                                             color: mainColor,
                                           ),
-                                          horizontalSmallSpace,
+                                          horizontalMiniSpace,
                                           Text(
                                             LocaleKeys.BtnAtLab.tr(),
                                             textAlign: TextAlign.start,
@@ -139,7 +140,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                             height: 25,
                                             color: mainColor,
                                           ),
-                                          horizontalSmallSpace,
+                                          horizontalMiniSpace,
                                           Text(
                                             LocaleKeys.BtnAtHome.tr(),
                                             textAlign: TextAlign.start,
@@ -206,9 +207,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         children: [
                           // first tab bar view widget
                           ConditionalBuilder(
-                            condition:
-                            AppCubit.get(context).labResultsModel?.data?.isEmpty ==
-                                false,
+                            condition: AppCubit.get(context).labResultsModel?.data != null,
                             builder: (context)=> Column(
                               children: [
                                 verticalSmallSpace,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({Key? key}) : super(key: key);
@@ -25,7 +28,36 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   void initState() {
     super.initState();
+    permission();
     AppCubit.get(context).getAddress();
+  }
+
+  Position? position;
+
+  /// Invoke the file picker
+  Future<void> getLocation() async {
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  Future<bool> permission() async {
+    PermissionStatus result;
+    // In Android we need to request the storage permission,
+    // while in iOS is the photos permission
+    if (Platform.isAndroid) {
+      result = await Permission.location.request();
+    } else {
+      result = await Permission.locationAlways.request();
+    }
+
+    if (result.isGranted) {
+        getLocation();
+      return true;
+    } else if (Platform.isIOS || result.isPermanentlyDenied) {
+      return false;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -45,17 +77,24 @@ class _AddressScreenState extends State<AddressScreen> {
             child: Column(
               children: [
                 InkWell(
-                  onTap: () async {
-                    Position position = await Geolocator.getCurrentPosition(
-                        desiredAccuracy: LocationAccuracy.high);
-                    Navigator.push(
-                      context,
-                      FadeRoute(
-                        page: MapScreen(
-                          position: position,
+                  onTap: () {
+                    if (Platform.isIOS) {
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: MapScreen(),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: MapScreen(
+                            position: position,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     height: 50,

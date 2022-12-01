@@ -344,6 +344,18 @@ class AppDeleteAddressErrorState extends AppStates{
   AppDeleteAddressErrorState(this.error);
 }
 
+class AppDeleteCartLoadingState extends AppStates{}
+
+class AppDeleteCartSuccessState extends AppStates{
+  final SuccessModel successModel;
+  AppDeleteCartSuccessState(this.successModel);
+}
+
+class AppDeleteCartErrorState extends AppStates{
+  final String error;
+  AppDeleteCartErrorState(this.error);
+}
+
 class AppCreateAddressLoadingState extends AppStates{}
 
 class AppCreateAddressSuccessState extends AppStates{

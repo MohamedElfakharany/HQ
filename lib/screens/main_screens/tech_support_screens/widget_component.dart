@@ -12,8 +12,7 @@ import 'package:hq/tech_lib/tech_screens/tech_map_screen.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
 class UserRequestsCart extends StatelessWidget {
-  const UserRequestsCart({Key? key, required this.index}) : super(key: key);
-  final int index;
+  const UserRequestsCart({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class UserRequestsCart extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var techRequests =
-        AppCubit.get(context).patientTechnicalSupportModel?.data;
+            AppCubit.get(context).patientTechnicalSupportModel?.data;
         return Container(
           height: 200.0,
           width: MediaQuery.of(context).size.width * 0.7,
@@ -78,7 +77,7 @@ class UserRequestsCart extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              'Show Map',
+                              LocaleKeys.txtShowMap.tr(),
                               style: titleSmallStyle2.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: mainColor),
@@ -91,7 +90,9 @@ class UserRequestsCart extends StatelessWidget {
                   ],
                 ),
               ),
+              if (techRequests?.statusEn == 'Pending')
               myHorizontalDivider(),
+              if (techRequests?.statusEn == 'Pending')
               MaterialButton(
                 onPressed: () {
                   showPopUp(
@@ -111,8 +112,7 @@ class UserRequestsCart extends StatelessWidget {
                           ),
                           verticalMediumSpace,
                           Text(
-                            LocaleKeys.txtPopUpMainCancelReservation
-                                .tr(),
+                            LocaleKeys.txtPopUpMainCancelReservation.tr(),
                             textAlign: TextAlign.center,
                             style: titleStyle.copyWith(
                               color: redColor,
@@ -120,26 +120,26 @@ class UserRequestsCart extends StatelessWidget {
                           ),
                           verticalMediumSpace,
                           Text(
-                            LocaleKeys
-                                .txtPopUpSecondaryCancelReservation
-                                .tr(),
+                            LocaleKeys.txtPopUpSecondaryCancelReservation.tr(),
                             textAlign: TextAlign.center,
                             style: subTitleSmallStyle,
                           ),
                           verticalMediumSpace,
-                          ConditionalBuilder(
-                            condition: state is! AppCancelTechRequestsLoadingState,
-                            builder: (context) => GeneralButton(
-                              radius: radius,
-                              btnBackgroundColor: redColor,
-                              title:
-                              LocaleKeys.txtUnderstandContinue.tr(),
-                              onPress: () {
-                                AppCubit.get(context).cancelTechRequest(technicalRequestId: techRequests?.id);
-                              },
+                            ConditionalBuilder(
+                              condition:
+                                  state is! AppCancelTechRequestsLoadingState,
+                              builder: (context) => GeneralButton(
+                                radius: radius,
+                                btnBackgroundColor: redColor,
+                                title: LocaleKeys.txtUnderstandContinue.tr(),
+                                onPress: () {
+                                  AppCubit.get(context).cancelTechRequest(
+                                      technicalRequestId: techRequests?.id);
+                                },
+                              ),
+                              fallback: (context) => const Center(
+                                  child: CircularProgressIndicator.adaptive()),
                             ),
-                            fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()) ,
-                          ),
                           verticalSmallSpace,
                           GeneralButton(
                             radius: radius,
@@ -163,12 +163,12 @@ class UserRequestsCart extends StatelessWidget {
                   ),
                   child: Center(
                       child: Text(
-                        LocaleKeys.BtnCancel.tr(),
-                        style: titleStyle.copyWith(
-                            fontSize: 20.0,
-                            color: whiteColor,
-                            fontWeight: FontWeight.normal),
-                      )),
+                    LocaleKeys.BtnCancel.tr(),
+                    style: titleStyle.copyWith(
+                        fontSize: 20.0,
+                        color: whiteColor,
+                        fontWeight: FontWeight.normal),
+                  )),
                 ),
               ),
             ],

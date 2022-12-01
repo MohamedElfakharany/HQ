@@ -17,14 +17,9 @@ import 'package:hq/shared/constants/general_constants.dart';
 import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/translations/locale_keys.g.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({Key? key}) : super(key: key);
+class CartScreen extends StatelessWidget {
+   CartScreen({Key? key}) : super(key: key);
 
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
   var couponController = TextEditingController();
 
   @override
@@ -44,8 +39,10 @@ class _CartScreenState extends State<CartScreen> {
             padding:
                 const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
             child: ConditionalBuilder(
-              condition: state is! AppGetCartLoadingState,
-              builder: (context) => ListView(
+              condition: state is! AppGetCartLoadingState ||
+                  state is! AppDeleteCartLoadingState,
+              builder: (context) {
+                return ListView(
                 physics: const BouncingScrollPhysics(),
                 children: [
                   SizedBox(
@@ -99,12 +96,12 @@ class _CartScreenState extends State<CartScreen> {
                             /// set content instead of title of icon
                             content: _getIconButton(Colors.red, Icons.delete),
                             onTap: (handler) async {
-                              // AppCubit.get(context).deleteInquiry(
-                              //   inquiryId: AppCubit.get(context)
-                              //       .medicalInquiriesModel!
-                              //       .data![index]
-                              //       .id,
-                              // );
+                              AppCubit.get(context).deleteCart(
+                                cartId: AppCubit.get(context)
+                                    .cartModel!
+                                    .data![index]
+                                    .cartId,
+                              );
                             },
                           ),
                         ],
@@ -262,8 +259,8 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    textAlign: TextAlign.start,
                                     '${cartModel?.data?.length ?? 1}',
+                                    textAlign: TextAlign.start,
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -283,8 +280,8 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    textAlign: TextAlign.start,
                                     '${cartModel?.extra?.price} ${LocaleKeys.salary.tr()}',
+                                    textAlign: TextAlign.start,
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -304,8 +301,8 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    textAlign: TextAlign.start,
                                     '${cartModel?.extra?.tax}',
+                                    textAlign: TextAlign.start,
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -327,8 +324,8 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    textAlign: TextAlign.start,
                                     '${cartModel?.extra?.total} ${LocaleKeys.salary.tr()}',
+                                    textAlign: TextAlign.start,
                                     style: titleSmallStyle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -522,7 +519,8 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   verticalSmallSpace,
                 ],
-              ),
+              );
+              },
               fallback: (context) =>
                   const Center(child: CircularProgressIndicator.adaptive()),
             ),
