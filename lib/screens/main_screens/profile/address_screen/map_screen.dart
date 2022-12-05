@@ -258,7 +258,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> getAddressBasedOnLocation({double? lat, double? long}) async {
     await _getLocation(lat: lat, long: long).then((value) async {
-      var address = await geo.placemarkFromCoordinates(lat!, long!);
+      var address =  await geo.placemarkFromCoordinates(lat!, long!);
       userAddress = address.first;
       if (kDebugMode) {
         print('from getAddressBasedOnLocation userAddress : $userAddress');

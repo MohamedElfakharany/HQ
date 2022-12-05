@@ -578,15 +578,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: Row(
                                   children: [
-                                    // Image.asset(
-                                    //   'assets/images/terms.jpg',
-                                    //   width: 25,
-                                    //   height: 25,
-                                    // ),
-
-                                    SvgPicture.asset(
+                                    Image.asset(
                                       profileEyeShieldImage,
-                                      height: 0.05.sw,
+                                      width: 25,
+                                      height: 25,
                                     ),
                                     horizontalSmallSpace,
                                     Text(

@@ -826,7 +826,8 @@ class _LabReservationOverviewScreenState
                                     offerId: cartModel.extra!.offers,
                                     testId: cartModel.extra!.tests,
                                   );
-                                } else {
+                                }
+                                else {
                                   if (cartModel.extra!.offers!.isEmpty) {
                                     AppCubit.get(context).createLabReservation(
                                       date: widget.date,
@@ -836,7 +837,8 @@ class _LabReservationOverviewScreenState
                                       coupon: couponController.text,
                                       testId: cartModel.extra?.tests,
                                     );
-                                  } else if (cartModel.extra!.tests!.isEmpty) {
+                                  }
+                                  else if (cartModel.extra!.tests!.isEmpty) {
                                     AppCubit.get(context).createLabReservation(
                                         date: widget.date,
                                         time: widget.time,
@@ -854,7 +856,7 @@ class _LabReservationOverviewScreenState
                                     familyId: widget.familyId,
                                     branchId: widget.branchId,
                                     coupon: couponController.text,
-                                    offerId: [widget.offersDataModel?.id],
+                                    offerId: ["${widget.offersDataModel?.id}"],
                                   );
                                 } else if (widget.offersDataModel?.id == null) {
                                   AppCubit.get(context).createLabReservation(

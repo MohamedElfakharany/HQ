@@ -259,7 +259,8 @@ class _LabReservationDetailsScreenState
                     condition: state is! AppGetCartLoadingState,
                     builder: (context) => InkWell(
                       onTap: () {
-                        if (widget.testsDataModel != null) {
+                        print(widget.offersDataModel?.image);
+                        if (widget.testsDataModel != null || widget.offersDataModel != null) {
                           Navigator.push(
                             context,
                             FadeRoute(

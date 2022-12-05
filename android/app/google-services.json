@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "711990167248",
-    "project_id": "hq-laboratory",
-    "storage_bucket": "hq-laboratory.appspot.com"
+    "project_number": "724677971450",
+    "project_id": "hq2-d353d",
+    "storage_bucket": "hq2-d353d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:711990167248:android:daa95924fb03ac237300d5",
+        "mobilesdk_app_id": "1:724677971450:android:49630104fb2cfc7305a843",
         "android_client_info": {
           "package_name": "com.orcavision.hq"
         }
       },
       "oauth_client": [
         {
-          "client_id": "711990167248-p1aij1ffkrkjl7sbbo27o0i9cssg9hbt.apps.googleusercontent.com",
+          "client_id": "724677971450-0o09oebnl34ha82v27hq7opn0cutpfp6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.orcavision.hq",
@@ -22,24 +22,24 @@
           }
         },
         {
-          "client_id": "711990167248-kqr6cb998fhn003eanf170hmv90cvjbh.apps.googleusercontent.com",
+          "client_id": "724677971450-8r40l925l07cq3t6011a62a7kqvh0vlf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_eYodO40DmGH8PoGhmhYtV__0DDjGhZo"
+          "current_key": "AIzaSyBHzKUz34lbLH39Ug9rRGiFrk936JBr1OQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "711990167248-kqr6cb998fhn003eanf170hmv90cvjbh.apps.googleusercontent.com",
+              "client_id": "724677971450-8r40l925l07cq3t6011a62a7kqvh0vlf.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "711990167248-9bfqkeq4073p1v307dam56o6e3gdtc02.apps.googleusercontent.com",
+              "client_id": "724677971450-1pm0ruokt6l7tkl4c7fsedhrfqoipafl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.orcavision.hq"

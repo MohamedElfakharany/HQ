@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/cubit/cubit.dart';
 import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/intro_screens/auth/login_screen.dart';
-import 'package:hq/screens/intro_screens/reset_password/verification_screen.dart';
+import 'package:hq/screens/intro_screens/auth/verification_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';
 import 'package:hq/shared/constants/general_constants.dart';

@@ -8,7 +8,7 @@ import 'package:hq/cubit/states.dart';
 import 'package:hq/screens/intro_screens/auth/register/select_country_screen.dart';
 import 'package:hq/screens/intro_screens/auth/register/sign_up_screen.dart';
 import 'package:hq/screens/intro_screens/reset_password/forget_password_screen.dart';
-import 'package:hq/screens/intro_screens/reset_password/verification_screen.dart';
+import 'package:hq/screens/intro_screens/auth/verification_screen.dart';
 import 'package:hq/screens/main_screens/home_layout_screen.dart';
 import 'package:hq/shared/components/general_components.dart';
 import 'package:hq/shared/constants/colors.dart';

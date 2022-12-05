@@ -427,14 +427,10 @@ class _HomeReservationOverviewScreenState
                               child: Row(
                                 children: [
                                   horizontalSmallSpace,
-                                  // Image.asset(
-                                  //   'assets/images/location.jpg',
-                                  //   width: 25,
-                                  //   height: 35,
-                                  // ),
-                                  SvgPicture.asset(
-                                    profileLocationImage,
-                                    height: 0.05.sw,
+                                  Image.asset(
+                                    'assets/images/location.jpg',
+                                    width: 25,
+                                    height: 35,
                                   ),
                                   myVerticalDivider(),
                                   Column(
@@ -443,7 +439,7 @@ class _HomeReservationOverviewScreenState
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        LocaleKeys.txtReservationDetails.tr(),
+                                        LocaleKeys.txtFieldAddress.tr(),
                                         style: titleStyle.copyWith(
                                             color: greyLightColor),
                                       ),

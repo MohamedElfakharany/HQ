@@ -1065,7 +1065,7 @@ class AppCubit extends Cubit<AppStates> {
     };
     var formData = {
       'phone': phone,
-      'phoneCode': phoneCode,
+      'phoneCode': '+$phoneCode',
     };
     try {
       Dio dio = Dio();
@@ -1082,7 +1082,13 @@ class AppCubit extends Cubit<AppStates> {
       var responseJsonB = response.data;
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
+
       successModel = SuccessModel.fromJson(responseJson);
+      if (kDebugMode) {
+        print('responseJson : $responseJson');
+        print('formData : ${formData.entries}');
+      }
+      getProfile();
       emit(AppChangeNumberSuccessState(successModel!));
     } catch (error) {
       emit(AppChangeNumberErrorState(error.toString()));
@@ -1271,10 +1277,10 @@ class AppCubit extends Cubit<AppStates> {
       var responseJson = json.decode(convertedResponse);
       resetPasswordModel = ResetPasswordModel.fromJson(responseJson);
       if (kDebugMode) {
-        // print('headers.entries : ${headers.entries}');
-        // print('formData.entries : ${formData.entries}');
-        // print('responseJson : $responseJson');
-        // print('resetPasswordModel : ${resetPasswordModel!.data}');
+        print('headers.entries : ${headers.entries}');
+        print('formData.entries : ${formData.entries}');
+        print('responseJson : $responseJson');
+        print('resetPasswordModel : ${resetPasswordModel!.data}');
       }
       emit(AppResetPasswordSuccessState(resetPasswordModel!));
     } catch (error) {
@@ -1783,7 +1789,7 @@ class AppCubit extends Cubit<AppStates> {
       var convertedResponse = utf8.decode(responseJsonB);
       var responseJson = json.decode(convertedResponse);
       if (kDebugMode) {
-        // print('responseJson : $responseJson');
+        print('responseJson : $responseJson');
         // print('formData : ${formData.fields}');
       }
       successModel = SuccessModel.fromJson(responseJson);
