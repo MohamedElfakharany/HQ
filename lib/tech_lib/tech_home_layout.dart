@@ -1,8 +1,9 @@
+import 'package:hq/shared/network/local/cache_helper.dart';
+import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hq/shared/constants/colors.dart';
-import 'package:hq/tech_lib/tech_components.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_states.dart';
 import 'package:hq/translations/locale_keys.g.dart';
@@ -12,6 +13,7 @@ class TechHomeLayoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = AppTechCubit.get(context);
+    isEnglishShared = CacheHelper.getData(key: 'isEnglish');
     return BlocConsumer<AppTechCubit, AppTechStates>(
       listener: (context, state) {},
       builder: (context, state) {

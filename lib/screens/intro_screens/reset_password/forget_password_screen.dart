@@ -46,7 +46,9 @@ class ForgetPasswordScreen extends StatelessWidget {
           }
         }
       },
-      builder: (context, state) => Scaffold(
+      builder: (context, state) {
+        nationalCodeController.text = '966';
+        return Scaffold(
         backgroundColor: whiteColor,
         appBar: GeneralAppBar(
           title: '',
@@ -126,7 +128,8 @@ class ForgetPasswordScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      );
+      },
     );
   }
 }

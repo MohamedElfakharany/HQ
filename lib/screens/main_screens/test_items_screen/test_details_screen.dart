@@ -33,34 +33,14 @@ class TestDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
-        if (state is AppGetCartSuccessState) {
-          if (state.cartModel.status == true) {
-            if (state.cartModel.data!.isEmpty) {
-              showToast(msg: LocaleKeys.noDataToShow.tr(), state: ToastState.error);
-            } else {
-              Navigator.push(
-                context,
-                FadeRoute(
-                  page: CartScreen(),
-                ),
-              );
-            }
-          } else {
-            showToast(msg: state.cartModel.message, state: ToastState.error);
-          }
-        } else if (state is AppGetCartErrorState) {
-          showToast(msg: state.error, state: ToastState.error);
-        }
         if (state is AppAddToCartSuccessState) {
           if (state.successModel.status) {
-            showToast(msg: state.successModel.message,state: ToastState.success);
+            showToast(
+                msg: state.successModel.message, state: ToastState.success);
             showCustomBottomSheet(
               context,
               bottomSheetContent: Container(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.55,
+                height: MediaQuery.of(context).size.height * 0.55,
                 decoration: BoxDecoration(
                   color: whiteColor,
                   borderRadius: BorderRadius.only(
@@ -68,8 +48,8 @@ class TestDetailsScreen extends StatelessWidget {
                     topRight: Radius.circular(radius),
                   ),
                 ),
-                padding: const EdgeInsetsDirectional.only(
-                    start: 20.0, end: 20.0),
+                padding:
+                    const EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,10 +104,8 @@ class TestDetailsScreen extends StatelessWidget {
                           horizontalMiniSpace,
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              mainAxisAlignment:
-                              MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 verticalMiniSpace,
                                 Text(
@@ -150,24 +128,16 @@ class TestDetailsScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      '${testsDataModel?.price ??
-                                          offersDataModel
-                                              ?.discount} ${LocaleKeys
-                                          .salary.tr()}',
-                                      style: titleStyle.copyWith(
-                                          fontSize: 15),
+                                      '${testsDataModel?.price ?? offersDataModel?.discount} ${LocaleKeys.salary.tr()}',
+                                      style: titleStyle.copyWith(fontSize: 15),
                                     ),
                                     horizontalMiniSpace,
-                                    if (offersDataModel?.price !=
-                                        null)
+                                    if (offersDataModel?.price != null)
                                       Text(
-                                        '${offersDataModel
-                                            ?.price} ${LocaleKeys
-                                            .salary.tr()}',
-                                        style:
-                                        subTitleSmallStyle.copyWith(
-                                          decoration: TextDecoration
-                                              .lineThrough,
+                                        '${offersDataModel?.price} ${LocaleKeys.salary.tr()}',
+                                        style: subTitleSmallStyle.copyWith(
+                                          decoration:
+                                              TextDecoration.lineThrough,
                                         ),
                                       ),
                                   ],
@@ -181,10 +151,7 @@ class TestDetailsScreen extends StatelessWidget {
                     verticalMicroSpace,
                     Container(
                       height: 50,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.9,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(radius),
                         color: greyExtraLightColor,
@@ -199,10 +166,7 @@ class TestDetailsScreen extends StatelessWidget {
                           ),
                           const Spacer(),
                           Text(
-                            '${testsDataModel?.price ??
-                                offersDataModel
-                                    ?.discount} ${LocaleKeys.salary
-                                .tr()}',
+                            '${testsDataModel?.price ?? offersDataModel?.discount} ${LocaleKeys.salary.tr()}',
                             style: titleStyle.copyWith(fontSize: 18),
                           ),
                           horizontalSmallSpace,
@@ -211,55 +175,43 @@ class TestDetailsScreen extends StatelessWidget {
                     ),
                     SizedBox(
                       height: 80.0,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width,
+                      width: MediaQuery.of(context).size.width,
                       child: Center(
                         child: Row(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
-                              child:
-                              ConditionalBuilder(
-                                condition: state is! AppGetCartLoadingState,
-                                builder: (context) => MaterialButton(
-                                  onPressed: () {
-                                    if (AppCubit
-                                        .get(context)
-                                        .isVisitor ==
-                                        false) {
-                                      AppCubit.get(context).getCart();
-                                    } else {
-                                      showPopUp(
-                                        context,
-                                        const VisitorHoldingPopUp(),
-                                      );
-                                    }
-                                  },
-                                  height: 80.0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: mainColor,
-                                      borderRadius:
-                                      BorderRadius.circular(radius),
-                                    ),
-                                    height: 50.0,
-                                    width: double.infinity,
-                                    child: Center(
-                                      child: Text(
-                                        LocaleKeys.BtnCheckout.tr(),
-                                        style: titleSmallStyle.copyWith(
-                                          color: whiteColor,
-                                        ),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  if (AppCubit.get(context).isVisitor ==
+                                      false) {
+                                    Navigator.push(
+                                        context, FadeRoute(page: CartScreen()));
+                                  } else {
+                                    showPopUp(
+                                      context,
+                                      const VisitorHoldingPopUp(),
+                                    );
+                                  }
+                                },
+                                height: 80.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: mainColor,
+                                    borderRadius: BorderRadius.circular(radius),
+                                  ),
+                                  height: 50.0,
+                                  width: double.infinity,
+                                  child: Center(
+                                    child: Text(
+                                      LocaleKeys.BtnCheckout.tr(),
+                                      style: titleSmallStyle.copyWith(
+                                        color: whiteColor,
                                       ),
                                     ),
                                   ),
                                 ),
-                                fallback: (context) =>
-                                const Center(child: CircularProgressIndicator.adaptive()),
                               ),
                             ),
                             Expanded(
@@ -267,8 +219,7 @@ class TestDetailsScreen extends StatelessWidget {
                                 width: double.infinity,
                                 title: LocaleKeys.BtnBrowse.tr(),
                                 onPress: () {
-                                  AppCubit.get(context)
-                                      .changeBottomScreen(0);
+                                  AppCubit.get(context).changeBottomScreen(0);
                                   navigateAndFinish(
                                     context,
                                     const HomeLayoutScreen(),
@@ -285,8 +236,8 @@ class TestDetailsScreen extends StatelessWidget {
               ),
               bottomSheetHeight: 0.55,
             );
-          }else {
-            showToast(msg: state.successModel.message,state: ToastState.error);
+          } else {
+            showToast(msg: state.successModel.message, state: ToastState.error);
           }
         }
       },
@@ -295,8 +246,8 @@ class TestDetailsScreen extends StatelessWidget {
           backgroundColor: whiteColor,
           appBar: GeneralAppBar(title: LocaleKeys.txtTestDetails.tr()),
           body: Padding(
-            padding: const EdgeInsets.only(
-                left: 20.0, right: 20.0, bottom: 20.0),
+            padding:
+                const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
             child: ListView(
               children: [
                 SizedBox(
@@ -305,13 +256,11 @@ class TestDetailsScreen extends StatelessWidget {
                     alignment: AlignmentDirectional.topStart,
                     children: [
                       CachedNetworkImage(
-                        imageUrl: testsDataModel?.image ?? offersDataModel?.image,
+                        imageUrl:
+                            testsDataModel?.image ?? offersDataModel?.image,
                         fit: BoxFit.cover,
                         height: 200,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.9,
+                        width: MediaQuery.of(context).size.width * 0.9,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -348,9 +297,8 @@ class TestDetailsScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        offersDataModel?.gender ??
-                                            testsDataModel?.gender,
-                                        style: const TextStyle(color: whiteColor),
+                                        LocaleKeys.Male.tr(),
+                                        style: TextStyle(color: whiteColor),
                                       ),
                                       horizontalMicroSpace,
                                       const Icon(
@@ -361,33 +309,31 @@ class TestDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            else
-                              if (offersDataModel?.gender == 'Female' ||
-                                  testsDataModel?.gender == 'Male')
-                                Container(
-                                  height: 30,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    color: pinkColor,
-                                    borderRadius: BorderRadius.circular(radius),
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          offersDataModel?.gender,
-                                          style: const TextStyle(
-                                              color: whiteColor),
-                                        ),
-                                        const Icon(
-                                          Icons.female,
-                                          color: whiteColor,
-                                        )
-                                      ],
-                                    ),
+                            else if (offersDataModel?.gender == 'Female' ||
+                                testsDataModel?.gender == 'Male')
+                              Container(
+                                height: 30,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  color: pinkColor,
+                                  borderRadius: BorderRadius.circular(radius),
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        LocaleKeys.Female.tr(),
+                                        style: TextStyle(color: whiteColor),
+                                      ),
+                                      const Icon(
+                                        Icons.female,
+                                        color: whiteColor,
+                                      )
+                                    ],
                                   ),
                                 ),
+                              ),
                           ],
                         ),
                       ),
@@ -395,8 +341,8 @@ class TestDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
                   child: Text(
                     testsDataModel?.title ?? offersDataModel?.title,
                     style: titleSmallStyle2,
@@ -409,9 +355,7 @@ class TestDetailsScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        '${testsDataModel?.price ??
-                            offersDataModel?.discount} ${LocaleKeys.salary
-                            .tr()}',
+                        '${testsDataModel?.price ?? offersDataModel?.discount} ${LocaleKeys.salary.tr()}',
                         style: titleStyle,
                       ),
                       horizontalMiniSpace,
@@ -439,9 +383,9 @@ class TestDetailsScreen extends StatelessWidget {
                       context,
                       FadeRoute(
                           page: ReadMoreScreen(
-                            testsDataModel: testsDataModel,
-                            offersDataModel: offersDataModel,
-                          )),
+                        testsDataModel: testsDataModel,
+                        offersDataModel: offersDataModel,
+                      )),
                     );
                   },
                   child: Container(
@@ -457,7 +401,7 @@ class TestDetailsScreen extends StatelessWidget {
                     ),
                     alignment: AlignmentDirectional.center,
                     padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -490,16 +434,11 @@ class TestDetailsScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        if (AppCubit
-                            .get(context)
-                            .isVisitor == false) {
+                        if (AppCubit.get(context).isVisitor == false) {
                           showCustomBottomSheet(
                             context,
                             bottomSheetContent: Container(
-                              height: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 0.5,
+                              height: MediaQuery.of(context).size.height * 0.5,
                               decoration: BoxDecoration(
                                 color: whiteColor,
                                 borderRadius: BorderRadius.only(
@@ -543,16 +482,13 @@ class TestDetailsScreen extends StatelessWidget {
                                     },
                                     child: Container(
                                       height: 50,
-                                      width:
-                                      MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width * 0.9,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            radius),
-                                        border:
-                                        Border.all(width: 1, color: mainColor),
+                                        borderRadius:
+                                            BorderRadius.circular(radius),
+                                        border: Border.all(
+                                            width: 1, color: mainColor),
                                         color: greyExtraLightColor,
                                       ),
                                       child: Row(
@@ -578,57 +514,60 @@ class TestDetailsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   verticalSmallSpace,
-                                  InkWell(
-                                    onTap: () {
-                                      if (kDebugMode) {
-                                        print('home');
-                                      }
-                                      Navigator.push(
-                                        context,
-                                        FadeRoute(
-                                          page: HomeAppointmentsScreen(
-                                            testsDataModel: testsDataModel,
-                                            offersDataModel: offersDataModel,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width:
-                                      MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width * 0.9,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            radius),
-                                        color: greyExtraLightColor,
-                                        border:
-                                        Border.all(width: 1, color: mainColor),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          horizontalSmallSpace,
-                                          Text(
-                                            LocaleKeys.BtnAtHome.tr(),
-                                            style: titleStyle.copyWith(
-                                              fontWeight: FontWeight.normal,
-                                              color: mainColor,
-                                              fontSize: 20,
+                                  if (AppCubit.get(context)
+                                          .generalModel
+                                          ?.data
+                                          ?.homeReservations ==
+                                      1)
+                                    InkWell(
+                                      onTap: () {
+                                        if (kDebugMode) {
+                                          print('home');
+                                        }
+                                        Navigator.push(
+                                          context,
+                                          FadeRoute(
+                                            page: HomeAppointmentsScreen(
+                                              testsDataModel: testsDataModel,
+                                              offersDataModel: offersDataModel,
                                             ),
                                           ),
-                                          const Spacer(),
-                                          const Icon(
-                                            Icons.home_outlined,
-                                            color: mainColor,
-                                            size: 40,
-                                          ),
-                                          horizontalSmallSpace,
-                                        ],
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(radius),
+                                          color: greyExtraLightColor,
+                                          border: Border.all(
+                                              width: 1, color: mainColor),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            horizontalSmallSpace,
+                                            Text(
+                                              LocaleKeys.BtnAtHome.tr(),
+                                              style: titleStyle.copyWith(
+                                                fontWeight: FontWeight.normal,
+                                                color: mainColor,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            const Icon(
+                                              Icons.home_outlined,
+                                              color: mainColor,
+                                              size: 40,
+                                            ),
+                                            horizontalSmallSpace,
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
                                   verticalSmallSpace,
                                   MaterialButton(
                                     onPressed: () {
@@ -636,24 +575,21 @@ class TestDetailsScreen extends StatelessWidget {
                                     },
                                     child: Container(
                                       height: 50,
-                                      width:
-                                      MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width * 0.9,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       decoration: BoxDecoration(
                                         color: greyLightColor,
-                                        borderRadius: BorderRadius.circular(
-                                            radius),
+                                        borderRadius:
+                                            BorderRadius.circular(radius),
                                       ),
                                       child: Center(
                                           child: Text(
-                                            LocaleKeys.BtnCancel.tr(),
-                                            style: titleStyle.copyWith(
-                                                fontSize: 25.0,
-                                                color: whiteColor,
-                                                fontWeight: FontWeight.normal),
-                                          )),
+                                        LocaleKeys.BtnCancel.tr(),
+                                        style: titleStyle.copyWith(
+                                            fontSize: 25.0,
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.normal),
+                                      )),
                                     ),
                                   ),
                                 ],
@@ -670,10 +606,7 @@ class TestDetailsScreen extends StatelessWidget {
                       },
                       child: Container(
                         height: 50,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         decoration: BoxDecoration(
                           color: mainColor,
                           borderRadius: BorderRadius.circular(radius),
@@ -689,44 +622,46 @@ class TestDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ConditionalBuilder(
-                      condition: state is! AppAddToCartLoadingState,
-                      builder: (context) => MaterialButton(
-                        onPressed: () {
-                          if (AppCubit
-                              .get(context)
-                              .isVisitor == true) {
-                            showPopUp(
-                              context,
-                              const VisitorHoldingPopUp(),
-                            );
-                          } else {
-                            if (offersDataModel == null) {
-                              AppCubit.get(context)
-                                  .addToCart(testId: testsDataModel?.id);
+                    Expanded(
+                      child: ConditionalBuilder(
+                        condition: state is! AppAddToCartLoadingState,
+                        builder: (context) => MaterialButton(
+                          onPressed: () {
+                            if (AppCubit.get(context).isVisitor == true) {
+                              showPopUp(
+                                context,
+                                const VisitorHoldingPopUp(),
+                              );
+                            } else {
+                              if (offersDataModel == null) {
+                                AppCubit.get(context)
+                                    .addToCart(testId: testsDataModel?.id);
+                              }
+                              if (testsDataModel == null) {
+                                AppCubit.get(context)
+                                    .addToCart(offerId: offersDataModel?.id);
+                              }
                             }
-                            if (testsDataModel == null) {
-                              AppCubit.get(context)
-                                  .addToCart(offerId: offersDataModel?.id);
-                            }
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(radius),
-                            border: Border.all(color: greyLightColor, width: 1),
-                            color: whiteColor,
-                          ),
-                          child: const Icon(
-                            Icons.add_circle,
-                            size: 30,
-                            color: greyLightColor,
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(radius),
+                              border:
+                                  Border.all(color: greyLightColor, width: 1),
+                              color: whiteColor,
+                            ),
+                            child: const Icon(
+                              Icons.add_circle,
+                              size: 30,
+                              color: greyLightColor,
+                            ),
                           ),
                         ),
+                        fallback: (context) => const Center(
+                            child: CircularProgressIndicator.adaptive()),
                       ),
-                      fallback: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                     ),
                   ],
                 ),

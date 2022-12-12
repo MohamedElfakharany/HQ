@@ -151,6 +151,7 @@ class _LabReservationOverviewScreenState
       },
       builder: (context, state) {
         var cartModel = AppCubit.get(context).cartModel;
+        print('widget.branchName : ${widget.branchName}');
         return ScreenUtilInit(
           builder: (ctx, _) => Scaffold(
             backgroundColor: greyExtraLightColor,
@@ -274,7 +275,7 @@ class _LabReservationOverviewScreenState
                                                   color: Colors.white,
                                                 ),
                                                 Text(LocaleKeys.BtnDelete.tr(),
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 20)),
                                               ],
@@ -437,14 +438,10 @@ class _LabReservationOverviewScreenState
                                 child: Row(
                                   children: [
                                     horizontalSmallSpace,
-                                    // Image.asset(
-                                    //   'assets/images/location.jpg',
-                                    //   width: 25,
-                                    //   height: 35,
-                                    // ),
-                                    SvgPicture.asset(
-                                      profileLocationImage,
-                                      height: 0.05.sw,
+                                    Image.asset(
+                                      'assets/images/location.jpg',
+                                      width: 25,
+                                      height: 35,
                                     ),
                                     myVerticalDivider(),
                                     Column(
@@ -537,7 +534,7 @@ class _LabReservationOverviewScreenState
                                       Expanded(
                                         child: DefaultFormField(
                                           controller: couponController,
-                                          type: TextInputType.number,
+                                          type: TextInputType.text,
                                           label: LocaleKeys.txtFieldCoupon.tr(),
                                           validatedText:
                                               LocaleKeys.txtFieldCoupon.tr(),

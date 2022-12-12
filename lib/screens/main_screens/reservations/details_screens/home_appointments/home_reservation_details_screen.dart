@@ -55,7 +55,6 @@ class _HomeReservationDetailsScreenState
       listener: (context, state) {},
       builder: (context, state) {
         print('HomeReservationDetailsScreen');
-        // locationValue = extraBranchTitle;
         return Scaffold(
           backgroundColor: greyExtraLightColor,
           appBar: GeneralAppBar(
@@ -142,6 +141,7 @@ class _HomeReservationDetailsScreenState
                               Icons.keyboard_arrow_down_rounded,
                               color: mainColor,
                             ),
+                            hint: Text('${AppCubit.get(context).userResourceModel?.data?.name}'),
                             items: AppCubit.get(context)
                                 .familiesName
                                 .map(buildMenuItem)
@@ -200,7 +200,7 @@ class _HomeReservationDetailsScreenState
                               child: DropdownButtonFormField<String>(
                                 validator: (value) {
                                   if (value == null) {
-                                    return 'Location Required';
+                                    return '${LocaleKeys.txtFill.tr()} ${LocaleKeys.txtAddress.tr()}';
                                   }
                                 },
                                 hint: Text(
@@ -220,7 +220,7 @@ class _HomeReservationDetailsScreenState
                                   fillColor: Colors.white,
                                   filled: true,
                                   errorStyle:
-                                      const TextStyle(color: Color(0xFF4F4F4F)),
+                                      TextStyle(color: Color(0xFF4F4F4F)),
                                   border: InputBorder.none,
                                   suffixIcon: IconButton(
                                     onPressed: () {
@@ -263,7 +263,6 @@ class _HomeReservationDetailsScreenState
                         ],
                       ),
                     ),
-                    const Spacer(),
                     MaterialButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
@@ -322,13 +321,13 @@ class _HomeReservationDetailsScreenState
         value: item,
         child: Row(
           children: [
-            Text(item),
+            Text(item,style: titleSmallStyle,),
           ],
         ),
       );
 
   DropdownMenuItem<String> buildLocationItem(String item) => DropdownMenuItem(
         value: item,
-        child: Text(item),
+        child: Text(item,style: titleSmallStyle,),
       );
 }

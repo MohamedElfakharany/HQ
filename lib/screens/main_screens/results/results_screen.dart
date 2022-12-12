@@ -28,6 +28,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
     AppCubit.get(context).getLabResults();
     AppCubit.get(context).getHomeResults();
   }
+  Color bgColorTest = whiteColor;
+  Color bgColorOffer = mainColor;
+  Color fontColorTest = mainColor;
+  Color fontColorOffer = whiteColor;
 
   @override
   Widget build(BuildContext context) {
@@ -53,148 +57,101 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       child: AppBar(
                         backgroundColor: greyExtraLightColor,
                         elevation: 0.0,
-                        // shape: RoundedRectangleBorder(
-                        //   borderRadius: BorderRadius.circular(20),
-                        // ),
                         bottom: TabBar(
-                          indicatorColor: mainColor,
+                          indicator: const BoxDecoration(),
+                          onTap: (i){
+                            setState((){
+                              bgColorTest = i == 0 ? mainLightColor : whiteColor;
+                              bgColorOffer = i == 1 ? mainLightColor : whiteColor;
+                              fontColorTest = i == 1 ? mainLightColor : whiteColor;
+                              fontColorOffer = i == 0 ? mainLightColor : whiteColor;
+                            });
+                          },
                           tabs: [
                             Tab(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 60,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            color: mainLightColor, width: 2),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.grey.withOpacity(0.15),
-                                            spreadRadius: 2,
-                                            blurRadius: 2,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                        color: whiteColor,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/atLabIcon.png',
-                                            width: 25,
-                                            height: 25,
-                                            color: mainColor,
-                                          ),
-                                          horizontalMiniSpace,
-                                          Text(
-                                            LocaleKeys.BtnAtLab.tr(),
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: darkColor,
-                                            ),
-                                          ),
-                                        ],
+                              child: Container(
+                                height: 60,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: mainLightColor, width: 2),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                      Colors.grey.withOpacity(0.15),
+                                      spreadRadius: 2,
+                                      blurRadius: 2,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: bgColorTest,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/atLabIcon.png',
+                                      width: 25,
+                                      height: 25,
+                                      color: fontColorTest,
+                                    ),
+                                    horizontalMiniSpace,
+                                    Text(
+                                      LocaleKeys.BtnAtLab.tr(),
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: fontColorTest,
                                       ),
                                     ),
-                                  ),
-                                  verticalMicroSpace,
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             Tab(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 60,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            color: mainLightColor, width: 2),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.grey.withOpacity(0.15),
-                                            spreadRadius: 2,
-                                            blurRadius: 2,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                        color: whiteColor,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/atHomeIcon.png',
-                                            width: 25,
-                                            height: 25,
-                                            color: mainColor,
-                                          ),
-                                          horizontalMiniSpace,
-                                          Text(
-                                            LocaleKeys.BtnAtHome.tr(),
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: darkColor,
-                                            ),
-                                          ),
-                                        ],
+                              child: Container(
+                                height: 60,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: mainLightColor, width: 2),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                      Colors.grey.withOpacity(0.15),
+                                      spreadRadius: 2,
+                                      blurRadius: 2,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: bgColorOffer,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/atHomeIcon.png',
+                                      width: 25,
+                                      height: 25,
+                                      color: fontColorOffer,
+                                    ),
+                                    horizontalMiniSpace,
+                                    Text(
+                                      LocaleKeys.BtnAtHome.tr(),
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: fontColorOffer,
                                       ),
                                     ),
-                                  ),
-                                  verticalMicroSpace,
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                            // Tab(
-                            //   child: Column(
-                            //     children: [
-                            //       Expanded(
-                            //         child: Container(
-                            //           height: 60,
-                            //           width: double.infinity,
-                            //           decoration: BoxDecoration(
-                            //             borderRadius: BorderRadius.circular(8),
-                            //             border: Border.all(
-                            //                 color: blueLightColor, width: 2),
-                            //             boxShadow: [
-                            //               BoxShadow(
-                            //                 color:
-                            //                     Colors.grey.withOpacity(0.15),
-                            //                 spreadRadius: 2,
-                            //                 blurRadius: 2,
-                            //                 offset: const Offset(0, 2),
-                            //               ),
-                            //             ],
-                            //             color: whiteColor,
-                            //           ),
-                            //           child: Center(
-                            //             child: Text(
-                            //               LocaleKeys.txtCanceled.tr(),
-                            //               textAlign: TextAlign.start,
-                            //               style: const TextStyle(
-                            //                 fontSize: 14,
-                            //                 color: darkColor,
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       verticalMicroSpace,
-                            //     ],
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -203,11 +160,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   if (AppCubit.get(context).isVisitor == false)
                     Expanded(
                       child: TabBarView(
-                        physics: const BouncingScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
                           // first tab bar view widget
                           ConditionalBuilder(
-                            condition: AppCubit.get(context).labResultsModel?.data != null,
+                            condition: AppCubit.get(context).labResultsModel?.data?.isEmpty == false,
                             builder: (context)=> Column(
                               children: [
                                 verticalSmallSpace,
@@ -223,8 +180,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                           Navigator.push(
                                             context,
                                             FadeRoute(
-                                              page: ResultDetailsScreen(labResultsDataModel: AppCubit.get(context)
-                                                  .labResultsModel!.data![index], index: index,),
+                                              page: ResultDetailsScreen(labResultsDataModel: AppCubit.get(context).labResultsModel!.data![index], index: index,),
                                             ),
                                           );
                                         },
@@ -251,7 +207,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                             ),
                             fallback: (context)=> ScreenHolder(
                                 msg:
-                                '${LocaleKeys.txtNoResults.tr()} ${LocaleKeys.BtnAtHome.tr()}'),
+                                '${LocaleKeys.txtNoResults.tr()} ${LocaleKeys.BtnAtLab.tr()}'),
                           ),
                           // second tab bar view widget
                           ConditionalBuilder(

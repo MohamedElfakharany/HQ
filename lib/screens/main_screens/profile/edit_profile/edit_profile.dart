@@ -240,16 +240,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 color: greyExtraLightColor.withOpacity(0.4),
                               ),
                             ),
-                            hintStyle: const TextStyle(
+                            hintStyle: TextStyle(
                                 color: greyDarkColor, fontSize: 14),
-                            labelStyle: const TextStyle(
+                            labelStyle: TextStyle(
                               // color: isClickable ? Colors.grey[400] : blueColor,
                               color: greyDarkColor,
                               fontSize: 14,
                             ),
                             fillColor: Colors.white,
                             filled: true,
-                            errorStyle: const TextStyle(color: redColor),
+                            errorStyle: TextStyle(color: redColor),
                             // floatingLabelBehavior: FloatingLabelBehavior.never,
                             contentPadding: const EdgeInsetsDirectional.only(
                                 start: 15.0,

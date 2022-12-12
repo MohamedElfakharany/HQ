@@ -39,6 +39,7 @@ class _VerificationChangeMobileScreenState
   Future fetchOtp({required String number, required String phoneCode}) async {
     await auth.verifyPhoneNumber(
       phoneNumber: '+$phoneCode$number',
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential);
       },

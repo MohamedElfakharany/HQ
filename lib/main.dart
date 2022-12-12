@@ -16,6 +16,7 @@ import 'package:hq/shared/network/local/const_shared.dart';
 import 'package:hq/shared/network/remote/dio_helper.dart';
 import 'package:hq/tech_lib/tech_cubit/tech_cubit.dart';
 import 'package:hq/translations/codegen_loader.g.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -37,14 +38,56 @@ void main() async {
   if (kDebugMode) {
     print('deviceToken : $deviceToken ');
   }
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    importance: Importance.max,
+  );
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('icon_logo');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  if (Platform.isAndroid){
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    if (Platform.isAndroid){
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      // If `onMessage` is triggered with a notification, construct our own
+      // local notification to show to users using the created channel.
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                icon: android.smallIcon,
+                // other properties...
+              ),
+            ));
+      }
+    }
+
     if (kDebugMode) {
       print('onMessage message.data.toString() ${message.data.toString()}');
     }
-    // showToast(msg: 'on Message', state: ToastState.success);
-    // RemoteNotification? notification = message.notification;
-    // AndroidNotification? android = message.notification?.android;
-
     if (message.data['message'] == 'ReservationScreen') {
       if (kDebugMode) {
         print('message Reservation Screen');
@@ -69,12 +112,11 @@ void main() async {
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
-        alert: true, // headsup notification in IOS
+        alert: true,
         badge: true,
         sound: true,
       );
     } else {
-      //close the app
       SystemChannels.platform.invokeMethod('SystemNavigator.pop');
     }
   }
@@ -89,17 +131,9 @@ void main() async {
         print('message Reservation Screen');
       }
     }
-    // showToast(msg: 'on Message Opened App', state: ToastState.success);
   });
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  // token = CacheHelper.getData(key: 'token');
-  // verified = CacheHelper.getData(key: 'verified');
-  // if(sharedLanguage != null) {
-  //   sharedLanguage = CacheHelper.getData(key: "local");
-  // }else{
-  //   sharedLanguage = 'en';
-  // }
   BlocOverrides.runZoned(
     () {
       if (Platform.isIOS || Platform.isAndroid) {
@@ -136,7 +170,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MyApp extends StatelessWidget {
   final Widget startWidget;
 
-  const MyApp({Key? key,
+  const MyApp({
+    Key? key,
     required this.startWidget,
   }) : super(key: key);
 
@@ -146,7 +181,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (BuildContext context) => AppCubit()..getCarouselData()),
+          create: (BuildContext context) => AppCubit()
+            ..getCarouselData()
+            ..getOnboarding(),
+        ),
         BlocProvider(create: (BuildContext context) => AppTechCubit()),
       ],
       child: MaterialApp(

@@ -269,7 +269,7 @@ class _HomeReservationOverviewScreenState
                                                 color: Colors.white,
                                               ),
                                               Text(LocaleKeys.BtnDelete.tr(),
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20)),
                                             ],
@@ -520,7 +520,7 @@ class _HomeReservationOverviewScreenState
                                     Expanded(
                                       child: DefaultFormField(
                                         controller: couponController,
-                                        type: TextInputType.number,
+                                        type: TextInputType.text,
                                         label: LocaleKeys.txtFieldCoupon.tr(),
                                         validatedText:
                                             LocaleKeys.txtFieldCoupon.tr(),
@@ -851,7 +851,7 @@ class _HomeReservationOverviewScreenState
                                   date: widget.date,
                                   time: widget.time,
                                   familyId: widget.familyId,
-                                  // branchId: extraBranchId!,
+                                  branchId: extraBranchId!,
                                   coupon: couponController.text,
                                   testId: ['${widget.testsDataModel?.id}'],
                                   addressId: widget.addressId,

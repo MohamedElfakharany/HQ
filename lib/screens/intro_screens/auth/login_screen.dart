@@ -72,9 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 FadeRoute(
                   page: VerificationScreen(
                     phoneCode: nationalCodeController.text,
-                    isChangeMobile: false,
                     mobileNumber: mobileController.text.toString(),
-                    isRegister: true,
                   ),
                 ),
               );
@@ -148,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       builder: (context, state) {
+        nationalCodeController.text = '966';
         return Scaffold(
           backgroundColor: whiteColor,
           appBar: GeneralAppBar(

@@ -21,12 +21,8 @@ class VerificationScreen extends StatefulWidget {
     Key? key,
     required this.mobileNumber,
     required this.phoneCode,
-    this.isRegister,
-    this.isChangeMobile,
     this.resetToken,
   }) : super(key: key);
-  bool? isRegister;
-  bool? isChangeMobile;
   String? resetToken;
   String phoneCode = "";
   String mobileNumber = "";
@@ -48,6 +44,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
     await auth.verifyPhoneNumber(
       phoneNumber: '+$phoneCode$number',
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((v) => {});
       },
@@ -82,28 +79,26 @@ class _VerificationScreenState extends State<VerificationScreen> {
     try {
       final authCredential = await auth.signInWithCredential(phoneAuthCredential);
       if (authCredential.user != null) {
-        if (widget.isRegister == true && widget.isChangeMobile == false) {
           await AppCubit.get(context).verify().then((v) {
             AppCubit.get(context).getCountry().then((v) {
               Navigator.push(
                   context, FadeRoute(page: const SelectCountryScreen()));
             });
           });
-        }
       }
     } on FirebaseAuthException catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return
-            // const Center(child: CircularProgressIndicator.adaptive());
-            AlertDialog(
-            content: Text(
-              e.code,
-            ),
-          );
-        },
-      );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return
+      //       // const Center(child: CircularProgressIndicator.adaptive());
+      //       AlertDialog(
+      //       content: Text(
+      //         e.code,
+      //       ),
+      //     );
+      //   },
+      // );
       if (kDebugMode) {
         print("catch");
       }

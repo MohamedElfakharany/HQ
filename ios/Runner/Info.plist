@@ -47,8 +47,10 @@
     <string>HQ want to accesses your camera</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>HQ want to accesses your photo library</string>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>DarAltep want to accesses your Microphone</string>
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
 	<key>UIBackgroundModes</key>
     <array>
         <string>fetch</string>

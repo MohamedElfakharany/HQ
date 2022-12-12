@@ -24,7 +24,9 @@ import 'package:hq/translations/locale_keys.g.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class LabCalenderView extends StatefulWidget {
-   const LabCalenderView({Key? key,}) : super(key: key);
+  const LabCalenderView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _LabCalenderViewState createState() => _LabCalenderViewState();
@@ -131,19 +133,17 @@ class _LabCalenderViewState extends State<LabCalenderView> {
 
                         AppCubit.get(context).getLabAppointments(
                             date:
-                            '${selectedDay.year.toString()}-${month
-                                .toString()}-${day.toString()}');
+                                '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
                       },
                       availableCalendarFormats: const {
                         CalendarFormat.month: 'Month',
                       },
                       headerStyle: HeaderStyle(
                         headerPadding: EdgeInsets.symmetric(horizontal: 0.2.sw),
-
                       ),
                       calendarStyle: const CalendarStyle(
                         selectedTextStyle:
-                        TextStyle(color: whiteColor, fontSize: 20),
+                            TextStyle(color: whiteColor, fontSize: 20),
                         todayDecoration: BoxDecoration(),
                         todayTextStyle: TextStyle(
                             color: greenColor,
@@ -153,17 +153,17 @@ class _LabCalenderViewState extends State<LabCalenderView> {
                             color: greenColor, shape: BoxShape.circle),
                         defaultDecoration: BoxDecoration(),
                         holidayDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         weekendDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         rangeEndDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         outsideDecoration: BoxDecoration(
                           shape: BoxShape.circle,
                         ),
                         disabledDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
-                        // weekendTextStyle: const TextStyle(
+                            BoxDecoration(shape: BoxShape.circle),
+                        // weekendTextStyle: TextStyle(
                         //   color: blueColor,
                         // ),
                         markerSize: 40.0,
@@ -297,8 +297,7 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
 
                         AppCubit.get(context).getHomeAppointments(
                             date:
-                            '${selectedDay.year.toString()}-${month
-                                .toString()}-${day.toString()}');
+                                '${selectedDay.year.toString()}-${month.toString()}-${day.toString()}');
                       },
                       availableCalendarFormats: const {
                         CalendarFormat.month: 'Month',
@@ -328,7 +327,7 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
                       ),
                       calendarStyle: const CalendarStyle(
                         selectedTextStyle:
-                        TextStyle(color: whiteColor, fontSize: 20),
+                            TextStyle(color: whiteColor, fontSize: 20),
                         todayDecoration: BoxDecoration(),
                         todayTextStyle: TextStyle(
                             color: greenColor,
@@ -338,17 +337,17 @@ class _HomeCalenderViewState extends State<HomeCalenderView> {
                             color: greenColor, shape: BoxShape.circle),
                         defaultDecoration: BoxDecoration(),
                         holidayDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         weekendDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         rangeEndDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
+                            BoxDecoration(shape: BoxShape.circle),
                         outsideDecoration: BoxDecoration(
                           shape: BoxShape.circle,
                         ),
                         disabledDecoration:
-                        BoxDecoration(shape: BoxShape.circle),
-                        // weekendTextStyle: const TextStyle(
+                            BoxDecoration(shape: BoxShape.circle),
+                        // weekendTextStyle: TextStyle(
                         //   color: blueColor,
                         // ),
                         markerSize: 40.0,
@@ -400,10 +399,7 @@ class OffersCard extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.9,
+          width: MediaQuery.of(context).size.width * 0.9,
           height: 235,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
@@ -419,10 +415,7 @@ class OffersCard extends StatelessWidget {
                     CachedNetworkImageNormal(
                       imageUrl: offersDataModel.image,
                       height: 165,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.9,
+                      width: MediaQuery.of(context).size.width * 0.9,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -430,14 +423,14 @@ class OffersCard extends StatelessWidget {
                         children: [
                           Container(
                             height: 30,
-                            width: 80,
+                            width: 30,
                             decoration: BoxDecoration(
                               color: redColor,
                               borderRadius: BorderRadius.circular(radius),
                             ),
                             child: const Center(
                               child: Text(
-                                'Off',
+                                '%',
                                 style: TextStyle(color: whiteColor),
                               ),
                             ),
@@ -456,8 +449,8 @@ class OffersCard extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      offersDataModel.gender,
-                                      style: const TextStyle(color: whiteColor),
+                                      LocaleKeys.Male.tr(),
+                                      style: TextStyle(color: whiteColor),
                                     ),
                                     horizontalMicroSpace,
                                     const Icon(
@@ -468,32 +461,30 @@ class OffersCard extends StatelessWidget {
                                 ),
                               ),
                             )
-                          else
-                            if (offersDataModel.gender == 'Female')
-                              Container(
-                                height: 30,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  color: pinkColor,
-                                  borderRadius: BorderRadius.circular(radius),
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        offersDataModel.gender,
-                                        style: const TextStyle(
-                                            color: whiteColor),
-                                      ),
-                                      const Icon(
-                                        Icons.female,
-                                        color: whiteColor,
-                                      )
-                                    ],
-                                  ),
+                          else if (offersDataModel.gender == 'Female')
+                            Container(
+                              height: 30,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                color: pinkColor,
+                                borderRadius: BorderRadius.circular(radius),
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      LocaleKeys.Female.tr(),
+                                      style: TextStyle(color: whiteColor),
+                                    ),
+                                    const Icon(
+                                      Icons.female,
+                                      color: whiteColor,
+                                    )
+                                  ],
                                 ),
                               ),
+                            ),
                         ],
                       ),
                     ),
@@ -502,7 +493,7 @@ class OffersCard extends StatelessWidget {
               ),
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 child: Text(
                   offersDataModel.title,
                   style: titleSmallStyle2,
@@ -587,10 +578,11 @@ class CategoriesCard extends StatelessWidget {
 }
 
 class TestItemCard extends StatelessWidget {
-  TestItemCard({Key? key,
-    required this.index,
-    this.offersDataModel,
-    this.testsDataModel})
+  TestItemCard(
+      {Key? key,
+      required this.index,
+      this.offersDataModel,
+      this.testsDataModel})
       : super(key: key);
   TestsDataModel? testsDataModel;
   OffersDataModel? offersDataModel;
@@ -621,12 +613,9 @@ class TestItemCard extends StatelessWidget {
                 children: [
                   horizontalMicroSpace,
                   CachedNetworkImageNormal(
-                    imageUrl: AppCubit
-                        .get(context)
-                        .testsModel
-                        ?.data?[index]
-                        .image ??
-                        '',
+                    imageUrl:
+                        AppCubit.get(context).testsModel?.data?[index].image ??
+                            '',
                     width: 80,
                     height: 80,
                   ),
@@ -637,22 +626,20 @@ class TestItemCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppCubit
-                              .get(context)
-                              .testsModel
-                              ?.data?[index]
-                              .title ??
+                          AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .title ??
                               '',
                           style: titleStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          AppCubit
-                              .get(context)
-                              .testsModel
-                              ?.data?[index]
-                              .description ??
+                          AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .description ??
                               '',
                           style: subTitleSmallStyle2,
                           maxLines: 1,
@@ -661,11 +648,7 @@ class TestItemCard extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${AppCubit
-                                  .get(context)
-                                  .testsModel
-                                  ?.data?[index].price} ${LocaleKeys.salary
-                                  .tr()}',
+                              '${AppCubit.get(context).testsModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
                               style: titleSmallStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -686,8 +669,7 @@ class TestItemCard extends StatelessWidget {
                               context,
                               FadeRoute(
                                 page: TestDetailsScreen(
-                                    testsDataModel: AppCubit
-                                        .get(context)
+                                    testsDataModel: AppCubit.get(context)
                                         .testsModel!
                                         .data?[index]),
                               ),
@@ -696,8 +678,7 @@ class TestItemCard extends StatelessWidget {
                           color: mainColor,
                           child: Text(
                             LocaleKeys.txtDetails.tr(),
-                            style:
-                            titleSmallStyle.copyWith(color: whiteColor),
+                            style: titleSmallStyle.copyWith(color: whiteColor),
                           ),
                         ),
                       ),
@@ -721,11 +702,10 @@ class TestItemCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           horizontalMicroSpace,
-                          if (AppCubit
-                              .get(context)
-                              .testsModel
-                              ?.data?[index]
-                              .gender ==
+                          if (AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .gender ==
                               'Male')
                             const Center(
                               child: CircleAvatar(
@@ -738,11 +718,10 @@ class TestItemCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          if (AppCubit
-                              .get(context)
-                              .testsModel
-                              ?.data?[index]
-                              .gender ==
+                          if (AppCubit.get(context)
+                                  .testsModel
+                                  ?.data?[index]
+                                  .gender ==
                               'Female')
                             const Center(
                               child: CircleAvatar(
@@ -759,16 +738,12 @@ class TestItemCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (AppCubit
-                      .get(context)
-                      .isVisitor == false)
+                  if (AppCubit.get(context).isVisitor == false)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
-                          if (AppCubit
-                              .get(context)
-                              .isVisitor == false) {
+                          if (AppCubit.get(context).isVisitor == false) {
                             showPopUp(
                               context,
                               const VisitorHoldingPopUp(),
@@ -777,11 +752,8 @@ class TestItemCard extends StatelessWidget {
                             showCustomBottomSheet(
                               context,
                               bottomSheetContent: Container(
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height *
-                                    0.55,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.55,
                                 decoration: BoxDecoration(
                                   color: whiteColor,
                                   borderRadius: BorderRadius.only(
@@ -792,10 +764,8 @@ class TestItemCard extends StatelessWidget {
                                 padding: const EdgeInsetsDirectional.only(
                                     start: 20.0, end: 20.0),
                                 child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     verticalMicroSpace,
                                     Row(
@@ -807,16 +777,15 @@ class TestItemCard extends StatelessWidget {
                                         Text(
                                           LocaleKeys.txtReservationSucceeded
                                               .tr(),
-                                          style: titleStyle.copyWith(
-                                              fontSize: 15),
+                                          style:
+                                              titleStyle.copyWith(fontSize: 15),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
                                       ],
                                     ),
                                     Text(
-                                      LocaleKeys
-                                          .TxtPopUpReservationTypeSecond
+                                      LocaleKeys.TxtPopUpReservationTypeSecond
                                           .tr(),
                                       style: subTitleSmallStyle.copyWith(
                                         fontSize: 15,
@@ -828,25 +797,22 @@ class TestItemCard extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: whiteColor,
                                         borderRadius:
-                                        BorderRadius.circular(radius),
+                                            BorderRadius.circular(radius),
                                         border: Border.all(
                                           width: 1,
                                           color: greyDarkColor,
                                         ),
                                       ),
-                                      alignment:
-                                      AlignmentDirectional.center,
+                                      alignment: AlignmentDirectional.center,
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 0, horizontal: 4),
                                       child: Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding:
-                                            const EdgeInsetsDirectional
-                                                .only(
-                                                start: 10.0, top: 10.0),
+                                            padding: const EdgeInsetsDirectional
+                                                .only(start: 10.0, top: 10.0),
                                             child: Image.asset(
                                               appLogo,
                                               width: 80,
@@ -857,26 +823,22 @@ class TestItemCard extends StatelessWidget {
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 verticalMiniSpace,
                                                 Text(
-                                                  AppCubit
-                                                      .get(context)
-                                                      .testsModel
-                                                      ?.data?[index]
-                                                      .title ??
-                                                      offersDataModel
-                                                          ?.title,
-                                                  style:
-                                                  titleStyle.copyWith(
+                                                  AppCubit.get(context)
+                                                          .testsModel
+                                                          ?.data?[index]
+                                                          .title ??
+                                                      offersDataModel?.title,
+                                                  style: titleStyle.copyWith(
                                                       fontWeight:
-                                                      FontWeight
-                                                          .normal),
+                                                          FontWeight.normal),
                                                   overflow:
-                                                  TextOverflow.ellipsis,
+                                                      TextOverflow.ellipsis,
                                                 ),
                                                 // const Padding(
                                                 //   padding: EdgeInsets.symmetric(
@@ -891,41 +853,25 @@ class TestItemCard extends StatelessWidget {
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      '${AppCubit
-                                                          .get(context)
-                                                          .testsModel
-                                                          ?.data?[index]
-                                                          .price ?? AppCubit
-                                                          .get(context)
-                                                          .offersModel
-                                                          ?.data?[index]
-                                                          .discount} ${LocaleKeys
-                                                          .salary.tr()}',
-                                                      style: titleStyle
-                                                          .copyWith(
-                                                          fontSize: 15),
+                                                      '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
+                                                      style:
+                                                          titleStyle.copyWith(
+                                                              fontSize: 15),
                                                     ),
                                                     horizontalMiniSpace,
-                                                    if (AppCubit
-                                                        .get(
-                                                        context)
-                                                        .offersModel
-                                                        ?.data?[index]
-                                                        .price !=
-                                                        null)
-                                                      Text(
-                                                        '${AppCubit
-                                                            .get(context)
+                                                    if (AppCubit.get(context)
                                                             .offersModel
                                                             ?.data?[index]
-                                                            .price} ${LocaleKeys
-                                                            .salary.tr()}',
+                                                            .price !=
+                                                        null)
+                                                      Text(
+                                                        '${AppCubit.get(context).offersModel?.data?[index].price} ${LocaleKeys.salary.tr()}',
                                                         style:
-                                                        subTitleSmallStyle
-                                                            .copyWith(
+                                                            subTitleSmallStyle
+                                                                .copyWith(
                                                           decoration:
-                                                          TextDecoration
-                                                              .lineThrough,
+                                                              TextDecoration
+                                                                  .lineThrough,
                                                         ),
                                                       ),
                                                   ],
@@ -939,14 +885,11 @@ class TestItemCard extends StatelessWidget {
                                     verticalMicroSpace,
                                     Container(
                                       height: 50,
-                                      width: MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width *
+                                      width: MediaQuery.of(context).size.width *
                                           0.9,
                                       decoration: BoxDecoration(
                                         borderRadius:
-                                        BorderRadius.circular(radius),
+                                            BorderRadius.circular(radius),
                                         color: greyExtraLightColor,
                                       ),
                                       child: Row(
@@ -955,20 +898,11 @@ class TestItemCard extends StatelessWidget {
                                           Text(
                                             LocaleKeys.txtTotal.tr(),
                                             style: titleStyle.copyWith(
-                                                fontWeight:
-                                                FontWeight.normal),
+                                                fontWeight: FontWeight.normal),
                                           ),
                                           const Spacer(),
                                           Text(
-                                            '${AppCubit
-                                                .get(context)
-                                                .testsModel
-                                                ?.data?[index].price ?? AppCubit
-                                                .get(context)
-                                                .offersModel
-                                                ?.data?[index]
-                                                .discount} ${LocaleKeys.salary
-                                                .tr()}',
+                                            '${AppCubit.get(context).testsModel?.data?[index].price ?? AppCubit.get(context).offersModel?.data?[index].discount} ${LocaleKeys.salary.tr()}',
                                             style: titleStyle.copyWith(
                                                 fontSize: 18),
                                           ),
@@ -978,17 +912,13 @@ class TestItemCard extends StatelessWidget {
                                     ),
                                     SizedBox(
                                       height: 80.0,
-                                      width:
-                                      MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width,
+                                      width: MediaQuery.of(context).size.width,
                                       child: Center(
                                         child: Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
                                             Expanded(
                                               child: MaterialButton(
@@ -997,11 +927,11 @@ class TestItemCard extends StatelessWidget {
                                                     context,
                                                     FadeRoute(
                                                       page: CartScreen(
-                                                        // testsDataModel:
-                                                        //     testsDataModel,
-                                                        // offersDataModel:
-                                                        //     offersDataModel,
-                                                      ),
+                                                          // testsDataModel:
+                                                          //     testsDataModel,
+                                                          // offersDataModel:
+                                                          //     offersDataModel,
+                                                          ),
                                                     ),
                                                   );
                                                 },
@@ -1010,9 +940,8 @@ class TestItemCard extends StatelessWidget {
                                                   decoration: BoxDecoration(
                                                     color: mainColor,
                                                     borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        radius),
+                                                        BorderRadius.circular(
+                                                            radius),
                                                   ),
                                                   height: 50.0,
                                                   width: double.infinity,
@@ -1032,12 +961,11 @@ class TestItemCard extends StatelessWidget {
                                             Expanded(
                                               child: GeneralUnfilledButton(
                                                 width: double.infinity,
-                                                title: LocaleKeys.BtnBrowse
-                                                    .tr(),
+                                                title:
+                                                    LocaleKeys.BtnBrowse.tr(),
                                                 onPress: () {
                                                   AppCubit.get(context)
-                                                      .changeBottomScreen(
-                                                      0);
+                                                      .changeBottomScreen(0);
                                                   navigateAndFinish(
                                                     context,
                                                     const HomeLayoutScreen(),
@@ -1103,15 +1031,13 @@ class VisitorHoldingPopUp extends StatelessWidget {
             child: GeneralButton(
                 title: LocaleKeys.BtnSignIn.tr(),
                 onPress: () {
-                  AppCubit
-                      .get(context)
-                      .currentIndex = 0;
+                  AppCubit.get(context).currentIndex = 0;
                   Navigator.pushAndRemoveUntil(
                       context,
                       FadeRoute(
                         page: OnBoardingScreen(),
                       ),
-                          (route) => false);
+                      (route) => false);
                 }),
           ),
           verticalLargeSpace,
@@ -1121,13 +1047,28 @@ class VisitorHoldingPopUp extends StatelessWidget {
   }
 }
 
-class NotificationsCard extends StatelessWidget {
+class NotificationsCard extends StatefulWidget {
   const NotificationsCard({Key? key, required this.notificationsDataModel})
       : super(key: key);
   final NotificationsDataModel notificationsDataModel;
 
   @override
+  State<NotificationsCard> createState() => _NotificationsCardState();
+}
+
+class _NotificationsCardState extends State<NotificationsCard> {
+  @override
   Widget build(BuildContext context) {
+    Color containerColor = whiteColor;
+
+    setState(() {
+      if (widget.notificationsDataModel.isRead == 0) {
+        containerColor = mainLightColor.withOpacity(0.1);
+      } else {
+        containerColor = whiteColor;
+      }
+    });
+
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -1135,7 +1076,7 @@ class NotificationsCard extends StatelessWidget {
           width: double.infinity,
           height: 100.0,
           decoration: BoxDecoration(
-            color: whiteColor,
+            color: containerColor,
             borderRadius: BorderRadius.circular(
               radius,
             ),
@@ -1170,37 +1111,33 @@ class NotificationsCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        notificationsDataModel.body,
+                        widget.notificationsDataModel.body,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(
-                        '${notificationsDataModel.date
-                            ?.date} - ${notificationsDataModel.date?.time}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: subTitleSmallStyle,
+                      Row(
+                        children: [
+                          Text(
+                            '${widget.notificationsDataModel.date?.date} - ${widget.notificationsDataModel.date?.time}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: subTitleSmallStyle,
+                          ),
+                          TextButton(
+                            child: Text(
+                              LocaleKeys.BtnDelete.tr(),
+                              style: titleSmallStyleRed,
+                            ),
+                            onPressed: () {
+                              AppCubit.get(context).deleteNotifications(
+                                  notificationId: '${widget.notificationsDataModel.id}');
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                // horizontalSmallSpace,
-                //   Container(
-                //     width: 60.0,
-                //     height: 30.0,
-                //     decoration: BoxDecoration(
-                //       color: greenColor.withOpacity(0.2),
-                //       borderRadius: BorderRadius.circular(
-                //         radius,
-                //       ),
-                //     ),
-                //     child: const Center(
-                //       child: Text(
-                //         'New',
-                //         style: titleSmallStyleGreen,
-                //       ),
-                //     ),
-                //   ),
               ],
             ),
           ),

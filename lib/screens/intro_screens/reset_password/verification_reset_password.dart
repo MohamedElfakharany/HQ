@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously, avoid_print
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -41,10 +41,9 @@ class _VerificationResetScreenState extends State<VerificationResetScreen> {
   Future fetchOtp({required String number, required String phoneCode}) async {
     await auth.verifyPhoneNumber(
       phoneNumber: '+$phoneCode$number',
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth
-            .signInWithCredential(credential)
-            .then((v) => {print(v.credential?.asMap())});
+        await auth.signInWithCredential(credential);
       },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
@@ -121,9 +120,10 @@ class _VerificationResetScreenState extends State<VerificationResetScreen> {
       listener: (context, state) async {
         if (state is AppResetPasswordSuccessState) {
           if (state.resetPasswordModel.status) {
-            showToast(msg: state.resetPasswordModel.message,state: ToastState.success);
+            showToast(
+                msg: state.resetPasswordModel.message,
+                state: ToastState.success);
             AppCubit.get(context).signOut(context);
-
           } else {
             Navigator.pop(context);
             Navigator.pop(context);

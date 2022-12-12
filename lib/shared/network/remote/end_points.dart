@@ -1,9 +1,6 @@
 ///Main HQ
       const mainURL = 'https://hq.orcav.com/api';
 
-///Main SULTAN
-//       const mainURL = 'https://sultan.orcav.com/api';
-
       const authURL = '$mainURL/auth';
 
       const coreURL = '$mainURL/core';
@@ -48,6 +45,8 @@
 
       const countryURL = '$coreURL/countries';
 
+      const onboardingURL = '$coreURL/onboarding';
+
       const cityURL = '$coreURL/cities';
 
       const branchURL = '$coreURL/branches';
@@ -55,6 +54,10 @@
       const relationsURL = '$coreURL/relations';
 
       const slidersURL = '$coreURL/sliders';
+
+      const generalURL = '$coreURL/general';
+
+      const bannerURL = '$coreURL/banners';
 
 ///Tests
 
@@ -69,6 +72,8 @@
       const getProfileURL = '$profileURL/get-profile';
 
       const getNotificationsURL = '$profileURL/notifications';
+
+      const notificationSeenURL = '$getNotificationsURL/read';
 
       const editProfileURL = '$profileURL/edit-profile';
 

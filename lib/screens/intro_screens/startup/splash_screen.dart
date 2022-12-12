@@ -34,6 +34,15 @@ class _SplashScreenState extends State<SplashScreen> {
     extraCityId = CacheHelper.getData(key: 'extraCityId');
     extraBranchId = CacheHelper.getData(key: 'extraBranchId');
     extraBranchTitle = CacheHelper.getData(key: 'extraBranchTitle');
+    isEnglishShared = CacheHelper.getData(key: 'isEnglish');
+
+    isEnglishShared ??= true;
+
+    if (sharedLanguage == 'en'){
+      fontFamily = 'Poppins';
+    }else {
+      fontFamily = 'Cairo';
+    }
 
     if (kDebugMode) {
       printWrapped('from main the token is $token');
@@ -41,6 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
       printWrapped('from main the isFirst is $isFirst');
       printWrapped('from main the verified is $verified');
       printWrapped('from main the sharedLanguage is $sharedLanguage');
+      printWrapped('from main the isEnglishShared is $isEnglishShared');
       printWrapped('from main the extraCountryId is $extraCountryId');
       printWrapped('from main the extraCityId is $extraCityId');
       printWrapped('from main the extraBranchId is $extraBranchId');
