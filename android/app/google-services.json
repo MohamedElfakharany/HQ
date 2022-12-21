@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "724677971450-0o09oebnl34ha82v27hq7opn0cutpfp6.apps.googleusercontent.com",
+          "client_id": "724677971450-ccksdes126o24rm3r16ncekrd591u733.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orcavision.hq",
+            "certificate_hash": "6892ad6b4ab13a2bfaa432a651582f0b75f55a80"
+          }
+        },
+        {
+          "client_id": "724677971450-pime7nr0epvfcgaq1j5psk5hk3dvk6q2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.orcavision.hq",

@@ -2,7 +2,7 @@ name: hq
 description: A new Flutter project.
 
 publish_to: 'none'
-version: 1.0.0+1
+version: 3.0.0+3
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
